@@ -1,0 +1,3 @@
+db: user02db
+id: user02
+passwd: user02

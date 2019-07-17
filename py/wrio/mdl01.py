@@ -6,11 +6,13 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 
 #from flaskr.db import get_db
+from wrio.db import myfunc01
 
 bp = Blueprint('auth', __name__, url_prefix='/mdl01')
 
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
-    ret = {"v1": "hello mdl01",}
+    ret = myfunc01()
+    #ret = {"v1": "hello mdl01",}
     return jsonify(ret)
