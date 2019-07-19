@@ -34,3 +34,16 @@ def myfunc01():
 
     conn.close()
     return sRet
+
+def myfunc02():
+    conn = get_db()
+    sql = "select * from t_table01"
+    retVal = None
+    with conn.cursor() as cur:
+        cur.execute(sql)
+        retVal = cur.fetchall()
+
+    conn.close()
+    return retVal
+
+
