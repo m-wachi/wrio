@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MainTbl } from '../maintbl';
 import { MaintblService } from '../maintbl.service';
-
 
 @Component({
   selector: 'app-maintbl',
@@ -10,15 +10,18 @@ import { MaintblService } from '../maintbl.service';
 export class MaintblComponent implements OnInit {
 
   aaa = 'Hey Hey Hey! Yeah!';
-  bbb = 'bbb';
+  mainTbl : MainTbl = null;
   
   constructor(private maintblSvc: MaintblService) { }
   //constructor() { }
 
   getAbc(): void {
-    var ab: string = 'xxx';
-    ab = this.maintblSvc.getAbc();
-    this.bbb = ab;
+    //this.mainTbl = this.maintblSvc.getAbc();
+    this.maintblSvc.getAbc()
+      .subscribe(mainTbl => this.mainTbl = mainTbl);
+    //this.mainTbl = new MainTbl();
+    //this.mainTbl.id = 12;
+    //this.mainTbl.name = "Good Morning!";
   }
 
     
