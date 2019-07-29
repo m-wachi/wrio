@@ -28,5 +28,6 @@ def path2():
 @bp.route('/path3', methods=('GET', 'POST'))
 def path3():
     mtbl = MainTbl()
-    obj = {"id": mtbl.id, "name": mtbl.name}
-    return jsonify(obj)
+    #obj = {"id": mtbl.id, "name": mtbl.name}
+    #return jsonify(obj)
+    return jsonify(mtbl.getJSONObj())

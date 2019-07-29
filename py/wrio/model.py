@@ -2,5 +2,8 @@
 
 class MainTbl(object):
     def __init__(self):
-        self.id = 45
-        self.name = 'Bye Bye Keen!'
+        self._jsonObj = {"id": 45, "name": 'Bye Bye Keen!'}
+
+    def getJSONObj(self):
+        return self._jsonObj
+    
