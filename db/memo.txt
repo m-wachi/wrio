@@ -1,3 +1,9 @@
+-- wrio system db --
+db: wrio01
+id: wrio_user
+passwd: wrio_user
+
+-- data db --
 db: user02db
 id: user02
 passwd: user02

@@ -1,0 +1,29 @@
+drop table t_dataset;
+
+create table t_dataset(
+    user_id character varying(20) NOT NULL,
+    dataset_name character varying(40) NOT NULL,
+    table_name character varying(40) NOT NULL,
+    table_abbrev character varying(4) NOT NULL,
+    table_type int NOT NULL,
+    
+	sales_date date NOT NULL,
+	item_grp_cd char(3) NOT NULL,
+	item_cd character varying(6) NOT NULL,
+	nof_sales numeric(5) NOT NULL,
+	sales_amount numeric(10) NOT NULL,
+	constraint pk_t_table01 primary key (sales_date, item_grp_cd, item_cd)
+);
+
+comment on table t_dataset IS 'data-set';
+comment on column t_dataset.user_id IS 'user id';
+comment on column t_dataset.dataset_name IS 'data-set name';
+comment on column t_dataset.table_name IS 'table name';
+comment on column t_dataset.table_abbrev IS 'table略称';
+comment on column t_dataset.table_type IS 'table type 1:FACT, 2:DIMENSION';
+comment on column t_dataset.user_id IS '';
+comment on column t_dataset.user_id IS '';
+comment on column t_dataset.user_id IS '';
+comment on column t_dataset.user_id IS '';
+comment on column t_dataset.user_id IS '';
+comment on column t_dataset.user_id IS '';
