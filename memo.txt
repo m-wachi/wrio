@@ -1,0 +1,12 @@
+PIVOTの保存データ
+
+dataset_id
+
+列見出情報(colhdr) 列名の配列
+行見出情報(rowhdr) 行名の配列
+フィルター条件 (SQLのWHERE句で使える形？)
+ソート条件 (SQLのORDER BY 句で使える)
+
+
+
+

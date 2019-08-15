@@ -29,3 +29,4 @@ comment on column m_ds_table.upd_time IS '更新日時';
 
 delete from m_ds_table;
 insert into m_ds_table values(1, 'f01', 't_table01', 1, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP);
+insert into m_ds_table values(1, 'd01', 'm_item', 2, 'item_cd', 'f01', 'item_cd', 2, CURRENT_TIMESTAMP);
