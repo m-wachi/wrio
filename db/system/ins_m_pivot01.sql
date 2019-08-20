@@ -21,4 +21,5 @@ comment on column m_pivot.upd_time IS '更新日時';
 
 delete from m_pivot;
 
-insert into m_pivot values(1, 'usr1', 1, '{ds_id: 1234, colhdr: [], rowhdr: ["d01.item_name"], rowodr: ["d01.item_name"]}', CURRENT_TIMESTAMP);
+-- insert into m_pivot values(1, 'usr1', 1, '{ds_id: 1234, colhdr: [], rowhdr: ["d01.item_name"], rowodr: ["d01.item_name"]}', CURRENT_TIMESTAMP);
+insert into m_pivot values(1, 'usr1', 1, '{"ds_id": 1234, "colhdr": [], "rowhdr": ["d01.item_name"], "rowodr": ["d01.item_name"]}', CURRENT_TIMESTAMP);
