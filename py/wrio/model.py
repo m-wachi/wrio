@@ -1,3 +1,4 @@
+import json
 
 
 class MainTbl(object):
@@ -30,4 +31,14 @@ class Dimension(object):
         s += ", abbrev: " + self.abbrev
         s += ", joinCond: " + self.joinCond
         return s
-    
+
+class Pivot(object):
+    def __init__(self):
+        self.datasetId = -1
+        self.jsonObj = None
+
+    def __str__(self):
+        s = "datasetId: " + str(self.datasetId)
+        s += (", jsonObj: " + json.dumps(self.jsonObj))
+        return s
+        
