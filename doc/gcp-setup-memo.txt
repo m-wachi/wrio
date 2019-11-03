@@ -1,0 +1,120 @@
+
+
+1. paste ssh-public-key on metadata->ssh key
+2. install the followings
+  a) emacs
+  b) postgresql
+  c) git
+  d) python3-venv
+
+3. install to enable vnc access
+  a) gnome-core
+  b) gnome-panel
+  c) vnc4server
+
+4. setup gcp firewall. open port 5901.
+
+5. edit .bashrc and add the followings at the tail.
+export EDITOR=vi
+
+5. mkdir .vnc
+
+6. vi .vnc/xstartup
+
+contents -->
+
+https://torilon.hatenablog.com/entry/2019/01/05/032516
+
+7. download google-chrome .deb file and install
+
+8. sudo apt-get install default-jdk
+
+9. install squirrel-sql
+  9.1. download squirrel-sql
+  9.2. java -jar squirrel-sql.jar
+
+8. mkdir src; cd src
+
+7. git clone https://github.com/m-wachi/wrio.git 
+
+9. cd wrio
+
+10. python3 -m venv
+
+11. source venv/bin/activate
+
+12. pip install flask
+
+13. sudo su - postgres
+
+14. createuser wrio_user 
+
+15. psql
+  alter user wrio_user password 'wrio_user';
+
+16. createdb  -O wrio_user wrio01
+
+17. createuser -P user02 
+  (password: user02)
+
+18. createdb -O user02 user02db
+
+19. exit  (back to normal user)
+
+20. cd ~/src/wrio/db/system
+
+21. source pgenv.sh
+
+22. psql -f m_dataset.sql
+    psql -f m_ds_table.sql
+    psql -f m_pivot.sql
+    psql -f ins_m_dataset.sql
+    psql -f ins_ms_ds_table.sql
+    psql -f ins_m_pivot.sql
+
+23. sudo apt-get install gcc
+    sudo apt-get install python3-dev
+    sudo apt-get install python3-wheel
+    sudo apt-get install libpq-dev
+    pip install psycopg2
+
+
+24. install nvm
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh | bash
+    restart shell(logout/login)
+
+25. install nodejs lts
+    nvm install --lts
+
+26. install angular
+    npm install -g @angular/cli
+
+
+27. install nginx
+    sudo apt-get install nginx
+    (copy wrio/etc/nginx/server.conf to /etc/nginx/conf.d/)
+    sudo systemctl restart nginx
+
+28. install emacs packages
+    M-x package-list-packages
+    (command) i:install, x:execute, q:quit
+    install packages: typescript-mode, tss
+
+
+*-01 if you want to use angular new version(how to use ng new)
+    1. cd ~/src/wrio
+    2. mv ng ng2
+    3. mkdir ng
+    4. ng new wrio --directory=ng --skipGit=true
+    5. merge ng2 to ng
+
+*-02 how to use emacs-git-diff
+    1. M-x vc-ediff     then '|'
+
+
+<<current staus>>
+'ng serve --open', and 'flask run' works collaboratively.
+conginue development.
+
+
+
