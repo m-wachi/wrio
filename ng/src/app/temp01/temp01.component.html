@@ -1,0 +1,14 @@
+<p>temp01 works!</p>
+<table border="1">
+  <tr>
+    <th *ngFor="let col of colnames">
+      {{col}}
+    </th>
+  </tr>
+  <tr *ngFor="let dataRow of dataRows">
+    <td *ngFor="let cellValue of dataRow">
+      {{cellValue}}
+    </td>
+  </tr>
+</table>
+
