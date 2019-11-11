@@ -28,6 +28,8 @@ https://torilon.hatenablog.com/entry/2019/01/05/032516
 7. download google-chrome .deb file and install
 
 8. sudo apt-get install default-jdk
+   sudo apt-get install libpostgresql-jdbc-java
+   (install postgresql.jar in /usr/share/java)
 
 9. install squirrel-sql
   9.1. download squirrel-sql
