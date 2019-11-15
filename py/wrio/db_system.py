@@ -1,7 +1,7 @@
 import click
 import psycopg2
 
-from wrio.model import (Dimension, DtSrc, Pivot)
+from wrio.model import (Dimension, DtSet, Pivot)
 #from flask import current_app, g
 #from flask.cli import with_appcontext
 
@@ -95,11 +95,12 @@ def getPivot(conn):
         row = cur.fetchone()
         jsonStr = row[1]
         pvt.datasetId = row[0]
+        pvt.settingJson = json.loads(jsonStr)
         pvt.jsonObj = json.loads(jsonStr)
 
     return pvt
 
-def getDtSrc(conn, datasetId):
+def getDtSet(conn, datasetId):
     sql = "select dtb.table_abbrev, dtb.table_name, dtb.table_type, \n"
     sql += "   dtb.join_src_col, dtb.dst_abbrev, dtb.join_dst_col, \n"
     sql += "   dtb.join_div \n"
@@ -107,30 +108,31 @@ def getDtSrc(conn, datasetId):
     sql += "where dtb.dataset_id = 1 \n"
     sql += "order by dtb.table_type "
 
-    dtSrc = DtSrc()
+    dtSet = DtSet()
+    dtSet.datasetId = datasetId
     with conn.cursor() as cur:
         cur.execute(sql)
         for row in cur:
             tableType = row[2]
             if tableType == 1:
-                dtSrc.factTable = row[1]
-                dtSrc.factAbbrev = row[0]
+                dtSet.factTable = row[1]
+                dtSet.factAbbrev = row[0]
             elif row[2] == 2:
                 dim1 = Dimension()
                 dim1.table = row[1]
                 dim1.abbrev = row[0]
                 dim1.joinCond = "%s.%s = %s.%s" % (row[4], row[5], dim1.abbrev, row[3])
-                dtSrc.dimensions = [dim1]
+                dtSet.dimensions = [dim1]
 
-    return dtSrc
+    return dtSet
 
 
 def myfunc03():
     conn = get_db()
 
     pvt = getPivot(conn)
-    dtSrc = getDtSrc(conn, pvt.datasetId)
+    dtSet = getDtSet(conn, pvt.datasetId)
     
     conn.close()
 
-    return (pvt, dtSrc)
+    return (pvt, dtSet)

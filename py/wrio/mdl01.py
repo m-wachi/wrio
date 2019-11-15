@@ -10,7 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from wrio.model import MainTbl
 from wrio.db_system import (myfunc01, myfunc02)
-from wrio.bslgc01 import mylogic01
+from wrio.bslgc01 import (mylogic01, mylogic02, mylogic03)
 
 bp = Blueprint('mdl01', __name__, url_prefix='/mdl01')
 
@@ -40,3 +40,15 @@ def path3():
 def path4():
     ret = mylogic01()
     return jsonify(ret)
+
+@bp.route('/path5', methods=('GET', 'POST'))
+def path5():
+    ret = mylogic02()
+    return jsonify(ret.getJSONObj())
+
+@bp.route('/path6', methods=('GET', 'POST'))
+def path6():
+    ret = mylogic03()
+    return ret
+
+    

@@ -13,5 +13,5 @@ create unique index ak1_m_dataset on m_dataset(user_id, dataset_name);
 comment on table m_dataset IS 'data-set';
 comment on column m_dataset.user_id IS 'user id';
 comment on column m_dataset.dataset_name IS 'data-set name';
-comment on column t_dataset.upd_time IS '更新日時';
+comment on column m_dataset.upd_time IS '更新日時';
 

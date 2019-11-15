@@ -102,6 +102,17 @@ https://torilon.hatenablog.com/entry/2019/01/05/032516
     (command) i:install, x:execute, q:quit
     install packages: typescript-mode, tss
 
+29. cd ~/src/wrio/db/target
+
+21. source pgenv.sh
+
+22. psql -f t_table01.sql
+    psql -f m_item.sql
+    psql -f insert_item01.sql
+    psql -f insert_table01.sql
+    psql -f ins_ms_ds_table.sql
+    psql -f ins_m_pivot.sql
+
 
 *-01 if you want to use angular new version(how to use ng new)
     1. cd ~/src/wrio
