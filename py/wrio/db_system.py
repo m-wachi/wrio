@@ -7,24 +7,13 @@ from wrio.model import (Dimension, DtSet, Pivot)
 
 import json
 
-def get_db():
-#    if 'db' not in g:
-#        g.db = sqlite3.connect(
-#            current_app.config['DATABASE'],
-#            detect_types=sqlite3.PARSE_DECLTYPES
-#        )
-#        g.db.row_factory = sqlite3.Row
-
+def getConn():
+    """
+    get system database(wrio) connection
+    """
     conn = psycopg2.connect("postgresql://wrio_user:wrio_user@localhost:5432/wrio01")
-
-#    return g.db
     return conn
-
-#def close_db(e=None):
-#    db = g.pop('db', None)
-
-#    if db is not None:
-#        db.close()
+  
 
 def myfunc01():
     sRet = ""
@@ -87,6 +76,11 @@ def myfunc02():
 
 
 def getPivot(conn):
+    pvt = getPivotBase(conn)
+    pvt.dataset = getDtSet(conn, pvt.datasetId)
+    return pvt
+
+def getPivotBase(conn):
     sql = "select dataset_id, setting_json from m_pivot"
     jsonStr = ""
     pvt = Pivot()
@@ -136,3 +130,4 @@ def myfunc03():
     conn.close()
 
     return (pvt, dtSet)
+

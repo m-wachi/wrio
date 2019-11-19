@@ -1,6 +1,8 @@
-from wrio.db_system import (myfunc03, myfunc02)
+#from wrio.db_system import (myfunc03, myfunc02)
+import wrio.db_system as sysdb 
 from wrio.model import (Dimension, DtSet)
-from wrio.db_user_pg import (usrPgMyfunc01)
+#from wrio.db_user_pg import (usrPgMyfunc01)
+import wrio.db_user_pg as usrdb
 
 def mylogic01():
     (pvt, dtSrc) = myfunc03()
@@ -12,3 +14,26 @@ def mylogic02():
 
 def mylogic03():
     return usrPgMyfunc01()
+
+def mylogic04():
+    sysConn = sysdb.getConn()
+
+    pvt = sysdb.getPivot(sysConn)
+
+    sysConn.close()
+
+    return pvt
+    
+    
+def mylogic05():
+    sysConn = sysdb.getConn()
+    pvt = sysdb.getPivot(sysConn)
+    sysConn.close()
+
+    usrConn = usrdb.getConn()
+    sql = usrdb.usrPgMyfunc02(pvt)
+    
+    usrConn.close()
+
+    return sql
+    

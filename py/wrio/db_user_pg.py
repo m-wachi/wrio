@@ -31,8 +31,24 @@ def usrPgMyfunc01():
     return sRet
 
 
-def usrPgMyfunc02():
-    pass
+def usrPgMyfunc02(pvt):
+
+    dtSet = pvt.dataset
+    #mainTblName = dtSet.factTable
+    #mainTblAbbrev = dtSet.factAbbrev
+
+    dim1 = dtSet.dimensions[0]
+
+    sSelectClause = "SELECT " + pvt.settingJson["rowhdr"][0]
+    sFromClause = "FROM {0} {1}".format(dtSet.factTable, dtSet.factAbbrev)
+
+    sJoin1 = "  INNER JOIN {0} {1} \n    ON {2}".format(
+        dim1.table, dim1.abbrev, dim1.joinCond)
+    
+    sql = sSelectClause + "\n" + sFromClause + "\n"
+    sql += sJoin1 + "\n"
+    return sql
+
 
 
 

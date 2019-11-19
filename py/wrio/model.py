@@ -59,7 +59,7 @@ class Pivot(object):
     def getJSONObj(self):
         jo = {"datasetId": self.datasetId,
               "settingJson": self.settingJson,
-              "dataset": self.dataset}
+              "dataset": self.dataset.getJSONObj()}
         return jo
 
     def __str__(self):
