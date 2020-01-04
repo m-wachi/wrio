@@ -70,3 +70,8 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# F# ASP.NET
+/fs/Wrio/bin
+/fs/Wrio/obj
+
