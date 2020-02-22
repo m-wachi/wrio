@@ -1,0 +1,18 @@
+1. sudo su - postgres
+
+2. createuser wrio_test
+
+3. psql
+  alter user wrio_test password 'wrio_test';
+
+4. createdb -O wrio_test wrio_test
+
+
+5. psql -h localhost -U wrio_test -f m_dataset.sql
+   psql -h localhost -U wrio_test -f m_ds_table.sql
+   psql -h localhost -U wrio_test -f m_pivot.sql
+   psql -h localhost -U wrio_test -f ins_m_dataset.sql
+   psql -h localhost -U wrio_test -f ins_m_ds_table.sql
+   psql -h localhost -U wrio_test -f ins_m_pivot.sql
+
+
