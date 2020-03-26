@@ -6,14 +6,16 @@ open System.Linq
 open System.Threading.Tasks
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Logging
+open Microsoft.Extensions.Configuration
 open Npgsql
 open Wrio
 open Wrio.Models
 open Wrio.Db.DbSystem
+open Wrio.Logic
 
 [<ApiController>]
 [<Route("[controller]")>]
-type MyWork02Controller (logger : ILogger<MyWork02Controller>) =
+type MyWork02Controller (logger : ILogger<MyWork02Controller>, config : IConfiguration) =
     inherit ControllerBase()
 
     [<HttpGet>]
@@ -60,7 +62,9 @@ type MyWork02Controller (logger : ILogger<MyWork02Controller>) =
 
     [<HttpGet("dim3")>]
     member __.GetMyWork03(): Dimension =
-        let dbSysConn = getDbSysConn
+        let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
+
+        let dbSysConn = getDbSysConn connString
         dbSysConn.Open()
         let dm = getDtSetOld dbSysConn 1
 
@@ -70,7 +74,9 @@ type MyWork02Controller (logger : ILogger<MyWork02Controller>) =
 
     [<HttpGet("dts1")>]
     member __.GetMyWork04(): DtSet =
-        let dbSysConn = getDbSysConn
+        let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
+
+        let dbSysConn = getDbSysConn connString
         dbSysConn.Open()
         let dtSet = getDtSet dbSysConn 1
 
@@ -80,5 +86,31 @@ type MyWork02Controller (logger : ILogger<MyWork02Controller>) =
 
     [<HttpGet("dts2")>]
     member __.GetMyWork05(): DtSet =
-        let dtSet = BsLogic01.getDtSetLogic 1
+        let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
+
+        let dtSet = BsLogic01.getDtSetLogic connString 1
+        
         dtSet
+
+    [<HttpGet("conf2")>]
+    member __.GetMyWork07(): String =
+        //let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
+
+        let a = config.GetSection("AppConfiguration")
+        a.GetValue("SystemConnectionString")
+
+        //let dtSet = BsLogic01.getDtSetLogic connString 1
+
+    [<HttpGet("work08")>]
+    member __.GetMyWork08(): MyConfig =
+
+        let myCfg = MyConfig()
+
+        let a = config.GetSection("AppConfiguration")
+
+        myCfg.SysConnStr <- a.GetValue("SystemConnectionString")
+
+        myCfg
+
+
+        //a

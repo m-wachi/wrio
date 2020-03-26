@@ -12,6 +12,8 @@ open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 
+//open Wrio.Logic
+
 type Startup private () =
     new (configuration: IConfiguration) as this =
         Startup() then
@@ -21,6 +23,8 @@ type Startup private () =
     member this.ConfigureServices(services: IServiceCollection) =
         // Add framework services.
         services.AddControllers() |> ignore
+
+        //services.AddSingleton<IMyConfig, MyConfig>() |> ignore
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     member this.Configure(app: IApplicationBuilder, env: IWebHostEnvironment) =

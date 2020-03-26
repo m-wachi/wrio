@@ -1,19 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="Models/WrioModel01.fs" />
     <Compile Include="Models/MyWork01Model.fs" />
     <Compile Include="Db/DbSystem.fs" />
     <Compile Include="Logic/Library.fs" />
     <Compile Include="Logic/BsLogic01.fs" />
+    <Compile Include="Logic/MyConfig.fs" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="4.1.2" />
   </ItemGroup>
-
 </Project>
