@@ -59,8 +59,8 @@ let Test3 () =
 let Test04 () =
     prepData01 ()
 
-    let cfg = new MyConfig()
-
+    let cfg = MyConfig()
+    cfg.SysConnStr <- connStrDbSys
 
     //let (ds: DtSet)  = BsLogic01.getDtSetLogic connStrDbSys 3
     let (ds: DtSet)  = BsLogic01.getDtSetLogic 3 cfg
