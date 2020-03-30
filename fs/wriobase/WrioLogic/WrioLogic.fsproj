@@ -7,8 +7,8 @@
     <Compile Include="Models/MyWork01Model.fs" />
     <Compile Include="Db/DbSystem.fs" />
     <Compile Include="Logic/Library.fs" />
-    <Compile Include="Logic/BsLogic01.fs" />
     <Compile Include="Logic/MyConfig.fs" />
+    <Compile Include="Logic/BsLogic01.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="4.1.2" />

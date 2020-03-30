@@ -58,7 +58,12 @@ let Test3 () =
 [<Test>]
 let Test04 () =
     prepData01 ()
-    let (ds: DtSet)  = BsLogic01.getDtSetLogic connStrDbSys 3
+
+    let cfg = new MyConfig()
+
+
+    //let (ds: DtSet)  = BsLogic01.getDtSetLogic connStrDbSys 3
+    let (ds: DtSet)  = BsLogic01.getDtSetLogic 3 cfg
     Assert.AreEqual(3, ds.DatasetId)
     Assert.AreEqual("t_table03", ds.FactTable)
     Assert.AreEqual("f03", ds.FactAbbrev)

@@ -86,9 +86,14 @@ type MyWork02Controller (logger : ILogger<MyWork02Controller>, config : IConfigu
 
     [<HttpGet("dts2")>]
     member __.GetMyWork05(): DtSet =
-        let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
 
-        let dtSet = BsLogic01.getDtSetLogic connString 1
+        //let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
+
+        let myCfg = MyConfig()
+        let a = config.GetSection("AppConfiguration")
+        myCfg.SysConnStr <- a.GetValue("SystemConnectionString")
+
+        let dtSet = BsLogic01.getDtSetLogic 1 myCfg
         
         dtSet
 

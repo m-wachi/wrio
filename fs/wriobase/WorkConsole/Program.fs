@@ -7,12 +7,9 @@ open Npgsql
 open Wrio.Models
 open Wrio.Logic
 
-
-
 let execSql (conn: NpgsqlConnection) (sql: string) : int =
     let cmd = new NpgsqlCommand(sql, conn)
     cmd.ExecuteNonQuery()
-
 
 
 [<EntryPoint>]
@@ -37,7 +34,12 @@ let main argv =
     
     let connStringTest = "Host=localhost;Username=wrio_test;Password=wrio_test;Database=wrio_test"
  
-    let ds1 = BsLogic01.getDtSetLogic connStringTest 1
+    let cfg = MyConfig()
+    cfg.SysConnStr <- connStringTest
+    
+    //let ds1 = BsLogic01.getDtSetLogic connStringTest 1
+    //let sysConnStr = cfg.GetSysconnStr()
+    let ds1 = BsLogic01.getDtSetLogic 1 cfg
 
     printfn "%s" (JsonSerializer.Serialize(ds1, sOpt))
 
