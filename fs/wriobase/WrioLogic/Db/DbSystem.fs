@@ -118,4 +118,55 @@ module DbSystem =
 
         dtSet
 
+(*
+def getPivotBase(conn):
+    sql = "select dataset_id, setting_json from m_pivot"
+    jsonStr = ""
+    pvt = Pivot()
+    with conn.cursor() as cur:
+        cur.execute(sql)
+        row = cur.fetchone()
+        jsonStr = row[1]
+        pvt.datasetId = row[0]
+        pvt.settingJson = json.loads(jsonStr)
+        pvt.jsonObj = json.loads(jsonStr)
 
+    return pvt
+*)
+    let getPivotBase (conn : NpgsqlConnection) (pivotId : int)  = 0
+        let sql = 
+            "select dataset_id, setting_json from m_pivot" +
+            "where " +
+            "    pivot_id = @pivot_id "
+
+        let cmd = new NpgsqlCommand(sql, conn)
+        cmd.Parameters.AddWithValue("pivot_id", pivotId)
+        let rdr = cmd.ExecuteReader()
+
+        if rdr.Read() then
+            let datasetId = rdr.GetInt32(0)
+            let setting_json = rdr.GetString(1)
+
+            let dtSet = getDtSet conn datasetId
+
+            let pvt : Pivot = {
+                DatasetId = datasetId
+                SettingJson = settingJson
+                Dataset = dtSet
+            }
+            pvt
+        else
+            pvt : Pivot = {
+                DatasetId = -1
+                SettingJson = ""
+                Dataset = null
+            }
+            pvt
+            //let dst = getDsTable rdr
+            //getDsTables (dst :: acc) rdr
+(*
+            TableName = rdr.GetString(1)
+            TableType = rdr.GetInt32(2)
+            JoinSrcCol = if rdr.IsDBNull(3) then "" else rdr.GetString(3)
+            DstAbbrev = if rdr.IsDBNull(4) then "" else rdr.GetString(4)
+*)

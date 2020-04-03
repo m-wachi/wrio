@@ -27,3 +27,34 @@ type DtSet(datasetId: int, factTable: string, factAbbrev: string) =
         and set(v: List<Dimension>) = dimensions <- v
 
 
+(*
+class Pivot(object):
+    def __init__(self):
+        self.datasetId = -1
+        self.settingJson = None
+        self.dataset = None
+        self.jsonObj = None  #will delete
+
+    def getJSONObj(self):
+        jo = {"datasetId": self.datasetId,
+              "settingJson": self.settingJson,
+              "dataset": self.dataset.getJSONObj()}
+        return jo
+
+    def __str__(self):
+        s = "datasetId: " + str(self.datasetId)
+        s += (", settingJson: " + json.dumps(self.settingJson))
+        return s
+*)
+
+type Pivot {
+    DatasetId : int
+    SettingJson : string
+    DtSet : DtSet
+}
+(*
+type Pivot(datasetId : int, settingJson : string, dtSet : Dataset)
+    member this.DatasetId : int = datasetId
+    member this.SettingJson : string = settingJson
+    member this.Dataset : DtSet = dtSet
+*)
