@@ -92,7 +92,7 @@ module DbSystem =
         *)
 
         let cmd = new NpgsqlCommand(sql, conn)
-        cmd.Parameters.AddWithValue("dataset_id", datasetId)
+        cmd.Parameters.AddWithValue("dataset_id", datasetId) |> ignore
         let rdr = cmd.ExecuteReader()
 
         let lstDst = getDsTables [] rdr
@@ -133,35 +133,55 @@ def getPivotBase(conn):
 
     return pvt
 *)
-    let getPivotBase (conn : NpgsqlConnection) (pivotId : int)  = 0
+
+    let getPivotBase (conn : NpgsqlConnection) (pivotId : int)  = 
+        let sql = 
+            "select dataset_id, setting_json from m_pivot " +
+            "where " +
+            "    pivot_id = @pivot_id "
+
+        let cmd = new NpgsqlCommand(sql, conn)
+        cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
+        let rdr = cmd.ExecuteReader()
+
+        if rdr.Read() then
+            let datasetId = rdr.GetInt32(0)
+            let settingJson = rdr.GetString(1)
+            (datasetId, settingJson)
+        else
+            (-1, "")
+
+(*
+    let getPivotBase (conn : NpgsqlConnection) (pivotId : int)  = 
         let sql = 
             "select dataset_id, setting_json from m_pivot" +
             "where " +
             "    pivot_id = @pivot_id "
 
         let cmd = new NpgsqlCommand(sql, conn)
-        cmd.Parameters.AddWithValue("pivot_id", pivotId)
+        cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
         let rdr = cmd.ExecuteReader()
 
         if rdr.Read() then
             let datasetId = rdr.GetInt32(0)
-            let setting_json = rdr.GetString(1)
+            let settingJson = rdr.GetString(1)
 
             let dtSet = getDtSet conn datasetId
 
             let pvt : Pivot = {
                 DatasetId = datasetId
                 SettingJson = settingJson
-                Dataset = dtSet
+                DtSet = dtSet
             }
             pvt
         else
-            pvt : Pivot = {
+            let pvt : Pivot = {
                 DatasetId = -1
                 SettingJson = ""
-                Dataset = null
+                DtSet = null
             }
             pvt
+*)
             //let dst = getDsTable rdr
             //getDsTables (dst :: acc) rdr
 (*

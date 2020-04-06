@@ -6,6 +6,7 @@ open Npgsql
 
 open Wrio.Models
 open Wrio.Logic
+open Wrio.Db
 
 let execSql (conn: NpgsqlConnection) (sql: string) : int =
     let cmd = new NpgsqlCommand(sql, conn)
@@ -52,4 +53,14 @@ let main argv =
 
     printfn "%A" sqlExecCnt
     *)
+    let conn1 = new NpgsqlConnection(connStringTest)
+    conn1.Open()
+
+    let (datasetId1, settingJsonStr1) = DbSystem.getPivotBase conn1 1
+    conn1.Close()
+
+    printfn "datasetId1=%d" datasetId1
+    printfn "settingJsonStr1"
+    printfn "%A" settingJsonStr1
+
     0 // return an integer exit code

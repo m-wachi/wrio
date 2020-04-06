@@ -47,7 +47,7 @@ class Pivot(object):
         return s
 *)
 
-type Pivot {
+type Pivot = {
     DatasetId : int
     SettingJson : string
     DtSet : DtSet
