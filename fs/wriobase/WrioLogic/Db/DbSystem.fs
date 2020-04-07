@@ -142,15 +142,26 @@ def getPivotBase(conn):
 
         let cmd = new NpgsqlCommand(sql, conn)
         cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
-        let rdr = cmd.ExecuteReader()
+        use rdr = cmd.ExecuteReader()   // use = c# using
 
         if rdr.Read() then
             let datasetId = rdr.GetInt32(0)
             let settingJson = rdr.GetString(1)
+            //rdr.Close()
             (datasetId, settingJson)
         else
+            //rdr.Close()
             (-1, "")
 
+    let getPivot (conn : NpgsqlConnection) (pivotId : int) =
+        let (datasetId, settingJson) = getPivotBase conn pivotId
+        let dtSet = getDtSet conn datasetId
+        let pvt : Pivot = {
+            DatasetId = datasetId
+            SettingJson = settingJson
+            DtSet = dtSet
+        }
+        pvt
 (*
     let getPivotBase (conn : NpgsqlConnection) (pivotId : int)  = 
         let sql = 

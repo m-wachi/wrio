@@ -57,10 +57,20 @@ let main argv =
     conn1.Open()
 
     let (datasetId1, settingJsonStr1) = DbSystem.getPivotBase conn1 1
-    conn1.Close()
 
     printfn "datasetId1=%d" datasetId1
     printfn "settingJsonStr1"
     printfn "%A" settingJsonStr1
+
+    let pvt1 = DbSystem.getPivot conn1 1
+    printfn "pvt1"
+    printfn "%A" pvt1
+
+    conn1.Close()
+
+    let pvt2 = BsLogic01.getPivotLogic 1 cfg
+
+    printfn "pvt2"
+    printfn "%A" pvt2
 
     0 // return an integer exit code

@@ -17,3 +17,9 @@ module BsLogic01 =
         dbSysConn.Close()
         
         dtSet
+
+    let getPivotLogic (pivotId: int) (cfg: IMyConfig) =
+        let sysConnStr = cfg.GetSysConnStr()
+        use dbSysConn = DbSystem.getDbSysConn sysConnStr
+        dbSysConn.Open()
+        DbSystem.getPivot dbSysConn pivotId
