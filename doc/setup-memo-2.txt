@@ -7,12 +7,28 @@
 
 4. createdb -O wrio_test wrio_test
 
-
 5. psql -h localhost -U wrio_test -f m_dataset.sql
    psql -h localhost -U wrio_test -f m_ds_table.sql
    psql -h localhost -U wrio_test -f m_pivot.sql
    psql -h localhost -U wrio_test -f ins_m_dataset.sql
    psql -h localhost -U wrio_test -f ins_m_ds_table.sql
    psql -h localhost -U wrio_test -f ins_m_pivot.sql
+
+6. sudo su - postgres
+
+7. createuser user02_test
+
+8. psql
+  alter user user02_test password 'user02_test';
+
+9. createdb -O user02_test user02_test
+
+10. cd db/target; source pgenv_test.sh
+
+11. psql -f m_item.sql 
+    psql -f t_table01.sql 
+    psql -f insert_item01.sql 
+    psql -f insert_table01.sql 
+
 
 

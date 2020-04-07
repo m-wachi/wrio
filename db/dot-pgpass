@@ -1,3 +1,5 @@
 localhost:5432:user02db:user02:user02
 localhost:5432:wrio01:wrio_user:wrio_user
+localhost:5432:user02_test:user02_test:user02_test
+localhost:5432:wrio_test:wrio_test:wrio_test
 

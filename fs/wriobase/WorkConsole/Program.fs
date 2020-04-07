@@ -68,9 +68,24 @@ let main argv =
 
     conn1.Close()
 
+    (*
     let pvt2 = BsLogic01.getPivotLogic 1 cfg
 
     printfn "pvt2"
     printfn "%A" pvt2
+
+    *)
+
+    let connStringUsrTest = "Host=localhost;Username=user02_test;Password=user02_test;Database=user02_test"
+
+    let conn2 = new NpgsqlConnection(connStringUsrTest)
+    conn2.Open()
+
+    let rt1 = DbUserPg.usrPgMyfunc01 conn2
+    printfn "rt1"
+    printfn "%A" rt1
+
+    conn2.Close()
+
 
     0 // return an integer exit code
