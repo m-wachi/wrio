@@ -63,3 +63,29 @@ def usrPgMyfunc02(pvt):
     sql += sJoin1 + "\n"
     return sql
 *)
+
+    let usrPgMyfunc02 (conn : NpgsqlConnection) (pvt: Pivot) =
+        let dtSet = pvt.DtSet
+        let dim1 = dtSet.Dimenstions.Head
+
+        let sSelectClause = "SELECT " + pvt.settingJson["rowhdr"][0]
+        let sFromClause = "FROM {0} {1}".format(dtSet.factTable, dtSet.factAbbrev)
+
+        let sql = 
+            "select \n" +
+            "   b.item_name, sum(a.nof_sales) nof_sales \n" +
+            "from t_table01 a \n" +
+            "    inner join m_item b on a.item_cd = b.item_cd \n" +
+            "group by b.item_name \n"
+
+        let cmd = new NpgsqlCommand(sql, conn)
+            //cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
+        use rdr = cmd.ExecuteReader()   // use = c# using
+
+        if rdr.Read() then
+            let itemName = rdr.GetString(0)
+            let nofSales = rdr.GetInt32(1)
+            (itemName, nofSales)
+        else
+            //rdr.Close()
+            ("", 0)
