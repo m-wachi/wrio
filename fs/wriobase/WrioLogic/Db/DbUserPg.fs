@@ -68,7 +68,7 @@ def usrPgMyfunc02(pvt):
         let dtSet = pvt.DtSet
         let dim1 = dtSet.Dimenstions.Head
 
-        let sSelectClause = "SELECT " + pvt.settingJson["rowhdr"][0]
+        let sSelectClause = "SELECT " + pvt.SettingJson["rowhdr"][0]
         let sFromClause = "FROM {0} {1}".format(dtSet.factTable, dtSet.factAbbrev)
 
         let sql = 
