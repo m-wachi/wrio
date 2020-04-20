@@ -156,9 +156,10 @@ def getPivotBase(conn):
     let getPivot (conn : NpgsqlConnection) (pivotId : int) =
         let (datasetId, settingJson) = getPivotBase conn pivotId
         let dtSet = getDtSet conn datasetId
+        let pvtSetting = PivotSetting()
         let pvt : Pivot = {
             DatasetId = datasetId
-            SettingJson = settingJson
+            Setting = pvtSetting
             DtSet = dtSet
         }
         pvt
