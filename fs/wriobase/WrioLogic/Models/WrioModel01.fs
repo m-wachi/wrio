@@ -30,7 +30,7 @@ type DtSet(datasetId: int, factTable: string, factAbbrev: string) =
 type PivotSetting() = 
     let mutable datasetId: int = -1
     let mutable colHdr : List<string> = []
-    let mutable rowHdr : List<string> = []
+    let mutable rowHdr = Array.empty<string>
     let mutable rowOdr : List<string> = []
     let mutable colOdr : List<string> = []
     member this.DatasetId 
@@ -40,8 +40,8 @@ type PivotSetting() =
         with get() : List<string> = colHdr
         and set(v : List<string>) = colHdr <- v
     member this.RowHdr 
-        with get() : List<string> = rowHdr
-        and set(v : List<string>) = rowHdr <- v
+        with get() = rowHdr
+        and set(v) = rowHdr <- v
     member this.RowOdr 
         with get() : List<string> = rowOdr
         and set(v : List<string>) = rowOdr <- v
