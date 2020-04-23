@@ -89,9 +89,9 @@ let main argv =
 
     let pvtSt1 = PivotSetting()
     pvtSt1.DatasetId <- 3
-    pvtSt1.RowHdr <- ["rowHdr01"; "rowHdr02"]
-    pvtSt1.ColHdr <- ["col1"; "col2"]
-    pvtSt1.RowOdr <- ["row1"]
+    pvtSt1.RowHdr <- [|"rowHdr01"; "rowHdr02"|]
+    pvtSt1.ColHdr <- [|"col1"; "col2"|]
+    pvtSt1.RowOdr <- [|"row1"|]
 
     printfn "pvtSt1"
     printfn "%A" pvtSt1
@@ -103,7 +103,7 @@ let main argv =
 
     let pvtSt2 : PivotSetting = JsonSerializer.Deserialize<PivotSetting>(settingJsonStr1, sOpt)
     printfn "settingJsonStr1=%s" settingJsonStr1
-    printfn "pvtSt2.RowHdr[0]=%s" (pvtSt2.RowHdr.Item(0))
+    printfn "pvtSt2.RowHdr[0]=%s" (pvtSt2.RowHdr.[0])
 
 
     0 // return an integer exit code

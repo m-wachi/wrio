@@ -1,5 +1,7 @@
 namespace Wrio.Logic
 
+open System.Text.Json
+open Wrio.Models
 open Wrio.Db
 
 module BsLogic01 =
@@ -22,4 +24,21 @@ module BsLogic01 =
         let sysConnStr = cfg.GetSysConnStr()
         use dbSysConn = DbSystem.getDbSysConn sysConnStr
         dbSysConn.Open()
-        DbSystem.getPivot dbSysConn pivotId
+
+
+        let (datasetId, sSettingJson) = DbSystem.getPivotBase dbSysConn pivotId
+
+        let dtSet = DbSystem.getDtSet dbSysConn datasetId
+
+        let sOpt = JsonSerializerOptions()
+        sOpt.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
+
+        let pvtSetting : PivotSetting = JsonSerializer.Deserialize<PivotSetting>(sSettingJson, sOpt)
+
+        let pvt : Pivot = {
+            PivotId = pivotId
+            DatasetId = datasetId
+            Setting = pvtSetting
+            DtSet = dtSet
+        }
+        pvt

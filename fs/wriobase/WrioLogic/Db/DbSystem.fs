@@ -153,16 +153,6 @@ def getPivotBase(conn):
             //rdr.Close()
             (-1, "")
 
-    let getPivot (conn : NpgsqlConnection) (pivotId : int) =
-        let (datasetId, settingJson) = getPivotBase conn pivotId
-        let dtSet = getDtSet conn datasetId
-        let pvtSetting = PivotSetting()
-        let pvt : Pivot = {
-            DatasetId = datasetId
-            Setting = pvtSetting
-            DtSet = dtSet
-        }
-        pvt
 (*
     let getPivotBase (conn : NpgsqlConnection) (pivotId : int)  = 
         let sql = 
