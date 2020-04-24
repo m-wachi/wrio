@@ -73,13 +73,13 @@ def usrPgMyfunc02(pvt):
         let sSelectClause = "SELECT " + pvt.Setting.RowHdr.[0]
         let sFromClause = String.Format("FROM {0} {1}", dtSet.FactTable, dtSet.FactAbbrev)
 
-        let sql = 
-            "select \n" +
-            "   b.item_name, sum(a.nof_sales) nof_sales \n" +
-            "from t_table01 a \n" +
-            "    inner join m_item b on a.item_cd = b.item_cd \n" +
-            "group by b.item_name \n"
+        let sJoin1 = String.Format("  INNER JOIN {0} {1} \n    ON {2}", dim1.Table, dim1.Abbrev, dim1.JoinCond)
+    
+        let sql = sSelectClause + "\n" + sFromClause + "\n"
+        let sql2 = sql + sJoin1 + "\n"
 
+        sql2
+        (*
         let cmd = new NpgsqlCommand(sql, conn)
             //cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
         use rdr = cmd.ExecuteReader()   // use = c# using
@@ -91,3 +91,4 @@ def usrPgMyfunc02(pvt):
         else
             //rdr.Close()
             ("", 0)
+        *)

@@ -1,5 +1,7 @@
 namespace Wrio.Models
 
+open System
+
 type Dimension(table: string, abbrev: string, joinSrcCol: string, 
                 dstAbbrev: string, joinDstCol: string, joinDiv: int) =
     member this.Table: string = table
@@ -8,7 +10,10 @@ type Dimension(table: string, abbrev: string, joinSrcCol: string,
     member this.DstAbbrev: string = dstAbbrev
     member this.JoinDstCol: string = joinDstCol
     member this.JoinDiv: int = joinDiv
-
+    // 暫定コード
+    member this.JoinCond: string = 
+        String.Format("{0}.{1} = {2}.{3}", dstAbbrev, joinDstCol, abbrev, joinSrcCol)
+        //"%s.%s = %s.%s" % (row[4], row[5], dim1.abbrev, row[3])
 (*
 class DtSet(object):
     def __init__(self):

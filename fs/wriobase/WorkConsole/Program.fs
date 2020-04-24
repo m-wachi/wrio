@@ -62,10 +62,6 @@ let main argv =
     printfn "settingJsonStr1"
     printfn "%A" settingJsonStr1
 
-    let pvt1 = DbSystem.getPivot conn1 1
-    printfn "pvt1"
-    printfn "%A" pvt1
-
     conn1.Close()
 
     (*
