@@ -5,6 +5,7 @@ open Npgsql
 
 open Wrio.Models
 open Wrio.Logic
+open Wrio.Db
 
 let connStrDbSys = "Host=localhost;Username=wrio_test;Password=wrio_test;Database=wrio_test"
 
@@ -98,3 +99,32 @@ let GetPivotLogicTest01 () =
     Assert.AreEqual(3, pvt.DatasetId)
     Assert.AreEqual("d01.item_name", pvt.Setting.RowHdr.[0])
 
+[<Test>]
+let UserPgToSqlTest01 () =
+
+    let dtSet1 = DtSet(4, "t_main", "m")
+    dtSet1.Dimensions <- []
+
+    let pvtSt1 = PivotSetting()
+    pvtSt1.DatasetId <- 4
+    pvtSt1.RowHdr <- [|"rowHdr01"; "rowHdr02"|]
+    pvtSt1.ColHdr <- [|"col1"; "col2"|]
+    pvtSt1.RowOdr <- [|"row1"|]
+    
+    let pvt1 : Pivot = {
+        PivotId = 2
+        DatasetId = 4
+        Setting = pvtSt1
+        DtSet = dtSet1
+    }
+
+    let sqlExp1 = 
+        "SELECT" + " aaa " + "\n" +
+        "FROM t_main m"
+
+    let sqlAct1 = DbUserPg.toSql pvt1
+
+    Assert.AreEqual(sqlExp1, sqlAct1)
+
+
+    

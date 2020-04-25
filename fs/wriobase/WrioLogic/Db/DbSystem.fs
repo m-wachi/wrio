@@ -77,19 +77,6 @@ module DbSystem =
             "where " +
             "    dataset_id = @dataset_id " +
             "order by table_type"
-        (*
-            dtSet = DtSet()
-            dtSet.datasetId = datasetId
-            with conn.cursor() as cur:
-                cur.execute(sql)
-                for row in cur:
-                    tableType = row[2]
-                    if tableType == 1:
-                        dtSet.factTable = row[1]
-                        dtSet.factAbbrev = row[0]
-                    elif row[2] == 2:
-                        dim1 = Dimension()
-        *)
 
         let cmd = new NpgsqlCommand(sql, conn)
         cmd.Parameters.AddWithValue("dataset_id", datasetId) |> ignore
@@ -114,25 +101,9 @@ module DbSystem =
                 where (x.TableType = 2)
                 select (Dimension(x.TableName, x.TableAbbrev, x.JoinSrcCol, x.DstAbbrev, x.JoinDstCol, x.JoinDiv))
             }
-        dtSet.Dimenstions <- Seq.toList dst2s
+        dtSet.Dimensions <- Seq.toList dst2s
 
         dtSet
-
-(*
-def getPivotBase(conn):
-    sql = "select dataset_id, setting_json from m_pivot"
-    jsonStr = ""
-    pvt = Pivot()
-    with conn.cursor() as cur:
-        cur.execute(sql)
-        row = cur.fetchone()
-        jsonStr = row[1]
-        pvt.datasetId = row[0]
-        pvt.settingJson = json.loads(jsonStr)
-        pvt.jsonObj = json.loads(jsonStr)
-
-    return pvt
-*)
 
     let getPivotBase (conn : NpgsqlConnection) (pivotId : int)  = 
         let sql = 

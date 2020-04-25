@@ -44,30 +44,9 @@ def usrPgMyfunc01():
             //rdr.Close()
             ("", 0)
 
-
-(*
-def usrPgMyfunc02(pvt):
-
-    dtSet = pvt.dataset
-    #mainTblName = dtSet.factTable
-    #mainTblAbbrev = dtSet.factAbbrev
-
-    dim1 = dtSet.dimensions[0]
-
-    sSelectClause = "SELECT " + pvt.settingJson["rowhdr"][0]
-    sFromClause = "FROM {0} {1}".format(dtSet.factTable, dtSet.factAbbrev)
-
-    sJoin1 = "  INNER JOIN {0} {1} \n    ON {2}".format(
-        dim1.table, dim1.abbrev, dim1.joinCond)
-    
-    sql = sSelectClause + "\n" + sFromClause + "\n"
-    sql += sJoin1 + "\n"
-    return sql
-*)
-
     let usrPgMyfunc02 (conn : NpgsqlConnection) (pvt: Pivot) =
         let dtSet = pvt.DtSet
-        let dim1 = dtSet.Dimenstions.Head
+        let dim1 = dtSet.Dimensions.Head
 
         //let sSelectClause = "SELECT " + pvt.SettingJson["rowhdr"][0]
         let sSelectClause = "SELECT " + pvt.Setting.RowHdr.[0]
@@ -92,3 +71,18 @@ def usrPgMyfunc02(pvt):
             //rdr.Close()
             ("", 0)
         *)
+
+    let toSql (pvt: Pivot) : string =
+        let dtSet = pvt.DtSet
+        let dim1 = dtSet.Dimensions.Head
+
+        //let sSelectClause = "SELECT " + pvt.SettingJson["rowhdr"][0]
+        let sSelectClause = "SELECT " + pvt.Setting.RowHdr.[0]
+        let sFromClause = String.Format("FROM {0} {1}", dtSet.FactTable, dtSet.FactAbbrev)
+
+        let sJoin1 = String.Format("  INNER JOIN {0} {1} \n    ON {2}", dim1.Table, dim1.Abbrev, dim1.JoinCond)
+    
+        let sql = sSelectClause + "\n" + sFromClause + "\n"
+        let sql2 = sql + sJoin1 + "\n"
+
+        sql2

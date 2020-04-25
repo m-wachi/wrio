@@ -40,7 +40,7 @@ let main argv =
     
     //let ds1 = BsLogic01.getDtSetLogic connStringTest 1
     //let sysConnStr = cfg.GetSysconnStr()
-    let ds1 = BsLogic01.getDtSetLogic 1 cfg
+    let ds1 = BsLogic01.getDtSetLogic 3 cfg
 
     printfn "%s" (JsonSerializer.Serialize(ds1, sOpt))
 
@@ -71,18 +71,6 @@ let main argv =
     printfn "%A" pvt2
 
     *)
-
-    let connStringUsrTest = "Host=localhost;Username=user02_test;Password=user02_test;Database=user02_test"
-
-    let conn2 = new NpgsqlConnection(connStringUsrTest)
-    conn2.Open()
-
-    let rt1 = DbUserPg.usrPgMyfunc01 conn2
-    printfn "rt1"
-    printfn "%A" rt1
-
-    conn2.Close()
-
     let pvtSt1 = PivotSetting()
     pvtSt1.DatasetId <- 3
     pvtSt1.RowHdr <- [|"rowHdr01"; "rowHdr02"|]
@@ -100,6 +88,33 @@ let main argv =
     let pvtSt2 : PivotSetting = JsonSerializer.Deserialize<PivotSetting>(settingJsonStr1, sOpt)
     printfn "settingJsonStr1=%s" settingJsonStr1
     printfn "pvtSt2.RowHdr[0]=%s" (pvtSt2.RowHdr.[0])
+
+    let pvt1 = BsLogic01.getPivotLogic 1 cfg
+
+    printfn "pvt1"
+    printfn "%A" pvt1
+
+    let sql1 = DbUserPg.toSql pvt1
+
+    printfn "toSql pvt1 = [%s]" sql1
+
+    let connStringUsrTest = "Host=localhost;Username=user02_test;Password=user02_test;Database=user02_test"
+
+    let conn2 = new NpgsqlConnection(connStringUsrTest)
+    conn2.Open()
+
+    let rt1 = DbUserPg.usrPgMyfunc01 conn2
+    printfn "rt1"
+    printfn "%A" rt1
+
+    let rt2 = DbUserPg.usrPgMyfunc02 conn2 pvt1
+    printfn "rt2"
+    printfn "%s" rt2
+
+
+    conn2.Close()
+
+
 
 
     0 // return an integer exit code

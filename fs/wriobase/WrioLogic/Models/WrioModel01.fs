@@ -27,7 +27,7 @@ type DtSet(datasetId: int, factTable: string, factAbbrev: string) =
     member this.DatasetId: int = datasetId
     member this.FactTable: string = factTable
     member this.FactAbbrev: string = factAbbrev
-    member this.Dimenstions
+    member this.Dimensions
         with get() : List<Dimension> = dimensions
         and set(v: List<Dimension>) = dimensions <- v
 
