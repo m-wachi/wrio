@@ -50,7 +50,7 @@ def usrPgMyfunc01():
 
         //let sSelectClause = "SELECT " + pvt.SettingJson["rowhdr"][0]
         let sSelectClause = "SELECT " + pvt.Setting.RowHdr.[0]
-        let sFromClause = String.Format("FROM {0} {1}", dtSet.FactTable, dtSet.FactAbbrev)
+        let sFromClause = String.Format(" FROM {0} {1}", dtSet.FactTable, dtSet.FactAbbrev)
 
         let sJoin1 = String.Format("  INNER JOIN {0} {1} \n    ON {2}", dim1.Table, dim1.Abbrev, dim1.JoinCond)
     
@@ -77,8 +77,12 @@ def usrPgMyfunc01():
         let dim1 = dtSet.Dimensions.Head
 
         //let sSelectClause = "SELECT " + pvt.SettingJson["rowhdr"][0]
-        let sSelectClause = "SELECT " + pvt.Setting.RowHdr.[0]
-        let sFromClause = String.Format("FROM {0} {1}", dtSet.FactTable, dtSet.FactAbbrev)
+        //let sSelectClause = "SELECT " + pvt.Setting.RowHdr.[0]
+        let sSelectClause = "SELECT " + 
+                            String.Join(", ", pvt.Setting.RowHdr) + ", \n" + 
+                            String.Join(", ", pvt.Setting.ColHdr)
+
+        let sFromClause = String.Format(" FROM {0} {1}", dtSet.FactTable, dtSet.FactAbbrev)
 
         let sJoin1 = String.Format("  INNER JOIN {0} {1} \n    ON {2}", dim1.Table, dim1.Abbrev, dim1.JoinCond)
     

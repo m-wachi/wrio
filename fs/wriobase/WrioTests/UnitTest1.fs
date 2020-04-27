@@ -102,14 +102,16 @@ let GetPivotLogicTest01 () =
 [<Test>]
 let UserPgToSqlTest01 () =
 
+    let dim1 = Dimension("t_tbl01", "t1", "col0101", "m", "col0001", 1)
+
     let dtSet1 = DtSet(4, "t_main", "m")
-    dtSet1.Dimensions <- []
+    dtSet1.Dimensions <- [dim1]
 
     let pvtSt1 = PivotSetting()
     pvtSt1.DatasetId <- 4
-    pvtSt1.RowHdr <- [|"rowHdr01"; "rowHdr02"|]
-    pvtSt1.ColHdr <- [|"col1"; "col2"|]
-    pvtSt1.RowOdr <- [|"row1"|]
+    pvtSt1.RowHdr <- [|"t1.rowHdr01"; "m.rowHdr02"|]
+    pvtSt1.ColHdr <- [|"m.col1"; "m.col2"|]
+    pvtSt1.RowOdr <- [|"t1.row1"|]
     
     let pvt1 : Pivot = {
         PivotId = 2
@@ -119,8 +121,10 @@ let UserPgToSqlTest01 () =
     }
 
     let sqlExp1 = 
-        "SELECT" + " aaa " + "\n" +
-        "FROM t_main m"
+        "SELECT t1.rowHdr01, m.rowHdr02, \nm.col1, m.col2\n" +
+        " FROM t_main m\n" +
+        "  INNER JOIN t_tbl01 t1 \n" +
+        "    ON m.col0001 = t1.col0101\n"
 
     let sqlAct1 = DbUserPg.toSql pvt1
 
