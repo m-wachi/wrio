@@ -3,6 +3,22 @@ namespace Wrio.Db
 open Npgsql
 open Wrio.Models
 
+type private DsTable = {
+    TableAbbrev: string
+    TableName: string
+    TableType: int
+}
+
+type DbSysDsJoin = {
+    DsTableId: int
+    SeqNo: int; 
+    DatasetId: int
+    JoinSrcCol: string
+    DstAbbrev: string
+    JoinDstCol: string
+    JoinDiv: int
+}
+
 module DbSystem =
  
     //let private connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01; Pooling=True; Maximum Pool Size=5;"
@@ -39,40 +55,100 @@ module DbSystem =
 
         dms
 
-    type private DsTable = {
-        TableAbbrev: string
-        TableName: string
-        TableType: int
-        JoinSrcCol: string
-        DstAbbrev: string
-        JoinDstCol: string
-        JoinDiv: int
-    }
 
-    let private getDsTable (rdr :NpgsqlDataReader) : DsTable =
+    let private getDsTableFromRdr (rdr :NpgsqlDataReader) : DsTable =
         { 
             TableAbbrev = rdr.GetString(0)
             TableName = rdr.GetString(1)
             TableType = rdr.GetInt32(2)
-            JoinSrcCol = if rdr.IsDBNull(3) then "" else rdr.GetString(3)
-            DstAbbrev = if rdr.IsDBNull(4) then "" else rdr.GetString(4)
-            JoinDstCol = if rdr.IsDBNull(5) then "" else rdr.GetString(5)
-            JoinDiv = if rdr.IsDBNull(6) then -1 else rdr.GetInt32(6)
         }
 
     let rec private getDsTables acc (rdr :NpgsqlDataReader) =
         if rdr.Read() then
-            let dst = getDsTable rdr
+            let dst = getDsTableFromRdr rdr
             getDsTables (dst :: acc) rdr
         else
             acc
 
 
-    let getDtSet (conn : NpgsqlConnection) (datasetId : int) : DtSet =
+    let private getDsJoinFromRdr (rdr :NpgsqlDataReader) : DbSysDsJoin =
+        { 
+            DsTableId = rdr.GetInt32(0)
+            SeqNo = rdr.GetInt32(1)
+            DatasetId = rdr.GetInt32(2)
+            JoinSrcCol =  rdr.GetString(3)
+            DstAbbrev =  rdr.GetString(4)
+            JoinDstCol = rdr.GetString(5)
+            JoinDiv = rdr.GetInt32(6)
+        }
+
+    let rec private getDsJoins acc (rdr :NpgsqlDataReader) =
+        if rdr.Read() then
+            let dst = getDsJoinFromRdr rdr
+            getDsJoins (dst :: acc) rdr
+        else
+            acc
+
+
+    let getDsJoin (conn : NpgsqlConnection) (datasetId : int) : DbSysDsJoin list =
+        let sql = 
+            "SELECT " + 
+            "    ds_table_id, seq, dataset_id, " +
+            "    join_src_col, dst_abbrev, join_dst_col, join_div " +
+            "FROM m_ds_join " +
+            "WHERE " +
+            "    dataset_id = @dataset_id " +
+            "ORDER BY ds_table_id, seq "
+
+        let cmd = new NpgsqlCommand(sql, conn)
+        cmd.Parameters.AddWithValue("dataset_id", datasetId) |> ignore
+        let rdr = cmd.ExecuteReader()
+
+        getDsJoins [] rdr
+
+
+
+    // let getDtSet (conn : NpgsqlConnection) (datasetId : int) : DtSet =
+    //     let sql = 
+    //         "select " + 
+    //         "    table_abbrev, table_name, table_type, " +
+    //         "    join_src_col, dst_abbrev, join_dst_col, join_div " +
+    //         "from m_ds_table " +
+    //         "where " +
+    //         "    dataset_id = @dataset_id " +
+    //         "order by table_type"
+
+    //     let cmd = new NpgsqlCommand(sql, conn)
+    //     cmd.Parameters.AddWithValue("dataset_id", datasetId) |> ignore
+    //     let rdr = cmd.ExecuteReader()
+
+    //     let lstDst = getDsTables [] rdr
+
+    //     let dst1s = 
+    //         query {
+    //             for x in lstDst do
+    //             where (x.TableType = 1)
+    //             select x
+    //         }
+
+    //     let dst1 = Seq.head dst1s
+
+    //     let dtSet = DtSet(datasetId, dst1.TableName, dst1.TableAbbrev)
+
+    //     let dst2s = 
+    //         query {
+    //             for x in lstDst do
+    //             where (x.TableType = 2)
+    //             select (Dimension(x.TableName, x.TableAbbrev, x.JoinSrcCol, x.DstAbbrev, x.JoinDstCol, x.JoinDiv))
+    //         }
+    //     dtSet.Dimensions <- Seq.toList dst2s
+
+    //     dtSet
+
+    let getDsTable (conn : NpgsqlConnection) (datasetId : int) : DtSet =
         let sql = 
             "select " + 
-            "    table_abbrev, table_name, table_type, " +
-            "    join_src_col, dst_abbrev, join_dst_col, join_div " +
+            "    table_abbrev, table_name, table_type " +
             "from m_ds_table " +
             "where " +
             "    dataset_id = @dataset_id " +
@@ -95,15 +171,16 @@ module DbSystem =
 
         let dtSet = DtSet(datasetId, dst1.TableName, dst1.TableAbbrev)
 
-        let dst2s = 
-            query {
-                for x in lstDst do
-                where (x.TableType = 2)
-                select (Dimension(x.TableName, x.TableAbbrev, x.JoinSrcCol, x.DstAbbrev, x.JoinDstCol, x.JoinDiv))
-            }
-        dtSet.Dimensions <- Seq.toList dst2s
+        // let dst2s = 
+        //     query {
+        //         for x in lstDst do
+        //         where (x.TableType = 2)
+        //         select (Dimension(x.TableName, x.TableAbbrev, x.JoinSrcCol, x.DstAbbrev, x.JoinDstCol, x.JoinDiv))
+        //     }
+        // dtSet.Dimensions <- Seq.toList dst2s
 
         dtSet
+
 
     let getPivotBase (conn : NpgsqlConnection) (pivotId : int)  = 
         let sql = 

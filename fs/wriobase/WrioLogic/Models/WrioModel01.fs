@@ -2,6 +2,24 @@ namespace Wrio.Models
 
 open System
 
+(*
+type DtJoin(joinSrcCol: string, dstAbbrev: string, joinDstCol: string, 
+        joinDiv: int) =
+    JoinSrcCol: string
+    DstAbbrev: string
+    JoinDstCol: string
+    JoinDiv: int
+*)
+type DsJoin = {
+    //DsTableId: int
+    //SeqNo: int
+    JoinSrcCol: string
+    DstAbbrev: string
+    JoinDstCol: string
+    JoinDiv: int
+}
+
+
 type Dimension(table: string, abbrev: string, joinSrcCol: string, 
                 dstAbbrev: string, joinDstCol: string, joinDiv: int) =
     member this.Table: string = table

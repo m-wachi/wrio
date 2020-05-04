@@ -35,6 +35,28 @@ let main argv =
     
     let connStringTest = "Host=localhost;Username=wrio_test;Password=wrio_test;Database=wrio_test"
  
+    let conn1 = new NpgsqlConnection(connStringTest)
+    conn1.Open()
+
+    let (datasetId1, settingJsonStr1) = DbSystem.getPivotBase conn1 1
+
+    printfn "datasetId1=%d" datasetId1
+    printfn "settingJsonStr1"
+    printfn "%A" settingJsonStr1
+    conn1.Close()
+
+    let conn2 = new NpgsqlConnection(connStringTest)
+    conn2.Open()
+
+    let lstDsJoin1 = DbSystem.getDsJoin conn2 1
+
+    printfn "lstDsJoin1"
+    printfn "%A" lstDsJoin1
+
+    conn2.Close()
+
+
+
     let cfg = MyConfig()
     cfg.SysConnStr <- connStringTest
     
@@ -53,17 +75,6 @@ let main argv =
 
     printfn "%A" sqlExecCnt
     *)
-    let conn1 = new NpgsqlConnection(connStringTest)
-    conn1.Open()
-
-    let (datasetId1, settingJsonStr1) = DbSystem.getPivotBase conn1 1
-
-    printfn "datasetId1=%d" datasetId1
-    printfn "settingJsonStr1"
-    printfn "%A" settingJsonStr1
-
-    conn1.Close()
-
     (*
     let pvt2 = BsLogic01.getPivotLogic 1 cfg
 
@@ -89,7 +100,20 @@ let main argv =
     printfn "settingJsonStr1=%s" settingJsonStr1
     printfn "pvtSt2.RowHdr[0]=%s" (pvtSt2.RowHdr.[0])
 
-    let pvt1 = BsLogic01.getPivotLogic 1 cfg
+    let pvt1Op = BsLogic01.getPivotLogic 1 cfg
+
+    let dtSet1 = DtSet(-1, "", "")
+
+    let dummyPivot1 : Pivot = {
+        PivotId = -1
+        DatasetId = -1
+        Setting = pvtSt1
+        DtSet = dtSet1
+    }
+
+    let pvt1 = match pvt1Op with
+                | Some x -> x
+                | None -> dummyPivot1
 
     printfn "pvt1"
     printfn "%A" pvt1

@@ -8,19 +8,22 @@ module BsLogic01 =
     let hello name =
         sprintf "Hello %s" name
 
+    
     //let getDtSetLogic (connStrSys: string) (datasetId: int) = 
-    let getDtSetLogic (datasetId: int) (cfg: IMyConfig) = 
+    let getDtSetLogic (datasetId: int) (cfg: IMyConfig) : DtSet option = 
         //let dbSysConn = DbSystem.getDbSysConn connStrSys
         let sysConnStr = cfg.GetSysConnStr()
         let dbSysConn = DbSystem.getDbSysConn sysConnStr
         dbSysConn.Open()
-        let dtSet = DbSystem.getDtSet dbSysConn datasetId
+        //let dtSet = DbSystem.getDtSet dbSysConn datasetId
 
         dbSysConn.Close()
         
-        dtSet
+        //dtSet
+        None
 
-    let getPivotLogic (pivotId: int) (cfg: IMyConfig) =
+
+    let getPivotLogic (pivotId: int) (cfg: IMyConfig) : Pivot option =
         let sysConnStr = cfg.GetSysConnStr()
         use dbSysConn = DbSystem.getDbSysConn sysConnStr
         dbSysConn.Open()
@@ -28,13 +31,14 @@ module BsLogic01 =
 
         let (datasetId, sSettingJson) = DbSystem.getPivotBase dbSysConn pivotId
 
-        let dtSet = DbSystem.getDtSet dbSysConn datasetId
+        //let dtSet = DbSystem.getDtSet dbSysConn datasetId
 
         let sOpt = JsonSerializerOptions()
         sOpt.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
 
         let pvtSetting : PivotSetting = JsonSerializer.Deserialize<PivotSetting>(sSettingJson, sOpt)
 
+        (*
         let pvt : Pivot = {
             PivotId = pivotId
             DatasetId = datasetId
@@ -42,3 +46,6 @@ module BsLogic01 =
             DtSet = dtSet
         }
         pvt
+        *)
+
+        None

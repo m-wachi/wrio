@@ -24,6 +24,7 @@ let Setup () =
     //let tx = conn.BeginTransaction()
     execSql dbSysConn "delete from m_ds_table" |> ignore
     execSql dbSysConn "delete from m_pivot" |> ignore
+    execSql dbSysConn "delete from m_ds_join" |> ignore
 
     //tx.Commit()
     dbSysConn.Close()
@@ -48,6 +49,13 @@ let prepData02 (dbSysConn : NpgsqlConnection) =
     execSql dbSysConn sql1 |> ignore
     ()
 
+let prepData03 (dbSysConn : NpgsqlConnection) =
+
+    let sql1 = "insert into m_ds_join values(3, 1, 3, 'item_cd', 'f01', 'item_cd', 2, CURRENT_TIMESTAMP);"
+    //let cmd = new NpgsqlCommand(sql1, conn)
+    //cmd.ExecuteNonQuery()
+    execSql dbSysConn sql1 |> ignore
+    ()
 
 
 [<Test>]
@@ -63,6 +71,16 @@ let Test3 () =
     Assert.AreEqual("Hello John", sRet)
     //prepData01 ()
 
+[<Test>]
+let DbSystemGetDtJoinTest01 () =
+    let dbSysConn = getTestDbSysConn ()
+    dbSysConn.Open()
+    prepData03 (dbSysConn)
+    dbSysConn.Close()
+
+    Assert.Fail("now implementing..")
+
+(*
 [<Test>]
 let Test04 () =
 
@@ -98,6 +116,7 @@ let GetPivotLogicTest01 () =
     Assert.AreEqual(1, pvt.PivotId)
     Assert.AreEqual(3, pvt.DatasetId)
     Assert.AreEqual("d01.item_name", pvt.Setting.RowHdr.[0])
+*)
 
 [<Test>]
 let UserPgToSqlTest01 () =
