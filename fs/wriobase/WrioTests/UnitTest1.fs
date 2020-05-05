@@ -1,4 +1,4 @@
-module WrioTests
+module WrioTests2
 
 open NUnit.Framework
 open Npgsql
@@ -31,27 +31,11 @@ let Setup () =
     ()
 
 
-let prepData01 (dbSysConn : NpgsqlConnection) =
-    let sql1 = "insert into m_ds_table values(3, 'f03', 't_table03', 1, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP)"
-    let sql2 = "insert into m_ds_table values(3, 'd01', 'm_item', 2, 'item_cd', 'f01', 'item_cd', 2, CURRENT_TIMESTAMP)"
-
-    execSql dbSysConn sql1 |> ignore
-    execSql dbSysConn sql2 |> ignore
-
-
 
 let prepData02 (dbSysConn : NpgsqlConnection) =
 
     let sql1 = "insert into m_pivot values(1, 'usr1', 3, '{\"datasetId\": 1234, \"colHdr\": [], \"rowHdr\": [\"d01.item_name\"], \"rowOdr\": [\"d01.item_name\"]}', CURRENT_TIMESTAMP)"
 
-    //let cmd = new NpgsqlCommand(sql1, conn)
-    //cmd.ExecuteNonQuery()
-    execSql dbSysConn sql1 |> ignore
-    ()
-
-let prepData03 (dbSysConn : NpgsqlConnection) =
-
-    let sql1 = "insert into m_ds_join values(3, 1, 3, 'item_cd', 'f01', 'item_cd', 2, CURRENT_TIMESTAMP);"
     //let cmd = new NpgsqlCommand(sql1, conn)
     //cmd.ExecuteNonQuery()
     execSql dbSysConn sql1 |> ignore
@@ -71,14 +55,7 @@ let Test3 () =
     Assert.AreEqual("Hello John", sRet)
     //prepData01 ()
 
-[<Test>]
-let DbSystemGetDtJoinTest01 () =
-    let dbSysConn = getTestDbSysConn ()
-    dbSysConn.Open()
-    prepData03 (dbSysConn)
-    dbSysConn.Close()
 
-    Assert.Fail("now implementing..")
 
 (*
 [<Test>]

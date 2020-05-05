@@ -3,7 +3,7 @@ namespace Wrio.Db
 open Npgsql
 open Wrio.Models
 
-type private DsTable = {
+type DbSysDsTable = {
     TableAbbrev: string
     TableName: string
     TableType: int
@@ -52,23 +52,7 @@ module DbSystem =
                 Dimension("", "", "", "", "", 0)
                 
         //rdr.Close()
-
         dms
-
-
-    let private getDsTableFromRdr (rdr :NpgsqlDataReader) : DsTable =
-        { 
-            TableAbbrev = rdr.GetString(0)
-            TableName = rdr.GetString(1)
-            TableType = rdr.GetInt32(2)
-        }
-
-    let rec private getDsTables acc (rdr :NpgsqlDataReader) =
-        if rdr.Read() then
-            let dst = getDsTableFromRdr rdr
-            getDsTables (dst :: acc) rdr
-        else
-            acc
 
 
     let private getDsJoinFromRdr (rdr :NpgsqlDataReader) : DbSysDsJoin =
@@ -145,7 +129,23 @@ module DbSystem =
 
     //     dtSet
 
-    let getDsTable (conn : NpgsqlConnection) (datasetId : int) : DtSet =
+
+    let private getDsTableFromRdr (rdr :NpgsqlDataReader) : DbSysDsTable =
+        { 
+            TableAbbrev = rdr.GetString(0)
+            TableName = rdr.GetString(1)
+            TableType = rdr.GetInt32(2)
+        }
+
+    let rec private getDsTables acc (rdr :NpgsqlDataReader) =
+        if rdr.Read() then
+            let dst = getDsTableFromRdr rdr
+            getDsTables (dst :: acc) rdr
+        else
+            acc
+
+
+    let getDsTableOld (conn : NpgsqlConnection) (datasetId : int) : DtSet =
         let sql = 
             "select " + 
             "    table_abbrev, table_name, table_type " +
@@ -180,6 +180,21 @@ module DbSystem =
         // dtSet.Dimensions <- Seq.toList dst2s
 
         dtSet
+
+    let getDsTable (conn : NpgsqlConnection) (datasetId : int) : DbSysDsTable list =
+        let sql = 
+            "select " + 
+            "    table_abbrev, table_name, table_type " +
+            "from m_ds_table " +
+            "where " +
+            "    dataset_id = @dataset_id " +
+            "order by table_type"
+
+        let cmd = new NpgsqlCommand(sql, conn)
+        cmd.Parameters.AddWithValue("dataset_id", datasetId) |> ignore
+        let rdr = cmd.ExecuteReader()
+
+        getDsTables [] rdr
 
 
     let getPivotBase (conn : NpgsqlConnection) (pivotId : int)  = 
