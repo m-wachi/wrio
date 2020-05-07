@@ -15,12 +15,40 @@ module BsLogic01 =
         let sysConnStr = cfg.GetSysConnStr()
         let dbSysConn = DbSystem.getDbSysConn sysConnStr
         dbSysConn.Open()
-        //let dtSet = DbSystem.getDtSet dbSysConn datasetId
+        let lstDsTable = DbSystem.getDsTable dbSysConn datasetId
+
+        //
+        // DsTable -> Fact
+        //
+        let dsTbl1s = 
+            query {
+                for x in lstDsTable do
+                where (x.TableType = 1)
+                select x
+            }
+
+        let dst1 = Seq.head dsTbl1s
+        let dtSet = DtSet(datasetId, dst1.TableName, dst1.TableAbbrev)
+
+        //
+        // DsTable -> Dimensions
+        //
+        let sqDim = 
+            query {
+                for x in lstDsTable do
+                where (x.TableType = 2)
+                select (Dimension(x.TableName, x.TableAbbrev, "", "", "", 0))
+            }
+
+        dtSet.Dimensions <- Seq.toArray sqDim
+
+        //dtSet.Dimensions.[0].
+
+        let lstDsJoin = DbSystem.getDsJoin dbSysConn datasetId
 
         dbSysConn.Close()
         
-        //dtSet
-        None
+        Some dtSet
 
 
     let getPivotLogic (pivotId: int) (cfg: IMyConfig) : Pivot option =

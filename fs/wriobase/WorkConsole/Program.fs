@@ -55,8 +55,7 @@ let main argv =
 
     conn2.Close()
 
-
-
+    printfn "BsLogic01.getDtSetLogic"
     let cfg = MyConfig()
     cfg.SysConnStr <- connStringTest
     

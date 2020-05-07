@@ -4,6 +4,7 @@ open Npgsql
 open Wrio.Models
 
 type DbSysDsTable = {
+    DsTableId: int
     TableAbbrev: string
     TableName: string
     TableType: int
@@ -88,7 +89,9 @@ module DbSystem =
         cmd.Parameters.AddWithValue("dataset_id", datasetId) |> ignore
         let rdr = cmd.ExecuteReader()
 
-        getDsJoins [] rdr
+        let lstDsJoin = getDsJoins [] rdr
+        rdr.Close()
+        lstDsJoin
 
 
 
@@ -132,9 +135,10 @@ module DbSystem =
 
     let private getDsTableFromRdr (rdr :NpgsqlDataReader) : DbSysDsTable =
         { 
-            TableAbbrev = rdr.GetString(0)
-            TableName = rdr.GetString(1)
-            TableType = rdr.GetInt32(2)
+            DsTableId = rdr.GetInt32(0)
+            TableAbbrev = rdr.GetString(1)
+            TableName = rdr.GetString(2)
+            TableType = rdr.GetInt32(3)
         }
 
     let rec private getDsTables acc (rdr :NpgsqlDataReader) =
@@ -184,7 +188,7 @@ module DbSystem =
     let getDsTable (conn : NpgsqlConnection) (datasetId : int) : DbSysDsTable list =
         let sql = 
             "select " + 
-            "    table_abbrev, table_name, table_type " +
+            "    ds_table_id, table_abbrev, table_name, table_type " +
             "from m_ds_table " +
             "where " +
             "    dataset_id = @dataset_id " +
@@ -194,8 +198,10 @@ module DbSystem =
         cmd.Parameters.AddWithValue("dataset_id", datasetId) |> ignore
         let rdr = cmd.ExecuteReader()
 
-        getDsTables [] rdr
-
+        //再帰で逆順になっているので戻す
+        let lstDsTbl = getDsTables [] rdr
+        rdr.Close()
+        List.rev lstDsTbl 
 
     let getPivotBase (conn : NpgsqlConnection) (pivotId : int)  = 
         let sql = 

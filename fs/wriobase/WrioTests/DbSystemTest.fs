@@ -79,12 +79,17 @@ module DbSystemTest =
 
         dbSysConn.Close()
 
-        Assert.AreEqual(1, lstDsTable1.Length)
+        Assert.AreEqual(2, lstDsTable1.Length)
 
         let dsTable1 = lstDsTable1.Head
+        Assert.AreEqual(1, dsTable1.DsTableId)
+        Assert.AreEqual("f03", dsTable1.TableAbbrev)
+        Assert.AreEqual("t_table03", dsTable1.TableName)
+        Assert.AreEqual(1, dsTable1.TableType)
 
-        Assert.AreEqual(3, dsTable1.TableAbbrev)
-        Assert.AreEqual(1, dsTable1.TableName)
-        Assert.AreEqual(3, dsTable1.TableType)
+        let dsTable2 = lstDsTable1.Tail.Head
+        Assert.AreEqual(2, dsTable2.DsTableId)
+        Assert.AreEqual("d01", dsTable2.TableAbbrev)
+        Assert.AreEqual("m_item", dsTable2.TableName)
+        Assert.AreEqual(2, dsTable2.TableType)
 
-        Assert.Fail("test 2nd record")

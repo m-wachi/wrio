@@ -41,13 +41,13 @@ class DtSet(object):
         self.dimensions = []
 *)    
 type DtSet(datasetId: int, factTable: string, factAbbrev: string) =
-    let mutable dimensions: List<Dimension> = []
+    let mutable dimensions: Dimension array = [||]
     member this.DatasetId: int = datasetId
     member this.FactTable: string = factTable
     member this.FactAbbrev: string = factAbbrev
     member this.Dimensions
-        with get() : List<Dimension> = dimensions
-        and set(v: List<Dimension>) = dimensions <- v
+        with get() : Dimension array = dimensions
+        and set(v: Dimension array) = dimensions <- v
 
 
 type PivotSetting() = 
