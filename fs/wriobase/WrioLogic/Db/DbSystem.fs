@@ -12,7 +12,7 @@ type DbSysDsTable = {
 
 type DbSysDsJoin = {
     DsTableId: int
-    SeqNo: int; 
+    SeqNo: int
     DatasetId: int
     JoinSrcCol: string
     DstAbbrev: string

@@ -13,6 +13,31 @@ let execSql (conn: NpgsqlConnection) (sql: string) : int =
     cmd.ExecuteNonQuery()
 
 
+//let func02 acc lstDsJoin1 lstDsJoin2 =
+let rec func03 dsTableId (lstDsJoin2: DbSysDsJoin list) =
+    let dsJoin2 = lstDsJoin2.Head
+    if dsTableId = dsJoin2.DsTableId then 
+        let rv = func03 dsTableId (lstDsJoin2.Tail)
+        (dsJoin2 :: (fst rv), (snd rv))
+    else
+        ([], lstDsJoin2)
+
+(*
+let func01 acc (lstDsJoin1: DbSysDsJoin list) (lstDsJoin2 : DbSysDsJoin list) =
+    if List.isEmpty lstDsJoin1 then
+        acc
+    else
+        let dsJoin1 = lstDsJoin1.Head
+        let retfunc03 dsJoin1 lstDsJoin2
+        
+        
+        
+        (dsJoin1, lst1, lst2)
+*)
+
+
+
+
 [<EntryPoint>]
 let main argv =
     printfn "Hello World from F#!"
@@ -65,6 +90,43 @@ let main argv =
 
     printfn "%s" (JsonSerializer.Serialize(ds1, sOpt))
 
+    let dsJoin21: DbSysDsJoin = {
+        DsTableId = 1
+        SeqNo = 1
+        DatasetId = 1
+        JoinSrcCol = "col1"
+        DstAbbrev = "b"
+        JoinDstCol = "col1_1"
+        JoinDiv = 1
+    }
+
+    let dsJoin22 = {
+        DsTableId = 1
+        SeqNo = 2
+        DatasetId = 1
+        JoinSrcCol = "col1"
+        DstAbbrev = "b"
+        JoinDstCol = "col1_1"
+        JoinDiv = 1
+    }
+
+    let dsJoin23 = {
+        DsTableId = 2
+        SeqNo = 1
+        DatasetId = 1
+        JoinSrcCol = "col1"
+        DstAbbrev = "b"
+        JoinDstCol = "col1_1"
+        JoinDiv = 1
+    }
+
+    let lstDsJoin2 = [dsJoin21; dsJoin22; dsJoin23]
+
+    let func03Ret = func03 1 lstDsJoin2
+    printfn "func03Ret"
+    printfn "%A" func03Ret
+
+    
     (*
     let conn1 = new NpgsqlConnection(connStringTest)
     conn1.Open()
@@ -94,7 +156,7 @@ let main argv =
 
     printfn "sPvtSt1=%s" sPvtSt1
 
-
+    (*
     let pvtSt2 : PivotSetting = JsonSerializer.Deserialize<PivotSetting>(settingJsonStr1, sOpt)
     printfn "settingJsonStr1=%s" settingJsonStr1
     printfn "pvtSt2.RowHdr[0]=%s" (pvtSt2.RowHdr.[0])
@@ -136,7 +198,7 @@ let main argv =
 
 
     conn2.Close()
-
+    *)
 
 
 

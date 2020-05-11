@@ -46,7 +46,7 @@ def usrPgMyfunc01():
 
     let usrPgMyfunc02 (conn : NpgsqlConnection) (pvt: Pivot) =
         let dtSet = pvt.DtSet
-        let dim1 = dtSet.Dimensions.Head
+        let dim1 = dtSet.Dimensions.[0]
 
         //let sSelectClause = "SELECT " + pvt.SettingJson["rowhdr"][0]
         let sSelectClause = "SELECT " + pvt.Setting.RowHdr.[0]
@@ -74,7 +74,7 @@ def usrPgMyfunc01():
 
     let toSql (pvt: Pivot) : string =
         let dtSet = pvt.DtSet
-        let dim1 = dtSet.Dimensions.Head
+        let dim1 = dtSet.Dimensions.[0]
 
         //let sSelectClause = "SELECT " + pvt.SettingJson["rowhdr"][0]
         //let sSelectClause = "SELECT " + pvt.Setting.RowHdr.[0]
