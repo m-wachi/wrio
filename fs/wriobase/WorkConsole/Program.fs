@@ -4,6 +4,7 @@ open System
 open System.Text.Json
 open Npgsql
 
+open Wrio.Util
 open Wrio.Models
 open Wrio.Logic
 open Wrio.Db
@@ -58,6 +59,13 @@ let main argv =
     let sJson3 = JsonSerializer.Serialize(dm1, sOpt)
     printfn "%s" sJson3
     
+    let lst1 = [1; 2; 3; 4]
+
+    let pred1 x = x < 3
+
+    let spanRet1 = MyUtil.span pred1 lst1
+    printfn "spanRet1 = %A" spanRet1
+
     let connStringTest = "Host=localhost;Username=wrio_test;Password=wrio_test;Database=wrio_test"
  
     let conn1 = new NpgsqlConnection(connStringTest)
