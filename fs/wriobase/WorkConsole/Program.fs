@@ -14,14 +14,23 @@ let execSql (conn: NpgsqlConnection) (sql: string) : int =
     cmd.ExecuteNonQuery()
 
 
-//let func02 acc lstDsJoin1 lstDsJoin2 =
-let rec func03 dsTableId (lstDsJoin2: DbSysDsJoin list) =
-    let dsJoin2 = lstDsJoin2.Head
-    if dsTableId = dsJoin2.DsTableId then 
-        let rv = func03 dsTableId (lstDsJoin2.Tail)
-        (dsJoin2 :: (fst rv), (snd rv))
+let func02 dsTableId (lstDsJoin2: DbSysDsJoin list) =
+    let pred x = dsTableId = x.DsTableId
+    MyUtil.span pred lstDsJoin2
+
+
+let rec func04 (lstDsTable : DbSysDsTable list) (lstDsJoin : DbSysDsJoin list) =
+    if lstDsTable.IsEmpty then
+        []
     else
-        ([], lstDsJoin2)
+        let dsTable1 = lstDsTable.Head
+        let (lstDsJoin1, lstDsJoin2) = func02 dsTable1.DsTableId lstDsJoin
+        (dsTable1, lstDsJoin1) :: func04 lstDsTable.Tail lstDsJoin2
+
+let pairToDim (pairDsTblJoin : (DbSysDsTable, DbSysDsJoin)) =
+    let (dsTbl, lstDsJoin) = pairDsTblJoin
+    //Dimension(dsTbl.TableName, dsTbl.TableAbbrev, lstDsJoin)
+
 
 (*
 let func01 acc (lstDsJoin1: DbSysDsJoin list) (lstDsJoin2 : DbSysDsJoin list) =
@@ -30,13 +39,9 @@ let func01 acc (lstDsJoin1: DbSysDsJoin list) (lstDsJoin2 : DbSysDsJoin list) =
     else
         let dsJoin1 = lstDsJoin1.Head
         let retfunc03 dsJoin1 lstDsJoin2
-        
-        
-        
+
         (dsJoin1, lst1, lst2)
 *)
-
-
 
 
 [<EntryPoint>]
@@ -99,12 +104,8 @@ let main argv =
     printfn "%s" (JsonSerializer.Serialize(ds1, sOpt))
 
     let dsJoin21: DbSysDsJoin = {
-        DsTableId = 1
-        SeqNo = 1
-        DatasetId = 1
-        JoinSrcCol = "col1"
-        DstAbbrev = "b"
-        JoinDstCol = "col1_1"
+        DsTableId = 1; SeqNo = 1; DatasetId = 1;
+        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1";
         JoinDiv = 1
     }
 
@@ -130,11 +131,24 @@ let main argv =
 
     let lstDsJoin2 = [dsJoin21; dsJoin22; dsJoin23]
 
-    let func03Ret = func03 1 lstDsJoin2
-    printfn "func03Ret"
-    printfn "%A" func03Ret
+    let dsTable21 = {
+        DsTableId = 1; TableAbbrev = "a"; TableName = "t_tbl01"; TableType = 2
+    }
 
+    let dsTable22 = {
+        DsTableId = 2; TableAbbrev = "b"; TableName = "t_tbl02"; TableType = 2
+    }
+
+    let lstDsTable2 = [dsTable21; dsTable22]
+
+    let func02Ret = func02 1 lstDsJoin2
+    printfn "func02Ret"
+    printfn "%A" func02Ret
     
+    let func04Ret = func04 lstDsTable2 lstDsJoin2
+    printfn "func04Ret"
+    printfn "%A" func04Ret
+
     (*
     let conn1 = new NpgsqlConnection(connStringTest)
     conn1.Open()

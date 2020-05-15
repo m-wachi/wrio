@@ -20,17 +20,20 @@ type DsJoin = {
 }
 
 
-type Dimension(table: string, abbrev: string, joinSrcCol: string, 
-                dstAbbrev: string, joinDstCol: string, joinDiv: int) =
+type Dimension(table: string, abbrev: string, joinDiv: int, lstDsJoin: DsJoin array) =
+    // joinSrcCol: string, dstAbbrev: string, joinDstCol: 
     member this.Table: string = table
     member this.Abbrev: string = abbrev
-    member this.JoinSrcCol: string = joinSrcCol
-    member this.DstAbbrev: string = dstAbbrev
-    member this.JoinDstCol: string = joinDstCol
-    member this.JoinDiv: int = joinDiv
+    //member this.JoinSrcCol: string = joinSrcCol //will be deleted
+    //member this.DstAbbrev: string = dstAbbrev   //will be deleted
+    //member this.JoinDstCol: string = joinDstCol //will be deleted
+    // member this.JoinDiv: int = joinDiv          //will be deleted
+    member this.LstDsJoin: DsJoin array = lstDsJoin
+
+
     // 暫定コード
     member this.JoinCond: string = 
-        String.Format("{0}.{1} = {2}.{3}", dstAbbrev, joinDstCol, abbrev, joinSrcCol)
+        String.Format("{0}.{1} = {2}.{3}", lstDsJoin.[0].DstAbbrev, lstDsJoin.[0].JoinDstCol, abbrev, lstDsJoin.[0].JoinSrcCol)
         //"%s.%s = %s.%s" % (row[4], row[5], dim1.abbrev, row[3])
 (*
 class DtSet(object):
