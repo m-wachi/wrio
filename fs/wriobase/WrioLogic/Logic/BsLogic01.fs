@@ -21,11 +21,11 @@ module BsLogic01 =
             let dsTable1 = lstDsTable.Head
             let (lstDsJoin1, lstDsJoin2) = spanByDsTableId dsTable1.DsTableId lstDsJoin
             (dsTable1, lstDsJoin1) :: zipDsTblJoin lstDsTable.Tail lstDsJoin2
-    
+(*    
     let pairToDim (pairDsTblJoin : (DbSysDsTable, DbSysDsJoin)) =
         let (dsTbl, lstDsJoin) = pairDsTblJoin
         //Dimension(dsTbl.TableName, dsTbl.TableAbbrev, "", "", "", 0)
-
+*)
 
     //let getDtSetLogic (connStrSys: string) (datasetId: int) = 
     let getDtSetLogic (datasetId: int) (cfg: IMyConfig) : DtSet option = 
@@ -62,9 +62,9 @@ module BsLogic01 =
 
         //dtSet.Dimensions.[0].
 
-        let lstDsJoin = DbSystem.getDsJoin dbSysConn datasetId
+        //let lstDsJoin = DbSystem.getDsJoin dbSysConn datasetId
 
-        let lstPair = zipDsTblJoin lstDsTbl2 lstDsJoin
+        //let lstPair = zipDsTblJoin lstDsTbl2 lstDsJoin
 
         // let sqDim = 
         //     query {

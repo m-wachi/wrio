@@ -26,11 +26,11 @@ let rec func04 (lstDsTable : DbSysDsTable list) (lstDsJoin : DbSysDsJoin list) =
         let dsTable1 = lstDsTable.Head
         let (lstDsJoin1, lstDsJoin2) = func02 dsTable1.DsTableId lstDsJoin
         (dsTable1, lstDsJoin1) :: func04 lstDsTable.Tail lstDsJoin2
-
+(*
 let pairToDim (pairDsTblJoin : (DbSysDsTable, DbSysDsJoin)) =
     let (dsTbl, lstDsJoin) = pairDsTblJoin
     //Dimension(dsTbl.TableName, dsTbl.TableAbbrev, lstDsJoin)
-
+*)
 
 (*
 let func01 acc (lstDsJoin1: DbSysDsJoin list) (lstDsJoin2 : DbSysDsJoin list) =
@@ -52,7 +52,7 @@ let main argv =
 
     printfn "%s" sJson1
 
-    let dm1 = Dimension("tbl1", "a1", "col1", "d1", "col2", 2)
+    let dm1 = Dimension("tbl1", "a1", 2, [||])
 
     let sJson2 = JsonSerializer.Serialize(dm1)
 

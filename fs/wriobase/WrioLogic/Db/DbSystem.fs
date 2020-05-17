@@ -28,7 +28,7 @@ module DbSystem =
         let conn = new NpgsqlConnection(connString)
         //conn.Open()
         conn
-    
+(*    
     let getDtSetOld (conn : NpgsqlConnection) (datasetId : int) : Dimension =
         let sql = 
             "select " + 
@@ -54,8 +54,8 @@ module DbSystem =
                 
         //rdr.Close()
         dms
-
-
+*)
+(*
     let private getDsJoinFromRdr (rdr :NpgsqlDataReader) : DbSysDsJoin =
         { 
             DsTableId = rdr.GetInt32(0)
@@ -66,6 +66,18 @@ module DbSystem =
             JoinDstCol = rdr.GetString(5)
             JoinDiv = rdr.GetInt32(6)
         }
+*)
+    let private getDsJoinFromRdr (rdr :NpgsqlDataReader) : (int * int * DsJoin) =
+        let dsJoin : DsJoin =
+            {
+                JoinSrcCol =  rdr.GetString(3)
+                DstAbbrev =  rdr.GetString(4)
+                JoinDstCol = rdr.GetString(5)
+                JoinDiv = rdr.GetInt32(6)
+             }
+        let dsTableId = rdr.GetInt32(0)
+        let seqNo = rdr.GetInt32(1)
+        (dsTableId, seqNo, dsJoin)
 
     let rec private getDsJoins acc (rdr :NpgsqlDataReader) =
         if rdr.Read() then
@@ -75,7 +87,7 @@ module DbSystem =
             acc
 
 
-    let getDsJoin (conn : NpgsqlConnection) (datasetId : int) : DbSysDsJoin list =
+    let getDsJoin (conn : NpgsqlConnection) (datasetId : int) : (int * int * DsJoin) list =
         let sql = 
             "SELECT " + 
             "    ds_table_id, seq, dataset_id, " +
