@@ -10,10 +10,18 @@ module BsLogic01 =
     let hello name =
         sprintf "Hello %s" name
 
+    (*
     let spanByDsTableId dsTableId (lstDsJoin: DbSysDsJoin list) =
         let pred x = dsTableId = x.DsTableId
         MyUtil.span pred lstDsJoin
+    *)
+    let spanByDsTableId dsTableId (lstTupleDsJoin: (int * int * DsJoin) list) =
+        let pred (x : (int * int * DsJoin)) = 
+            let (dsTableIdTuple, seqNo, dsJoin) = x
+            dsTableId = dsTableIdTuple
+        MyUtil.span pred lstTupleDsJoin
 
+    (*
     let rec zipDsTblJoin (lstDsTable : DbSysDsTable list) (lstDsJoin : DbSysDsJoin list) =
         if lstDsTable.IsEmpty then
             []
@@ -21,6 +29,7 @@ module BsLogic01 =
             let dsTable1 = lstDsTable.Head
             let (lstDsJoin1, lstDsJoin2) = spanByDsTableId dsTable1.DsTableId lstDsJoin
             (dsTable1, lstDsJoin1) :: zipDsTblJoin lstDsTable.Tail lstDsJoin2
+    *)
 (*    
     let pairToDim (pairDsTblJoin : (DbSysDsTable, DbSysDsJoin)) =
         let (dsTbl, lstDsJoin) = pairDsTblJoin

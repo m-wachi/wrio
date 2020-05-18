@@ -13,12 +13,7 @@ let execSql (conn: NpgsqlConnection) (sql: string) : int =
     let cmd = new NpgsqlCommand(sql, conn)
     cmd.ExecuteNonQuery()
 
-
-let func02 dsTableId (lstDsJoin2: DbSysDsJoin list) =
-    let pred x = dsTableId = x.DsTableId
-    MyUtil.span pred lstDsJoin2
-
-
+(*
 let rec func04 (lstDsTable : DbSysDsTable list) (lstDsJoin : DbSysDsJoin list) =
     if lstDsTable.IsEmpty then
         []
@@ -26,6 +21,7 @@ let rec func04 (lstDsTable : DbSysDsTable list) (lstDsJoin : DbSysDsJoin list) =
         let dsTable1 = lstDsTable.Head
         let (lstDsJoin1, lstDsJoin2) = func02 dsTable1.DsTableId lstDsJoin
         (dsTable1, lstDsJoin1) :: func04 lstDsTable.Tail lstDsJoin2
+*)
 (*
 let pairToDim (pairDsTblJoin : (DbSysDsTable, DbSysDsJoin)) =
     let (dsTbl, lstDsJoin) = pairDsTblJoin
@@ -51,19 +47,79 @@ let main argv =
     let sJson1 = JsonSerializer.Serialize("hey hey")
 
     printfn "%s" sJson1
+(*
+    let dsJoin21: DbSysDsJoin = {
+        DsTableId = 1; SeqNo = 1; DatasetId = 1;
+        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1";
+        JoinDiv = 1
+    }
 
-    let dm1 = Dimension("tbl1", "a1", 2, [||])
+    let dsJoin22 = {
+        DsTableId = 1
+        SeqNo = 2
+        DatasetId = 1
+        JoinSrcCol = "col1"
+        DstAbbrev = "b"
+        JoinDstCol = "col1_1"
+        JoinDiv = 1
+    }
 
-    let sJson2 = JsonSerializer.Serialize(dm1)
+    let dsJoin23 = {
+        DsTableId = 2
+        SeqNo = 1
+        DatasetId = 1
+        JoinSrcCol = "col1"
+        DstAbbrev = "b"
+        JoinDstCol = "col1_1"
+        JoinDiv = 1
+    }
 
-    printfn "%s" sJson2
+    let lstDsJoin2 = [dsJoin21; dsJoin22; dsJoin23]
+*)
+    let dsJoin21: DsJoin = {
+        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"; JoinDiv = 1
+    }
+
+    let dsJoin22 = {
+        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"; JoinDiv = 1
+    }
+
+    let dsJoin23 = {
+        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"; JoinDiv = 1
+    }
+
+    let lstTupleDsJoin2 = [(1, 1, dsJoin21); (1, 2, dsJoin22); (2, 1, dsJoin23)]
+
+    let dsTable21 = {
+        DsTableId = 1; TableAbbrev = "a"; TableName = "t_tbl01"; TableType = 2
+    }
+
+    let dsTable22 = {
+        DsTableId = 2; TableAbbrev = "b"; TableName = "t_tbl02"; TableType = 2
+    }
+
+    let lstDsTable2 = [dsTable21; dsTable22]
+
+    let dsJoin3 = {
+        JoinSrcCol = "col1"
+        DstAbbrev = "b"
+        JoinDstCol = "col1_1"
+        JoinDiv = 1
+    }
+
+    let dm1 = Dimension("tbl1", "a1", 2, [|dsJoin3|])
 
     let sOpt = JsonSerializerOptions()
     sOpt.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
 
     let sJson3 = JsonSerializer.Serialize(dm1, sOpt)
-    printfn "%s" sJson3
+    printfn "sJson3=%s" sJson3
     
+    let dm1a : Dimension = JsonSerializer.Deserialize<Dimension>(sJson3, sOpt)
+
+    printfn "dm1a="
+    printfn "%A" dm1a
+
     let lst1 = [1; 2; 3; 4]
 
     let pred1 x = x < 3
@@ -103,44 +159,7 @@ let main argv =
 
     printfn "%s" (JsonSerializer.Serialize(ds1, sOpt))
 
-    let dsJoin21: DbSysDsJoin = {
-        DsTableId = 1; SeqNo = 1; DatasetId = 1;
-        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1";
-        JoinDiv = 1
-    }
-
-    let dsJoin22 = {
-        DsTableId = 1
-        SeqNo = 2
-        DatasetId = 1
-        JoinSrcCol = "col1"
-        DstAbbrev = "b"
-        JoinDstCol = "col1_1"
-        JoinDiv = 1
-    }
-
-    let dsJoin23 = {
-        DsTableId = 2
-        SeqNo = 1
-        DatasetId = 1
-        JoinSrcCol = "col1"
-        DstAbbrev = "b"
-        JoinDstCol = "col1_1"
-        JoinDiv = 1
-    }
-
-    let lstDsJoin2 = [dsJoin21; dsJoin22; dsJoin23]
-
-    let dsTable21 = {
-        DsTableId = 1; TableAbbrev = "a"; TableName = "t_tbl01"; TableType = 2
-    }
-
-    let dsTable22 = {
-        DsTableId = 2; TableAbbrev = "b"; TableName = "t_tbl02"; TableType = 2
-    }
-
-    let lstDsTable2 = [dsTable21; dsTable22]
-
+    (*
     let func02Ret = func02 1 lstDsJoin2
     printfn "func02Ret"
     printfn "%A" func02Ret
@@ -148,6 +167,11 @@ let main argv =
     let func04Ret = func04 lstDsTable2 lstDsJoin2
     printfn "func04Ret"
     printfn "%A" func04Ret
+    *)
+
+    let sbdtRet1 = BsLogic01.spanByDsTableId 1 lstTupleDsJoin2
+
+    printfn "sbdtRet1=%A" sbdtRet1
 
     (*
     let conn1 = new NpgsqlConnection(connStringTest)

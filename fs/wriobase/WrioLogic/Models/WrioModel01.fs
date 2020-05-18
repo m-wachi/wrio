@@ -21,6 +21,7 @@ type DsJoin = {
 
 
 type Dimension(table: string, abbrev: string, joinDiv: int, lstDsJoin: DsJoin array) =
+    new() = Dimension("", "", 1, [||])
     // joinSrcCol: string, dstAbbrev: string, joinDstCol: 
     member this.Table: string = table
     member this.Abbrev: string = abbrev
