@@ -16,7 +16,7 @@ type DsJoin = {
     JoinSrcCol: string
     DstAbbrev: string
     JoinDstCol: string
-    JoinDiv: int
+    //JoinDiv: int
 }
 
 
@@ -36,6 +36,19 @@ type Dimension(table: string, abbrev: string, joinDiv: int, lstDsJoin: DsJoin ar
     member this.JoinCond: string = 
         String.Format("{0}.{1} = {2}.{3}", lstDsJoin.[0].DstAbbrev, lstDsJoin.[0].JoinDstCol, abbrev, lstDsJoin.[0].JoinSrcCol)
         //"%s.%s = %s.%s" % (row[4], row[5], dim1.abbrev, row[3])
+
+type DsTable(dsTableId: int, table: string, abbrev: string, tableType: int, joinDiv: int, lstDsJoin: DsJoin array) =
+    new() = DsTable(0, "", "", 0, 1, [||])
+    member this.DsTableId: int = dsTableId
+    member this.Table: string = table
+    member this.Abbrev: string = abbrev
+    member this.TableType: int = tableType
+    member this.JoinDiv: int = joinDiv
+    member this.LstDsJoin: DsJoin array = lstDsJoin
+
+
+
+
 (*
 class DtSet(object):
     def __init__(self):

@@ -73,8 +73,8 @@ module DbSystem =
                 JoinSrcCol =  rdr.GetString(3)
                 DstAbbrev =  rdr.GetString(4)
                 JoinDstCol = rdr.GetString(5)
-                JoinDiv = rdr.GetInt32(6)
-             }
+                //JoinDiv = rdr.GetInt32(6)
+            }
         let dsTableId = rdr.GetInt32(0)
         let seqNo = rdr.GetInt32(1)
         (dsTableId, seqNo, dsJoin)
@@ -91,7 +91,7 @@ module DbSystem =
         let sql = 
             "SELECT " + 
             "    ds_table_id, seq, dataset_id, " +
-            "    join_src_col, dst_abbrev, join_dst_col, join_div " +
+            "    join_src_col, dst_abbrev, join_dst_col " +
             "FROM m_ds_join " +
             "WHERE " +
             "    dataset_id = @dataset_id " +
@@ -144,7 +144,7 @@ module DbSystem =
 
     //     dtSet
 
-
+    (*
     let private getDsTableFromRdr (rdr :NpgsqlDataReader) : DbSysDsTable =
         { 
             DsTableId = rdr.GetInt32(0)
@@ -152,6 +152,14 @@ module DbSystem =
             TableName = rdr.GetString(2)
             TableType = rdr.GetInt32(3)
         }
+    *)
+    let private getDsTableFromRdr (rdr :NpgsqlDataReader) : DsTable =
+        let dsTableId = rdr.GetInt32(0)
+        let abbrev = rdr.GetString(1)
+        let tableName = rdr.GetString(2)
+        let tableType = rdr.GetInt32(3)
+        let joinDiv = rdr.GetInt32(4)
+        DsTable(dsTableId, tableName, abbrev, tableType, joinDiv, [||])
 
     let rec private getDsTables acc (rdr :NpgsqlDataReader) =
         if rdr.Read() then
@@ -160,7 +168,7 @@ module DbSystem =
         else
             acc
 
-
+    (*
     let getDsTableOld (conn : NpgsqlConnection) (datasetId : int) : DtSet =
         let sql = 
             "select " + 
@@ -196,11 +204,13 @@ module DbSystem =
         // dtSet.Dimensions <- Seq.toList dst2s
 
         dtSet
+    *)
 
+    (*
     let getDsTable (conn : NpgsqlConnection) (datasetId : int) : DbSysDsTable list =
         let sql = 
             "select " + 
-            "    ds_table_id, table_abbrev, table_name, table_type " +
+            "    ds_table_id, table_abbrev, table_name, table_type, join_div " +
             "from m_ds_table " +
             "where " +
             "    dataset_id = @dataset_id " +
@@ -214,6 +224,26 @@ module DbSystem =
         let lstDsTbl = getDsTables [] rdr
         rdr.Close()
         List.rev lstDsTbl 
+    *)
+
+    let getDsTable (conn : NpgsqlConnection) (datasetId : int) : DsTable list =
+        let sql = 
+            "select " + 
+            "    ds_table_id, table_abbrev, table_name, table_type, join_div " +
+            "from m_ds_table " +
+            "where " +
+            "    dataset_id = @dataset_id " +
+            "order by table_type"
+
+        let cmd = new NpgsqlCommand(sql, conn)
+        cmd.Parameters.AddWithValue("dataset_id", datasetId) |> ignore
+        let rdr = cmd.ExecuteReader()
+
+        //再帰で逆順になっているので戻す
+        let lstDsTbl = getDsTables [] rdr
+        rdr.Close()
+        List.rev lstDsTbl 
+
 
     let getPivotBase (conn : NpgsqlConnection) (pivotId : int)  = 
         let sql = 

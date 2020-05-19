@@ -30,6 +30,7 @@ module BsLogic01 =
             let (lstDsJoin1, lstDsJoin2) = spanByDsTableId dsTable1.DsTableId lstDsJoin
             (dsTable1, lstDsJoin1) :: zipDsTblJoin lstDsTable.Tail lstDsJoin2
     *)
+
 (*    
     let pairToDim (pairDsTblJoin : (DbSysDsTable, DbSysDsJoin)) =
         let (dsTbl, lstDsJoin) = pairDsTblJoin
@@ -53,7 +54,7 @@ module BsLogic01 =
         //     }
         // let dst1 = Seq.head dsTbl1s
         let dst1 = lstDsTable.Head
-        let dtSet = DtSet(datasetId, dst1.TableName, dst1.TableAbbrev)
+        //let dtSet = DtSet(datasetId, dst1.TableName, dst1.TableAbbrev)
 
         //
         // DsTable -> Dimensions
@@ -85,7 +86,8 @@ module BsLogic01 =
 
         dbSysConn.Close()
         
-        Some dtSet
+        //Some dtSet
+        None
 
 
     let getPivotLogic (pivotId: int) (cfg: IMyConfig) : Pivot option =

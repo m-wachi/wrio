@@ -77,34 +77,34 @@ let main argv =
     let lstDsJoin2 = [dsJoin21; dsJoin22; dsJoin23]
 *)
     let dsJoin21: DsJoin = {
-        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"; JoinDiv = 1
+        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"
     }
 
     let dsJoin22 = {
-        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"; JoinDiv = 1
+        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"
     }
 
     let dsJoin23 = {
-        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"; JoinDiv = 1
+        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"
     }
 
     let lstTupleDsJoin2 = [(1, 1, dsJoin21); (1, 2, dsJoin22); (2, 1, dsJoin23)]
 
+    (*
     let dsTable21 = {
-        DsTableId = 1; TableAbbrev = "a"; TableName = "t_tbl01"; TableType = 2
+        DsTableId = 1; TableAbbrev = "a"; TableName = "t_tbl01"; TableType = 2; JoinDiv = 1
     }
 
     let dsTable22 = {
-        DsTableId = 2; TableAbbrev = "b"; TableName = "t_tbl02"; TableType = 2
+        DsTableId = 2; TableAbbrev = "b"; TableName = "t_tbl02"; TableType = 2; JoinDiv = 1
     }
 
     let lstDsTable2 = [dsTable21; dsTable22]
-
+    *)
     let dsJoin3 = {
         JoinSrcCol = "col1"
         DstAbbrev = "b"
         JoinDstCol = "col1_1"
-        JoinDiv = 1
     }
 
     let dm1 = Dimension("tbl1", "a1", 2, [|dsJoin3|])
