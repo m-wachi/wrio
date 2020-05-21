@@ -37,8 +37,8 @@ type Dimension(table: string, abbrev: string, joinDiv: int, lstDsJoin: DsJoin ar
         String.Format("{0}.{1} = {2}.{3}", lstDsJoin.[0].DstAbbrev, lstDsJoin.[0].JoinDstCol, abbrev, lstDsJoin.[0].JoinSrcCol)
         //"%s.%s = %s.%s" % (row[4], row[5], dim1.abbrev, row[3])
 
-type DsTable(dsTableId: int, table: string, abbrev: string, tableType: int, joinDiv: int, pLstDsJoin: DsJoin array) =
-    let mutable lstDsJoin = pLstDsJoin
+type DsTable(dsTableId: int, table: string, abbrev: string, tableType: int, joinDiv: int, pAryDsJoin: DsJoin array) =
+    let mutable aryDsJoin = pAryDsJoin
     new() = DsTable(0, "", "", 0, 1, [||])
     member this.DsTableId: int = dsTableId
     member this.Table: string = table
@@ -46,10 +46,10 @@ type DsTable(dsTableId: int, table: string, abbrev: string, tableType: int, join
     member this.TableType: int = tableType
     member this.JoinDiv: int = joinDiv
     member this.LstDsJoin
-        with get() : DsJoin array = lstDsJoin
-        and set(v: DsJoin array) = lstDsJoin <- v
+        with get() : DsJoin array = aryDsJoin
+        and set(v: DsJoin array) = aryDsJoin <- v
     override this.ToString(): string = 
-        sprintf "DsTable DsTableId=%d, LstDsJoin=%A" dsTableId lstDsJoin
+        sprintf "DsTable DsTableId=%d, LstDsJoin=%A" dsTableId aryDsJoin
 
 (*
 class DtSet(object):
