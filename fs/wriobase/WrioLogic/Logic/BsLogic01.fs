@@ -30,6 +30,18 @@ module BsLogic01 =
             let (lstDsJoin1, lstDsJoin2) = spanByDsTableId dsTable1.DsTableId lstDsJoin
             (dsTable1, lstDsJoin1) :: zipDsTblJoin lstDsTable.Tail lstDsJoin2
     *)
+    let rec zipDsTblJoin (lstDsTable : DsTable list) (lstTplDsJoin : (int * int * DsJoin) list) =
+        let getDsJoinFromTuple lstTplDsJoin3 =
+            let (_, _, lstDsJoin3)= lstTplDsJoin3
+            lstDsJoin3
+
+        if lstDsTable.IsEmpty then
+            []
+        else
+            let dsTable1 = lstDsTable.Head
+            let (lstTplDsJoin1, lstTplDsJoin2) = spanByDsTableId dsTable1.DsTableId lstTplDsJoin
+            dsTable1.LstDsJoin <- List.toArray (List.map getDsJoinFromTuple lstTplDsJoin1)
+            dsTable1 :: zipDsTblJoin lstDsTable.Tail lstTplDsJoin2
 
 (*    
     let pairToDim (pairDsTblJoin : (DbSysDsTable, DbSysDsJoin)) =
@@ -44,6 +56,8 @@ module BsLogic01 =
         let dbSysConn = DbSystem.getDbSysConn sysConnStr
         dbSysConn.Open()
         let lstDsTable = DbSystem.getDsTable dbSysConn datasetId
+
+        let lstTupleDsJoin = DbSystem.getDsJoin dbSysConn datasetId
 
         // DsTable -> Fact
         // let dsTbl1s = 

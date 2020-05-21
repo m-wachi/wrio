@@ -98,9 +98,14 @@ let main argv =
     let dsTable22 = {
         DsTableId = 2; TableAbbrev = "b"; TableName = "t_tbl02"; TableType = 2; JoinDiv = 1
     }
-
     let lstDsTable2 = [dsTable21; dsTable22]
     *)
+    let dsTable21 = DsTable(1, "tbl01", "a", 1, 0, [||])
+    let dsTable22 = DsTable(2, "tbl02", "b", 2, 1, [||])
+
+    let lstDsTable2 = [dsTable21; dsTable22]
+
+
     let dsJoin3 = {
         JoinSrcCol = "col1"
         DstAbbrev = "b"
@@ -126,6 +131,15 @@ let main argv =
 
     let spanRet1 = MyUtil.span pred1 lst1
     printfn "spanRet1 = %A" spanRet1
+
+    let spbdtRet1 = BsLogic01.spanByDsTableId 1 lstTupleDsJoin2
+    printfn "spbdtRet1 = %A" spbdtRet1
+
+    let zdtjRet1 = BsLogic01.zipDsTblJoin lstDsTable2 lstTupleDsJoin2
+    printfn "zdtjRet1 = %A" zdtjRet1
+
+    printfn "zdtjRet1.Head = %A" zdtjRet1.Head
+
 
     let connStringTest = "Host=localhost;Username=wrio_test;Password=wrio_test;Database=wrio_test"
  
