@@ -2,7 +2,7 @@ namespace Wrio.Db
 
 open Npgsql
 open Wrio.Models
-
+(*
 type DbSysDsTable = {
     DsTableId: int
     TableAbbrev: string
@@ -19,15 +19,17 @@ type DbSysDsJoin = {
     JoinDstCol: string
     JoinDiv: int
 }
+*)
 
 module DbSystem =
  
     //let private connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01; Pooling=True; Maximum Pool Size=5;"
-    
+
     let getDbSysConn (connString: string): NpgsqlConnection = 
         let conn = new NpgsqlConnection(connString)
         //conn.Open()
         conn
+
 (*    
     let getDtSetOld (conn : NpgsqlConnection) (datasetId : int) : Dimension =
         let sql = 
@@ -158,7 +160,11 @@ module DbSystem =
         let abbrev = rdr.GetString(1)
         let tableName = rdr.GetString(2)
         let tableType = rdr.GetInt32(3)
-        let joinDiv = rdr.GetInt32(4)
+        let joinDiv = 
+            if rdr.IsDBNull(4) then 
+                -1
+            else
+                rdr.GetInt32(4)
         DsTable(dsTableId, tableName, abbrev, tableType, joinDiv, [||])
 
     let rec private getDsTables acc (rdr :NpgsqlDataReader) =
@@ -204,26 +210,6 @@ module DbSystem =
         // dtSet.Dimensions <- Seq.toList dst2s
 
         dtSet
-    *)
-
-    (*
-    let getDsTable (conn : NpgsqlConnection) (datasetId : int) : DbSysDsTable list =
-        let sql = 
-            "select " + 
-            "    ds_table_id, table_abbrev, table_name, table_type, join_div " +
-            "from m_ds_table " +
-            "where " +
-            "    dataset_id = @dataset_id " +
-            "order by table_type"
-
-        let cmd = new NpgsqlCommand(sql, conn)
-        cmd.Parameters.AddWithValue("dataset_id", datasetId) |> ignore
-        let rdr = cmd.ExecuteReader()
-
-        //再帰で逆順になっているので戻す
-        let lstDsTbl = getDsTables [] rdr
-        rdr.Close()
-        List.rev lstDsTbl 
     *)
 
     let getDsTable (conn : NpgsqlConnection) (datasetId : int) : DsTable list =

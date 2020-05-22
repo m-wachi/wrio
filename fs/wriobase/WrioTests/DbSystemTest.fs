@@ -19,7 +19,7 @@ module DbSystemTest =
 
     let prepSysMDsJoin01 (dbSysConn : NpgsqlConnection) =
 
-        let sql1 = "insert into m_ds_join values(3, 1, 3, 'item_cd', 'f01', 'item_cd', 2, CURRENT_TIMESTAMP);"
+        let sql1 = "insert into m_ds_join values(3, 1, 3, 'item_cd', 'f01', 'item_cd', CURRENT_TIMESTAMP);"
         //let cmd = new NpgsqlCommand(sql1, conn)
         //cmd.ExecuteNonQuery()
         execSql dbSysConn sql1 |> ignore
@@ -27,8 +27,8 @@ module DbSystemTest =
 
 
     let prepMDsTable01 (dbSysConn : NpgsqlConnection) =
-        let sql1 = "insert into m_ds_table values(1, 3, 'f03', 't_table03', 1, CURRENT_TIMESTAMP)"
-        let sql2 = "insert into m_ds_table values(2, 3, 'd01', 'm_item', 2, CURRENT_TIMESTAMP)"
+        let sql1 = "insert into m_ds_table values(1, 3, 'f03', 't_table03', 1, NULL, CURRENT_TIMESTAMP)"
+        let sql2 = "insert into m_ds_table values(2, 3, 'd01', 'm_item', 2, 1, CURRENT_TIMESTAMP)"
 
         execSql dbSysConn sql1 |> ignore
         execSql dbSysConn sql2 |> ignore
@@ -53,21 +53,19 @@ module DbSystemTest =
         dbSysConn.Open()
         prepSysMDsJoin01 (dbSysConn)
 
-        let lstDsJoin1 = DbSystem.getDsJoin dbSysConn 3
+        let lstTplDsJoin1 = DbSystem.getDsJoin dbSysConn 3
 
         dbSysConn.Close()
 
-        Assert.AreEqual(1, lstDsJoin1.Length)
+        Assert.AreEqual(1, lstTplDsJoin1.Length)
 
-        let dsJoin1 = lstDsJoin1.Head
+        let (dsTableId, seqNo, dsJoin1) = lstTplDsJoin1.Head
 
-        Assert.AreEqual(3, dsJoin1.DsTableId)
-        Assert.AreEqual(1, dsJoin1.SeqNo)
-        Assert.AreEqual(3, dsJoin1.DatasetId)
+        Assert.AreEqual(3, dsTableId)
+        Assert.AreEqual(1, seqNo)
         Assert.AreEqual("item_cd", dsJoin1.JoinSrcCol)
         Assert.AreEqual("f01", dsJoin1.DstAbbrev)
         Assert.AreEqual("item_cd", dsJoin1.JoinDstCol)
-        Assert.AreEqual(2, dsJoin1.JoinDiv)
 
     [<Test>]
     let GetDtTableTest01 () =
@@ -83,13 +81,15 @@ module DbSystemTest =
 
         let dsTable1 = lstDsTable1.Head
         Assert.AreEqual(1, dsTable1.DsTableId)
-        Assert.AreEqual("f03", dsTable1.TableAbbrev)
-        Assert.AreEqual("t_table03", dsTable1.TableName)
+        Assert.AreEqual("f03", dsTable1.Abbrev)
+        Assert.AreEqual("t_table03", dsTable1.Table)
         Assert.AreEqual(1, dsTable1.TableType)
+        Assert.AreEqual(-1, dsTable1.JoinDiv)
 
         let dsTable2 = lstDsTable1.Tail.Head
         Assert.AreEqual(2, dsTable2.DsTableId)
-        Assert.AreEqual("d01", dsTable2.TableAbbrev)
-        Assert.AreEqual("m_item", dsTable2.TableName)
+        Assert.AreEqual("d01", dsTable2.Abbrev)
+        Assert.AreEqual("m_item", dsTable2.Table)
         Assert.AreEqual(2, dsTable2.TableType)
+        Assert.AreEqual(1, dsTable2.JoinDiv)
 

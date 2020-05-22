@@ -98,7 +98,7 @@ let GetPivotLogicTest01 () =
 [<Test>]
 let UserPgToSqlTest01 () =
 
-    let dim1 = Dimension("t_tbl01", "t1", "col0101", "m", "col0001", 1)
+    let dim1 = Dimension("t_tbl01", "t1", 1, [||])
 
     let dtSet1 = DtSet(4, "t_main", "m")
     dtSet1.Dimensions <- [|dim1|]
