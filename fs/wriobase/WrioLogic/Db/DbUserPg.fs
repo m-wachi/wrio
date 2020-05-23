@@ -50,10 +50,11 @@ def usrPgMyfunc01():
 
         //let sSelectClause = "SELECT " + pvt.SettingJson["rowhdr"][0]
         let sSelectClause = "SELECT " + pvt.Setting.RowHdr.[0]
-        let sFromClause = String.Format(" FROM {0} {1}", dtSet.FactTable, dtSet.FactAbbrev)
+        let sFromClause = String.Format(" FROM {0} {1}", dtSet.Fact.Table, dtSet.Fact.Abbrev)
 
-        let sJoin1 = String.Format("  INNER JOIN {0} {1} \n    ON {2}", dim1.Table, dim1.Abbrev, dim1.JoinCond)
-    
+        //let sJoin1 = String.Format("  INNER JOIN {0} {1} \n    ON {2}", dim1.Table, dim1.Abbrev, dim1.JoinCond)
+        let sJoin1 = String.Format("  INNER JOIN {0} {1} \n    ON {2}", dim1.Table, dim1.Abbrev, "")
+        
         let sql = sSelectClause + "\n" + sFromClause + "\n"
         let sql2 = sql + sJoin1 + "\n"
 
@@ -72,6 +73,10 @@ def usrPgMyfunc01():
             ("", 0)
         *)
 
+    let joinCondSql (srcAbbrev: string) (dsJoin: DsJoin) : string =
+        //sprintf "%s.%s=%s.%s" dsJoin.DstAbbrev dsJoin.JoinDstCol srcAbbrev dsJoin.JoinSrcCol
+        String.Format("{0}.{1} = {2}.{3}", dsJoin.DstAbbrev, dsJoin.JoinDstCol, srcAbbrev, dsJoin.JoinSrcCol)
+
     let toSql (pvt: Pivot) : string =
         let dtSet = pvt.DtSet
         let dim1 = dtSet.Dimensions.[0]
@@ -82,9 +87,11 @@ def usrPgMyfunc01():
                             String.Join(", ", pvt.Setting.RowHdr) + ", \n" + 
                             String.Join(", ", pvt.Setting.ColHdr)
 
-        let sFromClause = String.Format(" FROM {0} {1}", dtSet.FactTable, dtSet.FactAbbrev)
+        let sFromClause = String.Format(" FROM {0} {1}", dtSet.Fact.Table, dtSet.Fact.Abbrev)
 
-        let sJoin1 = String.Format("  INNER JOIN {0} {1} \n    ON {2}", dim1.Table, dim1.Abbrev, dim1.JoinCond)
+        let sJoinCond = joinCondSql dim1.Abbrev dim1.DsJoins.[0]
+
+        let sJoin1 = String.Format("  INNER JOIN {0} {1} \n    ON {2}", dim1.Table, dim1.Abbrev, sJoinCond)
     
         let sql = sSelectClause + "\n" + sFromClause + "\n"
         let sql2 = sql + sJoin1 + "\n"

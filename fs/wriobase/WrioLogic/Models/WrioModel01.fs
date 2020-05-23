@@ -52,13 +52,7 @@ type DsTable(dsTableId: int, table: string, abbrev: string, tableType: int, join
         sprintf "DsTable DsTableId=%d, LstDsJoin=%A" dsTableId aryDsJoin
 
 (*
-class DtSet(object):
-    def __init__(self):
-        self.datasetId = -1
-        self.factTable = ""
-        self.factAbbrev = ""
-        self.dimensions = []
-*)    
+ 
 type DtSet(datasetId: int, factTable: string, factAbbrev: string) =
     let mutable dimensions: Dimension array = [||]
     new() = DtSet(-1, "", "")
@@ -68,7 +62,15 @@ type DtSet(datasetId: int, factTable: string, factAbbrev: string) =
     member this.Dimensions
         with get() : Dimension array = dimensions
         and set(v: Dimension array) = dimensions <- v
-
+*)
+type DtSet(datasetId: int, fact: DsTable, pDimensions: DsTable array) =
+    let mutable dimensions: DsTable array = pDimensions
+    new() = DtSet(-1, DsTable(), [||])
+    member this.DatasetId: int = datasetId
+    member this.Fact: DsTable = fact
+    member this.Dimensions
+        with get() : DsTable array = dimensions
+        and set(v: DsTable array) = dimensions <- v
 
 type PivotSetting() = 
     let mutable datasetId: int = -1
@@ -125,5 +127,9 @@ type Pivot(datasetId : int, settingJson : string, dtSet : Dataset)
     member this.SettingJson : string = settingJson
     member this.Dataset : DtSet = dtSet
 *)
-
-
+(*
+module ModelFunc =
+    let joinCondSql (srcAbbrev: string) (dsJoin: DsJoin) : string =
+        //sprintf "%s.%s=%s.%s" dsJoin.DstAbbrev dsJoin.JoinDstCol srcAbbrev dsJoin.JoinSrcCol
+        String.Format("{0}.{1}={2}.{3}", dsJoin.DstAbbrev, dsJoin.JoinDstCol, srcAbbrev, dsJoin.JoinSrcCol)
+*)

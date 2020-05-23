@@ -142,7 +142,8 @@ let main argv =
 
 
     let connStringTest = "Host=localhost;Username=wrio_test;Password=wrio_test;Database=wrio_test"
- 
+    let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
+
     let conn1 = new NpgsqlConnection(connStringTest)
     conn1.Open()
 

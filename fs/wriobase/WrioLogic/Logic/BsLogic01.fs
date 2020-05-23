@@ -44,50 +44,16 @@ module BsLogic01 =
         let lstDsTable = DbSystem.getDsTable dbSysConn datasetId
 
         let lstTupleDsJoin = DbSystem.getDsJoin dbSysConn datasetId
+     
+        let fact = lstDsTable.Head
 
-        // DsTable -> Fact
-        // let dsTbl1s = 
-        //     query {
-        //         for x in lstDsTable do
-        //         where (x.TableType = 1)
-        //         select x
-        //     }
-        // let dst1 = Seq.head dsTbl1s
-        let dst1 = lstDsTable.Head
-        //let dtSet = DtSet(datasetId, dst1.TableName, dst1.TableAbbrev)
+        let dimensions = List.toArray <| zipDsTblJoin lstDsTable.Tail lstTupleDsJoin
 
-        //
-        // DsTable -> Dimensions
-        //
-        // let sqDim = 
-        //     query {
-        //         for x in lstDsTable do
-        //         where (x.TableType = 2)
-        //         select (Dimension(x.TableName, x.TableAbbrev, "", "", "", 0))
-        //     }
-        let lstDsTbl2 = lstDsTable.Tail
-
-
-        // dtSet.Dimensions <- Seq.toArray sqDim
-
-        //dtSet.Dimensions.[0].
-
-        //let lstDsJoin = DbSystem.getDsJoin dbSysConn datasetId
-
-        //let lstPair = zipDsTblJoin lstDsTbl2 lstDsJoin
-
-        // let sqDim = 
-        //     query {
-        //         for x in lstPair do
-        //             let 
-        //             select (Dimension(x.TableName, x.TableAbbrev, "", "", "", 0))
-        //     }
-
+        let dtSet = DtSet(datasetId, fact, dimensions)
 
         dbSysConn.Close()
         
-        //Some dtSet
-        None
+        Some dtSet
 
 
     let getPivotLogic (pivotId: int) (cfg: IMyConfig) : Pivot option =

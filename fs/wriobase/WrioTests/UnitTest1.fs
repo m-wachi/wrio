@@ -97,11 +97,14 @@ let GetPivotLogicTest01 () =
 
 [<Test>]
 let UserPgToSqlTest01 () =
+    let dsJoin1: DsJoin = {JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"}
+    let dim1: DsTable = DsTable(2, "tbl02", "b", 1, 1, [|dsJoin1|])
+    let fact: DsTable = DsTable(1, "tbl01", "a", 1, 1, [||])
+    //let dim1 = Dimension("t_tbl01", "t1", 1, [||])
 
-    let dim1 = Dimension("t_tbl01", "t1", 1, [||])
+    let dtSet1 = DtSet(4, fact, [|dim1|])
 
-    let dtSet1 = DtSet(4, "t_main", "m")
-    dtSet1.Dimensions <- [|dim1|]
+    //dtSet1.Dimensions <- [|dim1|]
 
     let pvtSt1 = PivotSetting()
     pvtSt1.DatasetId <- 4

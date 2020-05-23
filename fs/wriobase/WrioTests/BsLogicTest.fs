@@ -100,4 +100,8 @@ module BsLogicTest =
         Assert.AreEqual(1, dsTable3.DsTableId)
         Assert.AreEqual(2, dsTable3.DsJoins.Length)
 
-        Assert.Fail("not impl yet")
+        let dsTable4 = zdtjRet1.Tail.Head
+
+        Assert.AreEqual(2, dsTable4.DsTableId)
+        Assert.AreEqual(1, dsTable4.DsJoins.Length)
+
