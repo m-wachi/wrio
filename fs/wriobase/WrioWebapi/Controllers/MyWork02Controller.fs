@@ -22,7 +22,7 @@ type MyWork02Controller (logger : ILogger<MyWork02Controller>, config : IConfigu
     member __.Get() : MyWork01Model =
         let a = MyWork01Model(1, "model01")
         a
-
+(*
     [<HttpGet("dim1")>]
     member __.GetMyWork01(): Dimension =
         Dimension("dummy1", "a1", "", "", "", 0)
@@ -59,7 +59,8 @@ type MyWork02Controller (logger : ILogger<MyWork02Controller>, config : IConfigu
         conn.Close()
 
         dms
-
+*)
+(*
     [<HttpGet("dim3")>]
     member __.GetMyWork03(): Dimension =
         let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
@@ -71,18 +72,19 @@ type MyWork02Controller (logger : ILogger<MyWork02Controller>, config : IConfigu
         dbSysConn.Close()
 
         dm
-
+*)
     [<HttpGet("dts1")>]
     member __.GetMyWork04(): DtSet =
         let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
 
         let dbSysConn = getDbSysConn connString
         dbSysConn.Open()
-        let dtSet = getDtSet dbSysConn 1
-
+        //let dtSet = getDtSet dbSysConn 1
+        let dtSet = DtSet()
         dbSysConn.Close()
 
         dtSet
+    
 
     [<HttpGet("dts2")>]
     member __.GetMyWork05(): DtSet =
@@ -93,9 +95,11 @@ type MyWork02Controller (logger : ILogger<MyWork02Controller>, config : IConfigu
         let a = config.GetSection("AppConfiguration")
         myCfg.SysConnStr <- a.GetValue("SystemConnectionString")
 
-        let dtSet = BsLogic01.getDtSetLogic 1 myCfg
+        let ret = BsLogic01.getDtSetLogic 1 myCfg
         
-        dtSet
+        match ret with
+            | Some dtSet -> dtSet
+            | _ -> DtSet()
 
     [<HttpGet("conf2")>]
     member __.GetMyWork07(): String =

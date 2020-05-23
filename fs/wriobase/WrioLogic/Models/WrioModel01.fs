@@ -45,7 +45,7 @@ type DsTable(dsTableId: int, table: string, abbrev: string, tableType: int, join
     member this.Abbrev: string = abbrev
     member this.TableType: int = tableType
     member this.JoinDiv: int = joinDiv
-    member this.LstDsJoin
+    member this.DsJoins
         with get() : DsJoin array = aryDsJoin
         and set(v: DsJoin array) = aryDsJoin <- v
     override this.ToString(): string = 
@@ -61,6 +61,7 @@ class DtSet(object):
 *)    
 type DtSet(datasetId: int, factTable: string, factAbbrev: string) =
     let mutable dimensions: Dimension array = [||]
+    new() = DtSet(-1, "", "")
     member this.DatasetId: int = datasetId
     member this.FactTable: string = factTable
     member this.FactAbbrev: string = factAbbrev

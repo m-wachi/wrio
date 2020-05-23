@@ -10,27 +10,13 @@ module BsLogic01 =
     let hello name =
         sprintf "Hello %s" name
 
-    (*
-    let spanByDsTableId dsTableId (lstDsJoin: DbSysDsJoin list) =
-        let pred x = dsTableId = x.DsTableId
-        MyUtil.span pred lstDsJoin
-    *)
     let spanByDsTableId dsTableId (lstTupleDsJoin: (int * int * DsJoin) list) =
         let pred (x : (int * int * DsJoin)) = 
             let (dsTableIdTuple, seqNo, dsJoin) = x
             dsTableId = dsTableIdTuple
         MyUtil.span pred lstTupleDsJoin
 
-    (*
-    let rec zipDsTblJoin (lstDsTable : DbSysDsTable list) (lstDsJoin : DbSysDsJoin list) =
-        if lstDsTable.IsEmpty then
-            []
-        else
-            let dsTable1 = lstDsTable.Head
-            let (lstDsJoin1, lstDsJoin2) = spanByDsTableId dsTable1.DsTableId lstDsJoin
-            (dsTable1, lstDsJoin1) :: zipDsTblJoin lstDsTable.Tail lstDsJoin2
-    *)
-    let rec zipDsTblJoin (lstDsTable : DsTable list) (lstTplDsJoin : (int * int * DsJoin) list) =
+    let rec zipDsTblJoin (lstDsTable : DsTable list) (lstTplDsJoin : (int * int * DsJoin) list) : DsTable list =
         let getDsJoinFromTuple lstTplDsJoin3 =
             let (_, _, lstDsJoin3)= lstTplDsJoin3
             lstDsJoin3
@@ -40,7 +26,7 @@ module BsLogic01 =
         else
             let dsTable1 = lstDsTable.Head
             let (lstTplDsJoin1, lstTplDsJoin2) = spanByDsTableId dsTable1.DsTableId lstTplDsJoin
-            dsTable1.LstDsJoin <- List.toArray (List.map getDsJoinFromTuple lstTplDsJoin1)
+            dsTable1.DsJoins <- List.toArray (List.map getDsJoinFromTuple lstTplDsJoin1)
             dsTable1 :: zipDsTblJoin lstDsTable.Tail lstTplDsJoin2
 
 (*    
