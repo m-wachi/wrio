@@ -18,7 +18,7 @@ module BsLogicTest =
         cmd.ExecuteNonQuery()
 
     let prepSysMDsJoin01 (dbSysConn : NpgsqlConnection) =
-        let sql1 = "insert into m_ds_join values(3, 1, 3, 'item_cd', 'f01', 'item_cd', CURRENT_TIMESTAMP);"
+        let sql1 = "insert into m_ds_join values(2, 1, 3, 'item_cd', 'f01', 'item_cd', CURRENT_TIMESTAMP);"
         execSql dbSysConn sql1 |> ignore
         ()
 
@@ -123,5 +123,6 @@ module BsLogicTest =
                 let dimension = dtSet1.Dimensions.[0]
                 Assert.AreEqual(2, dimension.DsTableId)
                 let sDtSet1 = sprintf "%A" dimension
-                Assert.AreEqual("", sDtSet1)
-        ()
+                let dtJoin1 = dimension.DsJoins.[0]
+                Assert.AreEqual("item_cd", dtJoin1.JoinDstCol)
+
