@@ -2,25 +2,14 @@ namespace Wrio.Models
 
 open System
 
-(*
-type DtJoin(joinSrcCol: string, dstAbbrev: string, joinDstCol: string, 
-        joinDiv: int) =
+type DtJoin = {
     JoinSrcCol: string
     DstAbbrev: string
     JoinDstCol: string
-    JoinDiv: int
-*)
-type DsJoin = {
-    //DsTableId: int
-    //SeqNo: int
-    JoinSrcCol: string
-    DstAbbrev: string
-    JoinDstCol: string
-    //JoinDiv: int
 }
 
-
-type Dimension(table: string, abbrev: string, joinDiv: int, lstDsJoin: DsJoin array) =
+(*
+type Dimension(table: string, abbrev: string, joinDiv: int, lstDsJoin: DtJoin array) =
     new() = Dimension("", "", 1, [||])
     // joinSrcCol: string, dstAbbrev: string, joinDstCol: 
     member this.Table: string = table
@@ -29,15 +18,16 @@ type Dimension(table: string, abbrev: string, joinDiv: int, lstDsJoin: DsJoin ar
     //member this.DstAbbrev: string = dstAbbrev   //will be deleted
     //member this.JoinDstCol: string = joinDstCol //will be deleted
     // member this.JoinDiv: int = joinDiv          //will be deleted
-    member this.LstDsJoin: DsJoin array = lstDsJoin
+    member this.LstDsJoin: DtJoin array = lstDsJoin
 
 
     // 暫定コード
     member this.JoinCond: string = 
         String.Format("{0}.{1} = {2}.{3}", lstDsJoin.[0].DstAbbrev, lstDsJoin.[0].JoinDstCol, abbrev, lstDsJoin.[0].JoinSrcCol)
         //"%s.%s = %s.%s" % (row[4], row[5], dim1.abbrev, row[3])
+*)
 
-type DsTable(dsTableId: int, table: string, abbrev: string, tableType: int, joinDiv: int, pAryDsJoin: DsJoin array) =
+type DsTable(dsTableId: int, table: string, abbrev: string, tableType: int, joinDiv: int, pAryDsJoin: DtJoin array) =
     let mutable aryDsJoin = pAryDsJoin
     new() = DsTable(0, "", "", 0, 1, [||])
     member this.DsTableId: int = dsTableId
@@ -46,23 +36,12 @@ type DsTable(dsTableId: int, table: string, abbrev: string, tableType: int, join
     member this.TableType: int = tableType
     member this.JoinDiv: int = joinDiv
     member this.DsJoins
-        with get() : DsJoin array = aryDsJoin
-        and set(v: DsJoin array) = aryDsJoin <- v
+        with get() : DtJoin array = aryDsJoin
+        and set(v: DtJoin array) = aryDsJoin <- v
     override this.ToString(): string = 
         sprintf "DsTable DsTableId=%d, LstDsJoin=%A" dsTableId aryDsJoin
 
-(*
- 
-type DtSet(datasetId: int, factTable: string, factAbbrev: string) =
-    let mutable dimensions: Dimension array = [||]
-    new() = DtSet(-1, "", "")
-    member this.DatasetId: int = datasetId
-    member this.FactTable: string = factTable
-    member this.FactAbbrev: string = factAbbrev
-    member this.Dimensions
-        with get() : Dimension array = dimensions
-        and set(v: Dimension array) = dimensions <- v
-*)
+
 type DtSet(datasetId: int, fact: DsTable, pDimensions: DsTable array) =
     let mutable dimensions: DsTable array = pDimensions
     new() = DtSet(-1, DsTable(), [||])
@@ -71,8 +50,10 @@ type DtSet(datasetId: int, fact: DsTable, pDimensions: DsTable array) =
     member this.Dimensions
         with get() : DsTable array = dimensions
         and set(v: DsTable array) = dimensions <- v
-
-type PivotSetting() = 
+    override this.ToString(): string =
+        sprintf "DtSet datasetId=%d, fact=%A, dimensions=%A" datasetId fact dimensions
+        
+type PivotSetting() =  
     let mutable datasetId: int = -1
     let mutable colHdr : string array = [||]
     let mutable rowHdr : string array = [||] //Array.empty<string>

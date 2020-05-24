@@ -11,8 +11,8 @@ module DbUserPgTest =
     let connStrDbSys = "Host=localhost;Username=wrio_test;Password=wrio_test;Database=wrio_test"
 
     let getDsJoinData01() = 
-        let dsJoin1: DsJoin = {JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"}
-        dsJoin1
+        let dtJoin1: DtJoin = {JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"}
+        dtJoin1
 
 
     [<Test>]
@@ -25,8 +25,8 @@ module DbUserPgTest =
  
     [<Test>]
     let UserPgToSqlTest01 () =
-        let dsJoin1: DsJoin = {JoinSrcCol = "col0101"; DstAbbrev = "m"; JoinDstCol = "col0001"}
-        let dim1: DsTable = DsTable(2, "t_tbl01", "t1", 1, 1, [|dsJoin1|])
+        let dtJoin1: DtJoin = {JoinSrcCol = "col0101"; DstAbbrev = "m"; JoinDstCol = "col0001"}
+        let dim1: DsTable = DsTable(2, "t_tbl01", "t1", 1, 1, [|dtJoin1|])
         let fact: DsTable = DsTable(1, "t_main", "m", 1, 1, [||])
         //let dim1 = Dimension("t_tbl01", "t1", 1, [||])
 

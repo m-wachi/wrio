@@ -10,15 +10,15 @@ module BsLogic01 =
     let hello name =
         sprintf "Hello %s" name
 
-    let spanByDsTableId dsTableId (lstTupleDsJoin: (int * int * DsJoin) list) =
-        let pred (x : (int * int * DsJoin)) = 
+    let spanByDsTableId dsTableId (lstTupleDtJoin: (int * int * DtJoin) list) =
+        let pred (x : (int * int * DtJoin)) = 
             let (dsTableIdTuple, seqNo, dsJoin) = x
             dsTableId = dsTableIdTuple
-        MyUtil.span pred lstTupleDsJoin
+        MyUtil.span pred lstTupleDtJoin
 
-    let rec zipDsTblJoin (lstDsTable : DsTable list) (lstTplDsJoin : (int * int * DsJoin) list) : DsTable list =
-        let getDsJoinFromTuple lstTplDsJoin3 =
-            let (_, _, lstDsJoin3)= lstTplDsJoin3
+    let rec zipDsTblJoin (lstDsTable : DsTable list) (lstTplDsJoin : (int * int * DtJoin) list) : DsTable list =
+        let getDsJoinFromTuple lstTplDtJoin3 =
+            let (_, _, lstDsJoin3)= lstTplDtJoin3
             lstDsJoin3
 
         if lstDsTable.IsEmpty then

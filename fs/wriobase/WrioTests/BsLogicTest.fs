@@ -18,13 +18,9 @@ module BsLogicTest =
         cmd.ExecuteNonQuery()
 
     let prepSysMDsJoin01 (dbSysConn : NpgsqlConnection) =
-
         let sql1 = "insert into m_ds_join values(3, 1, 3, 'item_cd', 'f01', 'item_cd', CURRENT_TIMESTAMP);"
-        //let cmd = new NpgsqlCommand(sql1, conn)
-        //cmd.ExecuteNonQuery()
         execSql dbSysConn sql1 |> ignore
         ()
-
 
     let prepMDsTable01 (dbSysConn : NpgsqlConnection) =
         let sql1 = "insert into m_ds_table values(1, 3, 'f03', 't_table03', 1, NULL, CURRENT_TIMESTAMP)"
@@ -32,9 +28,9 @@ module BsLogicTest =
 
         execSql dbSysConn sql1 |> ignore
         execSql dbSysConn sql2 |> ignore    
-    
+
     let prepLstTplData01 =
-        let dsJoin21: DsJoin = {
+        let dsJoin21: DtJoin = {
             JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"
         }
         let dsJoin22 = {
@@ -105,3 +101,27 @@ module BsLogicTest =
         Assert.AreEqual(2, dsTable4.DsTableId)
         Assert.AreEqual(1, dsTable4.DsJoins.Length)
 
+    [<Test>]
+    let getDtSetLogicTest01() =
+        let conn = getTestDbSysConn()
+        conn.Open()
+        prepSysMDsJoin01(conn) |> ignore
+        prepMDsTable01(conn) |> ignore
+        conn.Close()
+
+        let cfg = MyConfig()
+        cfg.SysConnStr <- connStrDbSys
+    
+        let ret: DtSet option = BsLogic01.getDtSetLogic 3 cfg
+
+        match ret with
+            | None -> Assert.Fail("return None Error.")
+            | Some dtSet1 -> 
+                Assert.AreEqual(3, dtSet1.DatasetId)
+                let fact = dtSet1.Fact
+                Assert.AreEqual(1, fact.DsTableId)
+                let dimension = dtSet1.Dimensions.[0]
+                Assert.AreEqual(2, dimension.DsTableId)
+                let sDtSet1 = sprintf "%A" dimension
+                Assert.AreEqual("", sDtSet1)
+        ()

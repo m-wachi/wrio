@@ -55,8 +55,6 @@ let Test3 () =
     Assert.AreEqual("Hello John", sRet)
     //prepData01 ()
 
-
-
 (*
 [<Test>]
 let Test04 () =
@@ -94,40 +92,4 @@ let GetPivotLogicTest01 () =
     Assert.AreEqual(3, pvt.DatasetId)
     Assert.AreEqual("d01.item_name", pvt.Setting.RowHdr.[0])
 *)
-
-[<Test>]
-let UserPgToSqlTest01 () =
-    let dsJoin1: DsJoin = {JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"}
-    let dim1: DsTable = DsTable(2, "tbl02", "b", 1, 1, [|dsJoin1|])
-    let fact: DsTable = DsTable(1, "tbl01", "a", 1, 1, [||])
-    //let dim1 = Dimension("t_tbl01", "t1", 1, [||])
-
-    let dtSet1 = DtSet(4, fact, [|dim1|])
-
-    //dtSet1.Dimensions <- [|dim1|]
-
-    let pvtSt1 = PivotSetting()
-    pvtSt1.DatasetId <- 4
-    pvtSt1.RowHdr <- [|"t1.rowHdr01"; "m.rowHdr02"|]
-    pvtSt1.ColHdr <- [|"m.col1"; "m.col2"|]
-    pvtSt1.RowOdr <- [|"t1.row1"|]
-    
-    let pvt1 : Pivot = {
-        PivotId = 2
-        DatasetId = 4
-        Setting = pvtSt1
-        DtSet = dtSet1
-    }
-
-    let sqlExp1 = 
-        "SELECT t1.rowHdr01, m.rowHdr02, \nm.col1, m.col2\n" +
-        " FROM t_main m\n" +
-        "  INNER JOIN t_tbl01 t1 \n" +
-        "    ON m.col0001 = t1.col0101\n"
-
-    let sqlAct1 = DbUserPg.toSql pvt1
-
-    Assert.AreEqual(sqlExp1, sqlAct1)
-
-
     

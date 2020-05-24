@@ -73,9 +73,9 @@ def usrPgMyfunc01():
             ("", 0)
         *)
 
-    let joinCondSql (srcAbbrev: string) (dsJoin: DsJoin) : string =
+    let joinCondSql (srcAbbrev: string) (dtJoin: DtJoin) : string =
         //sprintf "%s.%s=%s.%s" dsJoin.DstAbbrev dsJoin.JoinDstCol srcAbbrev dsJoin.JoinSrcCol
-        String.Format("{0}.{1} = {2}.{3}", dsJoin.DstAbbrev, dsJoin.JoinDstCol, srcAbbrev, dsJoin.JoinSrcCol)
+        String.Format("{0}.{1} = {2}.{3}", dtJoin.DstAbbrev, dtJoin.JoinDstCol, srcAbbrev, dtJoin.JoinSrcCol)
 
     let toSql (pvt: Pivot) : string =
         let dtSet = pvt.DtSet

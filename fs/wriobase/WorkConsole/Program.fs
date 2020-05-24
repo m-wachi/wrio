@@ -76,7 +76,7 @@ let main argv =
 
     let lstDsJoin2 = [dsJoin21; dsJoin22; dsJoin23]
 *)
-    let dsJoin21: DsJoin = {
+    let dsJoin21: DtJoin = {
         JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"
     }
 
@@ -112,10 +112,11 @@ let main argv =
         JoinDstCol = "col1_1"
     }
 
-    let dm1 = Dimension("tbl1", "a1", 2, [|dsJoin3|])
-
     let sOpt = JsonSerializerOptions()
     sOpt.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
+
+(*
+    let dm1 = Dimension("tbl1", "a1", 2, [|dsJoin3|])
 
     let sJson3 = JsonSerializer.Serialize(dm1, sOpt)
     printfn "sJson3=%s" sJson3
@@ -124,7 +125,7 @@ let main argv =
 
     printfn "dm1a="
     printfn "%A" dm1a
-
+*)
     let lst1 = [1; 2; 3; 4]
 
     let pred1 x = x < 3
@@ -155,8 +156,8 @@ let main argv =
     conn1.Close()
 
     let conn2 = new NpgsqlConnection(connStringTest)
-    conn2.Open()
 
+    conn2.Open()
     let lstDsJoin1 = DbSystem.getDsJoin conn2 1
 
     printfn "lstDsJoin1"
@@ -166,11 +167,11 @@ let main argv =
 
     printfn "BsLogic01.getDtSetLogic"
     let cfg = MyConfig()
-    cfg.SysConnStr <- connStringTest
+    cfg.SysConnStr <- connString
     
     //let ds1 = BsLogic01.getDtSetLogic connStringTest 1
     //let sysConnStr = cfg.GetSysconnStr()
-    let ds1 = BsLogic01.getDtSetLogic 3 cfg
+    let ds1 = BsLogic01.getDtSetLogic 1 cfg
 
     printfn "%s" (JsonSerializer.Serialize(ds1, sOpt))
 

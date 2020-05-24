@@ -69,8 +69,8 @@ module DbSystem =
             JoinDiv = rdr.GetInt32(6)
         }
 *)
-    let private getDsJoinFromRdr (rdr :NpgsqlDataReader) : (int * int * DsJoin) =
-        let dsJoin : DsJoin =
+    let private getDsJoinFromRdr (rdr :NpgsqlDataReader) : (int * int * DtJoin) =
+        let dsJoin : DtJoin =
             {
                 JoinSrcCol =  rdr.GetString(3)
                 DstAbbrev =  rdr.GetString(4)
@@ -89,7 +89,7 @@ module DbSystem =
             acc
 
 
-    let getDsJoin (conn : NpgsqlConnection) (datasetId : int) : (int * int * DsJoin) list =
+    let getDsJoin (conn : NpgsqlConnection) (datasetId : int) : (int * int * DtJoin) list =
         let sql = 
             "SELECT " + 
             "    ds_table_id, seq, dataset_id, " +
