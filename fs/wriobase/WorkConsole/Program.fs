@@ -145,7 +145,7 @@ let main argv =
     let connStringTest = "Host=localhost;Username=wrio_test;Password=wrio_test;Database=wrio_test"
     let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
 
-    let conn1 = new NpgsqlConnection(connStringTest)
+    let conn1 = new NpgsqlConnection(connString)
     conn1.Open()
 
     let (datasetId1, settingJsonStr1) = DbSystem.getPivotBase conn1 1
@@ -153,6 +153,9 @@ let main argv =
     printfn "datasetId1=%d" datasetId1
     printfn "settingJsonStr1"
     printfn "%A" settingJsonStr1
+
+    let pvtSt3 : PivotSetting = JsonSerializer.Deserialize<PivotSetting>(settingJsonStr1, sOpt)
+    printfn "pvtSt3=%A" pvtSt3
     conn1.Close()
 
     let conn2 = new NpgsqlConnection(connStringTest)
@@ -218,23 +221,22 @@ let main argv =
 
     printfn "sPvtSt1=%s" sPvtSt1
 
-    (*
-    let pvtSt2 : PivotSetting = JsonSerializer.Deserialize<PivotSetting>(settingJsonStr1, sOpt)
-    printfn "settingJsonStr1=%s" settingJsonStr1
+    let pvtSt2 : PivotSetting = JsonSerializer.Deserialize<PivotSetting>(sPvtSt1, sOpt)
+    
     printfn "pvtSt2.RowHdr[0]=%s" (pvtSt2.RowHdr.[0])
 
-    let pvt1Op = BsLogic01.getPivotLogic 1 cfg
+    let optPvt1 = BsLogic01.getPivotLogic 1 cfg
 
-    let dtSet1 = DtSet(-1, "", "")
+    printfn "optPvt1=%A" optPvt1
 
     let dummyPivot1 : Pivot = {
         PivotId = -1
         DatasetId = -1
         Setting = pvtSt1
-        DtSet = dtSet1
+        DtSet = DtSet()
     }
 
-    let pvt1 = match pvt1Op with
+    let pvt1 = match optPvt1 with
                 | Some x -> x
                 | None -> dummyPivot1
 
@@ -244,6 +246,8 @@ let main argv =
     let sql1 = DbUserPg.toSql pvt1
 
     printfn "toSql pvt1 = [%s]" sql1
+
+    (*
 
     let connStringUsrTest = "Host=localhost;Username=user02_test;Password=user02_test;Database=user02_test"
 

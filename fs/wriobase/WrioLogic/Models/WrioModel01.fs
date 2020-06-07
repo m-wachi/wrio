@@ -39,7 +39,7 @@ type DsTable(dsTableId: int, table: string, abbrev: string, tableType: int, join
         with get() : DtJoin array = aryDsJoin
         and set(v: DtJoin array) = aryDsJoin <- v
     override this.ToString(): string = 
-        sprintf "DsTable DsTableId=%d, LstDsJoin=%A" dsTableId aryDsJoin
+        sprintf "DsTable { DsTableId=%d, LstDsJoin=%A }" dsTableId aryDsJoin
 
 
 type DtSet(datasetId: int, fact: DsTable, pDimensions: DsTable array) =
@@ -74,6 +74,9 @@ type PivotSetting() =
     member this.ColOdr 
         with get() : string array = colOdr
         and set(v : string array) = colOdr <- v
+
+    override this.ToString(): string =
+        sprintf "PivotSetting { datasetId=%d, colHdr=%A, rowHdr=%A, rowOdr=%A, colOdr=%A }" datasetId colHdr rowHdr rowOdr colOdr
 
 
 (*

@@ -1,6 +1,7 @@
 namespace Wrio.Logic
 
 open System.Text.Json
+open Npgsql
 
 open Wrio.Util
 open Wrio.Models
@@ -35,12 +36,8 @@ module BsLogic01 =
         //Dimension(dsTbl.TableName, dsTbl.TableAbbrev, "", "", "", 0)
 *)
 
-    //let getDtSetLogic (connStrSys: string) (datasetId: int) = 
-    let getDtSetLogic (datasetId: int) (cfg: IMyConfig) : DtSet option = 
-        //let dbSysConn = DbSystem.getDbSysConn connStrSys
-        let sysConnStr = cfg.GetSysConnStr()
-        let dbSysConn = DbSystem.getDbSysConn sysConnStr
-        dbSysConn.Open()
+
+    let getDtSetBase (dbSysConn: NpgsqlConnection) (datasetId: int) : DtSet option  =
         let lstDsTable = DbSystem.getDsTable dbSysConn datasetId
 
         let lstTupleDsJoin = DbSystem.getDsJoin dbSysConn datasetId
@@ -51,9 +48,31 @@ module BsLogic01 =
 
         let dtSet = DtSet(datasetId, fact, dimensions)
 
+        Some dtSet
+
+
+    //let getDtSetLogic (connStrSys: string) (datasetId: int) = 
+    let getDtSetLogic (datasetId: int) (cfg: IMyConfig) : DtSet option = 
+        //let dbSysConn = DbSystem.getDbSysConn connStrSys
+        let sysConnStr = cfg.GetSysConnStr()
+        let dbSysConn = DbSystem.getDbSysConn sysConnStr
+        dbSysConn.Open()
+        (*
+        let lstDsTable = DbSystem.getDsTable dbSysConn datasetId
+
+        let lstTupleDsJoin = DbSystem.getDsJoin dbSysConn datasetId
+     
+        let fact = lstDsTable.Head
+
+        let dimensions = List.toArray <| zipDsTblJoin lstDsTable.Tail lstTupleDsJoin
+
+        let dtSet = DtSet(datasetId, fact, dimensions)
+        *)
+        let optDtSet = getDtSetBase dbSysConn datasetId
+        
         dbSysConn.Close()
         
-        Some dtSet
+        optDtSet
 
 
     let getPivotLogic (pivotId: int) (cfg: IMyConfig) : Pivot option =
@@ -65,6 +84,7 @@ module BsLogic01 =
         let (datasetId, sSettingJson) = DbSystem.getPivotBase dbSysConn pivotId
 
         //let dtSet = DbSystem.getDtSet dbSysConn datasetId
+        let optDtset = getDtSetBase dbSysConn datasetId
 
         let sOpt = JsonSerializerOptions()
         sOpt.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
@@ -81,4 +101,16 @@ module BsLogic01 =
         pvt
         *)
 
-        None
+        let optPvt = 
+            match optDtset with
+                | Some dtSet -> 
+                    let pvt : Pivot = {
+                        PivotId = pivotId
+                        DatasetId = datasetId
+                        Setting = pvtSetting
+                        DtSet = dtSet
+                    }
+                    Some pvt
+                | None -> None
+
+        optPvt
