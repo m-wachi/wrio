@@ -97,3 +97,24 @@ def usrPgMyfunc01():
         let sql2 = sql + sJoin1 + "\n"
 
         sql2
+
+
+    
+
+
+    (*
+    let getPivotData (conn : NpgsqlConnection) (pvt: Pivot) =
+        let sql = toSql pvt
+
+        let cmd = new NpgsqlCommand(sql, conn)
+            //cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
+        use rdr = cmd.ExecuteReader()   // use = c# using
+
+        if rdr.Read() then
+            let itemName = rdr.GetString(0)
+            let nofSales = rdr.GetInt32(1)
+            (itemName, nofSales)
+        else
+            //rdr.Close()
+            ("", 0)
+    *)

@@ -247,24 +247,72 @@ let main argv =
 
     printfn "toSql pvt1 = [%s]" sql1
 
-    (*
-
     let connStringUsrTest = "Host=localhost;Username=user02_test;Password=user02_test;Database=user02_test"
 
-    let conn2 = new NpgsqlConnection(connStringUsrTest)
-    conn2.Open()
+    let usrConn2 = new NpgsqlConnection(connStringUsrTest)
+    usrConn2.Open()
 
-    let rt1 = DbUserPg.usrPgMyfunc01 conn2
+    let sqlUsr2 = ""
+
+    let usrCmd = new NpgsqlCommand(sqlUsr2, usrConn2)
+        //cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
+    use rdr = usrCmd.ExecuteReader()   // use = c# using
+
+    (*
+    グリッドデータ返却の方法
+    colNames: string array
+    values: (object array) array
+    *)
+    let reco1 = 
+        if rdr.Read() then
+            let recCnt = rdr.FieldCount
+            let rec func05 colNum = 
+                if colNum < 0 then
+                    []
+                else
+                    let x = rdr.getName(colNum)
+                    x :: func05 (colNum - 1) 
+
+            let fieldNames = func05 (recCnt - 1)
+
+            (*
+            let rec getVal colNum =
+                if colNum < 0 then
+                    []
+                else
+                    let x = rdr.GetValue(colNum)
+                    x :: getVal (colNum - 1)
+
+            let rowVals = getval (recCnt - 1)
+            *)
+            let 
+            for i = 0 to recCnt - 1 do
+                rdr.GetValue(i)
+
+
+            rdr.GetName
+            rdr.GetValue
+
+
+        //let itemName = rdr.GetString(0)
+        //let nofSales = rdr.GetInt32(1)
+        //(itemName, nofSales)
+        else
+            //rdr.Close()
+
+
+    (*
+    let rt1 = DbUserPg.usrPgMyfunc01 usrConn2
     printfn "rt1"
     printfn "%A" rt1
 
-    let rt2 = DbUserPg.usrPgMyfunc02 conn2 pvt1
+    let rt2 = DbUserPg.usrPgMyfunc02 usrConn2 pvt1
     printfn "rt2"
     printfn "%s" rt2
-
-
-    conn2.Close()
     *)
+
+    usrConn2.Close()
+    
 
 
 
