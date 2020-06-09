@@ -79,26 +79,6 @@ type PivotSetting() =
         sprintf "PivotSetting { datasetId=%d, colHdr=%A, rowHdr=%A, rowOdr=%A, colOdr=%A }" datasetId colHdr rowHdr rowOdr colOdr
 
 
-(*
-class Pivot(object):
-    def __init__(self):
-        self.datasetId = -1
-        self.settingJson = None
-        self.dataset = None
-        self.jsonObj = None  #will delete
-
-    def getJSONObj(self):
-        jo = {"datasetId": self.datasetId,
-              "settingJson": self.settingJson,
-              "dataset": self.dataset.getJSONObj()}
-        return jo
-
-    def __str__(self):
-        s = "datasetId: " + str(self.datasetId)
-        s += (", settingJson: " + json.dumps(self.settingJson))
-        return s
-*)
-
 type Pivot = {
     PivotId : int
     DatasetId : int
@@ -111,9 +91,26 @@ type Pivot(datasetId : int, settingJson : string, dtSet : Dataset)
     member this.SettingJson : string = settingJson
     member this.Dataset : DtSet = dtSet
 *)
+
+(*
+    グリッドデータ返却の方法
+    colNames: string array
+    rows: (object array) array
+    *)
+type PivotData() = 
+    let mutable colNames: string array = [||]
+    let mutable rows: (obj array) array = [||]
+    member this.ColNames
+        with get() = colNames
+        and set(v) = colNames <- v
+    member this.Rows
+        with get() = rows
+        and set(v) = rows <- v
+
 (*
 module ModelFunc =
     let joinCondSql (srcAbbrev: string) (dsJoin: DsJoin) : string =
         //sprintf "%s.%s=%s.%s" dsJoin.DstAbbrev dsJoin.JoinDstCol srcAbbrev dsJoin.JoinSrcCol
         String.Format("{0}.{1}={2}.{3}", dsJoin.DstAbbrev, dsJoin.JoinDstCol, srcAbbrev, dsJoin.JoinSrcCol)
 *)
+

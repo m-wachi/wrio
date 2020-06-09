@@ -1,6 +1,7 @@
 ﻿// Learn more about F# at http://fsharp.org
 
 open System
+open System.Data.Common
 open System.Text.Json
 open Npgsql
 
@@ -258,47 +259,26 @@ let main argv =
         //cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
     use rdr = usrCmd.ExecuteReader()   // use = c# using
 
-    (*
-    グリッドデータ返却の方法
-    colNames: string array
-    values: (object array) array
-    *)
-    let reco1 = 
-        if rdr.Read() then
-            let recCnt = rdr.FieldCount
-            let rec func05 colNum = 
-                if colNum < 0 then
-                    []
-                else
-                    let x = rdr.getName(colNum)
-                    x :: func05 (colNum - 1) 
+    let getRowVals (rdr: DbDataReader) colCount =
+        let rowVals : obj array = Array.zeroCreate colCount
+        for i = 0 to colCount - 1 do
+            rowVals.[i] <- rdr.GetValue(i)
+        rowVals
 
-            let fieldNames = func05 (recCnt - 1)
+    let getColNames (rdr: DbDataReader) =
+        let colCount = rdr.FieldCount
+        let colNames: string array = Array.zeroCreate colCount
+        for i = 0 to colCount - 1 do
+            colNames.[i] <- rdr.GetName(i)
+        colNames
 
-            (*
-            let rec getVal colNum =
-                if colNum < 0 then
-                    []
-                else
-                    let x = rdr.GetValue(colNum)
-                    x :: getVal (colNum - 1)
-
-            let rowVals = getval (recCnt - 1)
-            *)
-            let 
-            for i = 0 to recCnt - 1 do
-                rdr.GetValue(i)
-
-
-            rdr.GetName
-            rdr.GetValue
-
-
-        //let itemName = rdr.GetString(0)
-        //let nofSales = rdr.GetInt32(1)
-        //(itemName, nofSales)
-        else
-            //rdr.Close()
+    if rdr.Read() then
+        let colNames = getColNames rdr
+        printfn "colNames=%A" colNames
+        let rowVals1 = getRowVals rdr colNames.Length
+        printfn "rowVals1=%A" rowVals1
+    else
+        printfn "rdr.Read() = false"
 
 
     (*
