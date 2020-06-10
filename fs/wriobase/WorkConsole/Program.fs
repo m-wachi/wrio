@@ -253,34 +253,55 @@ let main argv =
     let usrConn2 = new NpgsqlConnection(connStringUsrTest)
     usrConn2.Open()
 
-    let sqlUsr2 = ""
+    let sqlUsr2 = "select * from t_table01"
 
     let usrCmd = new NpgsqlCommand(sqlUsr2, usrConn2)
         //cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
     use rdr = usrCmd.ExecuteReader()   // use = c# using
 
-    let getRowVals (rdr: DbDataReader) colCount =
-        let rowVals : obj array = Array.zeroCreate colCount
-        for i = 0 to colCount - 1 do
-            rowVals.[i] <- rdr.GetValue(i)
-        rowVals
-
+    (*
     let getColNames (rdr: DbDataReader) =
         let colCount = rdr.FieldCount
         let colNames: string array = Array.zeroCreate colCount
         for i = 0 to colCount - 1 do
             colNames.[i] <- rdr.GetName(i)
         colNames
+    *)
+
+    (*
+    let getRowVals (rdr: DbDataReader) colCount =
+        let rowVals : obj array = Array.zeroCreate colCount
+        for i = 0 to colCount - 1 do
+            rowVals.[i] <- rdr.GetValue(i)
+        rowVals
+    *)
+    let getRowVals (rdr: DbDataReader) = 
+        Array.map (fun i -> rdr.GetValue(i)) [|0 .. rdr.FieldCount - 1|]
+
+    let mutable rows = [||]
 
     if rdr.Read() then
-        let colNames = getColNames rdr
+        //let colNames = getColNames rdr
+        let colNames = Array.map (fun i -> rdr.GetName(i)) [|0 .. rdr.FieldCount - 1|]
         printfn "colNames=%A" colNames
-        let rowVals1 = getRowVals rdr colNames.Length
+        
+        //let rowVals1 = getRowVals rdr colNames.Length
+        //let f1 i = rdr.GetValue(i)
+        let rowVals1 = getRowVals rdr
+        rows <- [|rowVals1|]
         printfn "rowVals1=%A" rowVals1
     else
         printfn "rdr.Read() = false"
 
+    let func05 (rdr: DbDataReader) = 
+        [| while rdr.Read() do yield (getRowVals rdr) |]
 
+    let rows2 = func05 rdr
+    printfn "rows2=%A" rows2
+
+    rows <- Array.append rows rows2
+    printfn "rows=%A" rows
+    
     (*
     let rt1 = DbUserPg.usrPgMyfunc01 usrConn2
     printfn "rt1"

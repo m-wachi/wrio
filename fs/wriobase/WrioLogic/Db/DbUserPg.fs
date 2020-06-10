@@ -1,5 +1,6 @@
 namespace Wrio.Db
 
+open System.Data.Common
 open Npgsql
 open Wrio.Models
 open System
@@ -99,22 +100,38 @@ def usrPgMyfunc01():
         sql2
 
 
-    
-
-
-    (*
     let getPivotData (conn : NpgsqlConnection) (pvt: Pivot) =
+
+        let getRowVals (rdr: DbDataReader) = 
+            Array.map (fun i -> rdr.GetValue(i)) [|0 .. rdr.FieldCount - 1|]
+
+        let getRows (rdr: DbDataReader) = 
+            [| while rdr.Read() do yield (getRowVals rdr) |]
+
         let sql = toSql pvt
 
         let cmd = new NpgsqlCommand(sql, conn)
             //cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
-        use rdr = cmd.ExecuteReader()   // use = c# using
+
+        let mutable rows: (obj array) array = [||]
+
+        //use rdr = cmd.ExecuteReader()   // use = c# using
+        let rdr = cmd.ExecuteReader() 
 
         if rdr.Read() then
-            let itemName = rdr.GetString(0)
-            let nofSales = rdr.GetInt32(1)
-            (itemName, nofSales)
+            let colNames = Array.map (fun i -> rdr.GetName(i)) [|0 .. rdr.FieldCount - 1|]
+            //printfn "colNames=%A" colNames
+            
+            let rowVals1 = getRowVals rdr
+            printfn "rowVals1=%A" rowVals1
+            let rows2 = getRows rdr
+            //printfn "rows2=%A" rows2
+            Array.append [|rowVals1|] rows2
+
         else
-            //rdr.Close()
-            ("", 0)
-    *)
+            printfn "rdr.Read() = false"
+            [||]
+
+
+
+
