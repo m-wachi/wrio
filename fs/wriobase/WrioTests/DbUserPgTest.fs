@@ -116,11 +116,11 @@ module DbUserPgTest =
         let pvt2 = getTestPivot02()
 
         let sqlExp2 = 
-            "SELECT f.sales_date, \nitm.item_name, \nSUM(f.nof_sales) nof_sales\n" +
+            "SELECT f.sales_date, \nd1.item_name, \nSUM(f.nof_sales) nof_sales\n" +
             " FROM t_table01 f\n" +
-            "  INNER JOIN m_item itm " + 
-            "    ON f.item_cd = itm.item_cd " +
-            "GROUP BY f.sales_date, itm.item_name "
+            "  INNER JOIN m_item d1 " + 
+            "    ON f.item_cd = d1.item_cd " +
+            "GROUP BY f.sales_date, d1.item_name "
 
         let sqlAct2 = DbUserPg.toSql pvt2
 
