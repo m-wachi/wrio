@@ -52,11 +52,29 @@ type DtSet(datasetId: int, fact: DsTable, pDimensions: DsTable array) =
         and set(v: DsTable array) = dimensions <- v
     override this.ToString(): string =
         sprintf "DtSet datasetId=%d, fact=%A, dimensions=%A" datasetId fact dimensions
-        
+
+type CellVal(pColName: string, pAbbrev: string, pAggFuncDiv: int) =
+    let mutable colName: string = pColName
+    let mutable abbrev: string = pAbbrev
+    let mutable aggFuncDiv: int = pAggFuncDiv
+    new() = CellVal("", "", -1)
+    member this.ColName
+        with get() = colName
+        and set(v) = colName <- v
+    member this.Abbrev
+        with get() = abbrev
+        and set(v) = abbrev <- v
+    member this.AggFuncDiv
+        with get() = aggFuncDiv
+        and set(v) = aggFuncDiv <- v
+    override this.ToString(): string =
+        sprintf "CellVal { ColName=%s, AggFuncDiv=%d }" colName aggFuncDiv
+
 type PivotSetting() =  
     let mutable datasetId: int = -1
     let mutable colHdr : string array = [||]
-    let mutable rowHdr : string array = [||] //Array.empty<string>
+    let mutable rowHdr : string array = [||] 
+    let mutable cellVal: CellVal array = [||]
     let mutable rowOdr : string array = [||]
     let mutable colOdr : string array = [||]
     member this.DatasetId 
@@ -68,6 +86,9 @@ type PivotSetting() =
     member this.RowHdr 
         with get() = rowHdr
         and set(v) = rowHdr <- v
+    member this.CellVal
+        with get() = cellVal
+        and set(v) = cellVal <- v
     member this.RowOdr 
         with get() : string array = rowOdr
         and set(v : string array) = rowOdr <- v
@@ -76,7 +97,7 @@ type PivotSetting() =
         and set(v : string array) = colOdr <- v
 
     override this.ToString(): string =
-        sprintf "PivotSetting { datasetId=%d, colHdr=%A, rowHdr=%A, rowOdr=%A, colOdr=%A }" datasetId colHdr rowHdr rowOdr colOdr
+        sprintf "PivotSetting { datasetId=%d, colHdr=%A, rowHdr=%A, CellVal=%A, rowOdr=%A, colOdr=%A }" datasetId colHdr rowHdr cellVal rowOdr colOdr
 
 
 type Pivot = {
@@ -97,9 +118,10 @@ type Pivot(datasetId : int, settingJson : string, dtSet : Dataset)
     colNames: string array
     rows: (object array) array
     *)
-type PivotData() = 
-    let mutable colNames: string array = [||]
-    let mutable rows: (obj array) array = [||]
+type PivotData(pColNames: string array, pRows: (obj array) array) = 
+    let mutable colNames: string array = pColNames
+    let mutable rows: (obj array) array = pRows
+    new() = PivotData([||], [||])
     member this.ColNames
         with get() = colNames
         and set(v) = colNames <- v

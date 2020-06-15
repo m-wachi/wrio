@@ -253,13 +253,16 @@ let main argv =
     let usrConn2 = new NpgsqlConnection(connStringUsrTest)
     usrConn2.Open()
 
+    let pvtData = DbUserPg.getPivotData usrConn2 pvt1
+    printfn "pvtData=%A" pvtData
+    (*
+
     let sqlUsr2 = "select * from t_table01"
 
     let usrCmd = new NpgsqlCommand(sqlUsr2, usrConn2)
         //cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
     use rdr = usrCmd.ExecuteReader()   // use = c# using
 
-    (*
     let getColNames (rdr: DbDataReader) =
         let colCount = rdr.FieldCount
         let colNames: string array = Array.zeroCreate colCount
@@ -275,6 +278,7 @@ let main argv =
             rowVals.[i] <- rdr.GetValue(i)
         rowVals
     *)
+    (*
     let getRowVals (rdr: DbDataReader) = 
         Array.map (fun i -> rdr.GetValue(i)) [|0 .. rdr.FieldCount - 1|]
 
@@ -301,7 +305,8 @@ let main argv =
 
     rows <- Array.append rows rows2
     printfn "rows=%A" rows
-    
+    *)
+
     (*
     let rt1 = DbUserPg.usrPgMyfunc01 usrConn2
     printfn "rt1"

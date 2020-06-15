@@ -82,11 +82,13 @@ def usrPgMyfunc01():
         let dtSet = pvt.DtSet
         let dim1 = dtSet.Dimensions.[0]
 
+        let getAccumFuncExp (x: CellVal) = "SUM(" + x.Abbrev + "." + x.ColName + ") " + x.ColName
         //let sSelectClause = "SELECT " + pvt.SettingJson["rowhdr"][0]
         //let sSelectClause = "SELECT " + pvt.Setting.RowHdr.[0]
         let sSelectClause = "SELECT " + 
                             String.Join(", ", pvt.Setting.RowHdr) + ", \n" + 
-                            String.Join(", ", pvt.Setting.ColHdr)
+                            String.Join(", ", pvt.Setting.ColHdr) + ", \n" +
+                            String.Join(", ", (Array.map getAccumFuncExp pvt.Setting.CellVal))
 
         let sFromClause = String.Format(" FROM {0} {1}", dtSet.Fact.Table, dtSet.Fact.Abbrev)
 
@@ -120,17 +122,16 @@ def usrPgMyfunc01():
 
         if rdr.Read() then
             let colNames = Array.map (fun i -> rdr.GetName(i)) [|0 .. rdr.FieldCount - 1|]
-            //printfn "colNames=%A" colNames
-            
+            //1st row values
             let rowVals1 = getRowVals rdr
-            printfn "rowVals1=%A" rowVals1
+            //2nd row and following rows
             let rows2 = getRows rdr
-            //printfn "rows2=%A" rows2
-            Array.append [|rowVals1|] rows2
 
+            let rows = Array.append [|rowVals1|] rows2
+            PivotData(colNames, rows)
         else
             printfn "rdr.Read() = false"
-            [||]
+            PivotData()
 
 
 
