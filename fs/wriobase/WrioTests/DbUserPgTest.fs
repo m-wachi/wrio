@@ -50,7 +50,7 @@ module DbUserPgTest =
         let pvtSt1 = PivotSetting()
         pvtSt1.DatasetId <- 4
         pvtSt1.RowHdr <- [|"f.sales_date"|]
-        pvtSt1.ColHdr <- [|"itm.item_name"|]
+        pvtSt1.ColHdr <- [|"d1.item_name"|]
         pvtSt1.CellVal <- [|CellVal("nof_sales", "f", 1)|]
         pvtSt1.RowOdr <- [|"f.sales_date"|]
         
@@ -73,29 +73,6 @@ module DbUserPgTest =
  
     [<Test>]
     let UserPgToSqlTest01 () =
-        (*
-        let dtJoin1: DtJoin = {JoinSrcCol = "col0101"; DstAbbrev = "m"; JoinDstCol = "col0001"}
-        let dim1: DsTable = DsTable(2, "t_tbl01", "t1", 1, 1, [|dtJoin1|])
-        let fact: DsTable = DsTable(1, "t_main", "m", 1, 1, [||])
-        //let dim1 = Dimension("t_tbl01", "t1", 1, [||])
-
-        let dtSet1 = DtSet(4, fact, [|dim1|])
-
-        //dtSet1.Dimensions <- [|dim1|]
-
-        let pvtSt1 = PivotSetting()
-        pvtSt1.DatasetId <- 4
-        pvtSt1.RowHdr <- [|"t1.rowHdr01"; "m.rowHdr02"|]
-        pvtSt1.ColHdr <- [|"m.col1"; "m.col2"|]
-        pvtSt1.RowOdr <- [|"t1.row1"|]
-        
-        let pvt1 : Pivot = {
-            PivotId = 2
-            DatasetId = 4
-            Setting = pvtSt1
-            DtSet = dtSet1
-        }
-        *)
 
         let pvt1 = getTestPivot01()
 
@@ -104,7 +81,9 @@ module DbUserPgTest =
             "SUM(m.col3) col3, SUM(m.col4) col4\n" +
             " FROM t_main m\n" +
             "  INNER JOIN t_tbl01 t1 \n" +
-            "    ON m.col0001 = t1.col0101\n"
+            "    ON m.col0001 = t1.col0101\n" +
+            " GROUP BY t1.rowHdr01, m.rowHdr02, \n" +
+            "m.col1, m.col2 "
 
         let sqlAct1 = DbUserPg.toSql pvt1
 
@@ -118,9 +97,9 @@ module DbUserPgTest =
         let sqlExp2 = 
             "SELECT f.sales_date, \nd1.item_name, \nSUM(f.nof_sales) nof_sales\n" +
             " FROM t_table01 f\n" +
-            "  INNER JOIN m_item d1 " + 
-            "    ON f.item_cd = d1.item_cd " +
-            "GROUP BY f.sales_date, d1.item_name "
+            "  INNER JOIN m_item d1 \n" + 
+            "    ON f.item_cd = d1.item_cd\n " +
+            "GROUP BY f.sales_date, \nd1.item_name "
 
         let sqlAct2 = DbUserPg.toSql pvt2
 
@@ -131,7 +110,7 @@ module DbUserPgTest =
     let UserPgGetPivotDataTest01 () =
         let dbUsrConn = getTestDbUsrConn()
         dbUsrConn.Open()
-        let pvt1 = getTestPivot01()
+        let pvt1 = getTestPivot02()
 
         let pvtData = DbUserPg.getPivotData dbUsrConn pvt1
 
@@ -139,6 +118,11 @@ module DbUserPgTest =
 
         printfn "pvtData=%A" pvtData
 
+(*
+PivotData { ColNames=[|"sales_date"; "item_name"; "nof_sales"|], Rows=[|[|2019/07/01 0:00:00; "アイテム０１"; 10M|]; [|2019/07/02 0:00:00; "アイテム０１"; 8M|];
+   [|2019/07/01 0:00:00; "アイテム０２"; 15M|]; [|2019/07/02 0:00:00; "アイテム０２"; 12M|]|]
+
+*)
 
         Assert.Fail("not implemented yet.")
 

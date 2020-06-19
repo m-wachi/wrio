@@ -113,11 +113,6 @@ type Pivot(datasetId : int, settingJson : string, dtSet : Dataset)
     member this.Dataset : DtSet = dtSet
 *)
 
-(*
-    グリッドデータ返却の方法
-    colNames: string array
-    rows: (object array) array
-    *)
 type PivotData(pColNames: string array, pRows: (obj array) array) = 
     let mutable colNames: string array = pColNames
     let mutable rows: (obj array) array = pRows
@@ -128,6 +123,8 @@ type PivotData(pColNames: string array, pRows: (obj array) array) =
     member this.Rows
         with get() = rows
         and set(v) = rows <- v
+    override this.ToString(): string =
+        sprintf "PivotData { ColNames=%A, Rows=%A }" colNames rows
 
 (*
 module ModelFunc =
