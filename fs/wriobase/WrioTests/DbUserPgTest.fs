@@ -62,6 +62,45 @@ module DbUserPgTest =
         }
         pvt1
 
+    let execSql (conn: NpgsqlConnection) (sql: string) : int =
+        let cmd = new NpgsqlCommand(sql, conn)
+        cmd.ExecuteNonQuery()
+
+    let prepUsrTTable01 (dbUsrConn : NpgsqlConnection) =
+
+        let sql1 = "insert into t_table01 values('2019-07-01', '001', 'A0001', 10, 5250)"
+        let sql2 = "insert into t_table01 values('2019-07-01', '001', 'A0002', 15, 1500)"
+        let sql3 = "insert into t_table01 values('2019-07-02', '001', 'A0001', 8, 4200)"
+        let sql4 = "insert into t_table01 values('2019-07-02', '001', 'A0002', 12, 1200)"
+
+        execSql dbUsrConn sql1 |> ignore
+        execSql dbUsrConn sql2 |> ignore
+        execSql dbUsrConn sql3 |> ignore
+        execSql dbUsrConn sql4 |> ignore
+        ()
+
+    let prepUsrMItem01 (dbUsrConn : NpgsqlConnection) =
+
+        let sql1 = "insert into m_item values('A0001', '001', 'アイテム０１')"
+        let sql2 = "insert into m_item values('A0002', '001', 'アイテム０２')"
+
+        execSql dbUsrConn sql1 |> ignore
+        execSql dbUsrConn sql2 |> ignore
+        ()
+
+
+    [<SetUp>]
+    let Setup () =
+        let dbUsrConn = getTestDbUsrConn ()
+        dbUsrConn.Open()
+        //let tx = conn.BeginTransaction()
+        execSql dbUsrConn "delete from t_table01" |> ignore
+        execSql dbUsrConn "delete from m_item" |> ignore
+
+        //tx.Commit()
+        dbUsrConn.Close()
+        ()
+
 
     [<Test>]
     let GetDsJoinTest01 () =
@@ -110,21 +149,44 @@ module DbUserPgTest =
     let UserPgGetPivotDataTest01 () =
         let dbUsrConn = getTestDbUsrConn()
         dbUsrConn.Open()
+
+        prepUsrMItem01(dbUsrConn)
+        prepUsrTTable01(dbUsrConn)
+
         let pvt1 = getTestPivot02()
 
         let pvtData = DbUserPg.getPivotData dbUsrConn pvt1
 
         dbUsrConn.Close()
 
-        printfn "pvtData=%A" pvtData
+        //printfn "pvtData=%A" pvtData
 
-(*
-PivotData { ColNames=[|"sales_date"; "item_name"; "nof_sales"|], Rows=[|[|2019/07/01 0:00:00; "アイテム０１"; 10M|]; [|2019/07/02 0:00:00; "アイテム０１"; 8M|];
-   [|2019/07/01 0:00:00; "アイテム０２"; 15M|]; [|2019/07/02 0:00:00; "アイテム０２"; 12M|]|]
+        Assert.AreEqual(3, pvtData.ColNames.Length)
+        Assert.AreEqual("sales_date", pvtData.ColNames.[0])
+        Assert.AreEqual("item_name", pvtData.ColNames.[1])
+        Assert.AreEqual("nof_sales", pvtData.ColNames.[2])
+        
+        let mutable i = 0
+        Assert.AreEqual(4, pvtData.Rows.Length)
+        Assert.AreEqual("2019/07/01", pvtData.Rows.[i].[0].ToString().Substring(0, 10))
+        Assert.AreEqual("アイテム０１", pvtData.Rows.[i].[1])
+        Assert.AreEqual(10, pvtData.Rows.[i].[2])
 
-*)
+        i <- 1
+        Assert.AreEqual("2019/07/02", pvtData.Rows.[i].[0].ToString().Substring(0, 10))
+        Assert.AreEqual("アイテム０１", pvtData.Rows.[i].[1])
+        Assert.AreEqual(8, pvtData.Rows.[i].[2])
 
-        Assert.Fail("not implemented yet.")
+        i <- 2
+        Assert.AreEqual("2019/07/01", pvtData.Rows.[i].[0].ToString().Substring(0, 10))
+        Assert.AreEqual("アイテム０２", pvtData.Rows.[i].[1])
+        Assert.AreEqual(15, pvtData.Rows.[i].[2])
+
+        i <- 3
+        Assert.AreEqual("2019/07/02", pvtData.Rows.[i].[0].ToString().Substring(0, 10))
+        Assert.AreEqual("アイテム０２", pvtData.Rows.[i].[1])
+        Assert.AreEqual(12, pvtData.Rows.[i].[2])
+
 
 
    
