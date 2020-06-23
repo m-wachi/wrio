@@ -145,6 +145,7 @@ let main argv =
 
     let connStringTest = "Host=localhost;Username=wrio_test;Password=wrio_test;Database=wrio_test"
     let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
+    let connStringUsr = "Host=localhost;Username=user02;Password=user02;Database=user02db"
 
     let conn1 = new NpgsqlConnection(connString)
     conn1.Open()
@@ -172,7 +173,8 @@ let main argv =
     printfn "BsLogic01.getDtSetLogic"
     let cfg = MyConfig()
     cfg.SysConnStr <- connString
-    
+    cfg.UsrConnStr <- connStringUsr
+
     //let ds1 = BsLogic01.getDtSetLogic connStringTest 1
     //let sysConnStr = cfg.GetSysconnStr()
     let ds1 = BsLogic01.getDtSetLogic 1 cfg
@@ -209,11 +211,20 @@ let main argv =
     printfn "%A" pvt2
 
     *)
+    (*
     let pvtSt1 = PivotSetting()
     pvtSt1.DatasetId <- 3
     pvtSt1.RowHdr <- [|"rowHdr01"; "rowHdr02"|]
     pvtSt1.ColHdr <- [|"col1"; "col2"|]
     pvtSt1.RowOdr <- [|"row1"|]
+    *)
+    let pvtSt1 = PivotSetting()
+    pvtSt1.DatasetId <- 4
+    pvtSt1.RowHdr <- [|"f.sales_date"|]
+    pvtSt1.ColHdr <- [|"d1.item_name"|]
+    pvtSt1.CellVal <- [|CellVal("nof_sales", "f", 1)|]
+    pvtSt1.RowOdr <- [|"f.sales_date"|]
+
 
     printfn "pvtSt1"
     printfn "%A" pvtSt1
@@ -227,6 +238,9 @@ let main argv =
     printfn "pvtSt2.RowHdr[0]=%s" (pvtSt2.RowHdr.[0])
 
     let optPvt1 = BsLogic01.getPivotLogic 1 cfg
+
+
+
 
     printfn "optPvt1=%A" optPvt1
 
@@ -255,57 +269,9 @@ let main argv =
 
     let pvtData = DbUserPg.getPivotData usrConn2 pvt1
     printfn "pvtData=%A" pvtData
-    (*
 
-    let sqlUsr2 = "select * from t_table01"
-
-    let usrCmd = new NpgsqlCommand(sqlUsr2, usrConn2)
-        //cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
-    use rdr = usrCmd.ExecuteReader()   // use = c# using
-
-    let getColNames (rdr: DbDataReader) =
-        let colCount = rdr.FieldCount
-        let colNames: string array = Array.zeroCreate colCount
-        for i = 0 to colCount - 1 do
-            colNames.[i] <- rdr.GetName(i)
-        colNames
-    *)
-
-    (*
-    let getRowVals (rdr: DbDataReader) colCount =
-        let rowVals : obj array = Array.zeroCreate colCount
-        for i = 0 to colCount - 1 do
-            rowVals.[i] <- rdr.GetValue(i)
-        rowVals
-    *)
-    (*
-    let getRowVals (rdr: DbDataReader) = 
-        Array.map (fun i -> rdr.GetValue(i)) [|0 .. rdr.FieldCount - 1|]
-
-    let mutable rows = [||]
-
-    if rdr.Read() then
-        //let colNames = getColNames rdr
-        let colNames = Array.map (fun i -> rdr.GetName(i)) [|0 .. rdr.FieldCount - 1|]
-        printfn "colNames=%A" colNames
-        
-        //let rowVals1 = getRowVals rdr colNames.Length
-        //let f1 i = rdr.GetValue(i)
-        let rowVals1 = getRowVals rdr
-        rows <- [|rowVals1|]
-        printfn "rowVals1=%A" rowVals1
-    else
-        printfn "rdr.Read() = false"
-
-    let func05 (rdr: DbDataReader) = 
-        [| while rdr.Read() do yield (getRowVals rdr) |]
-
-    let rows2 = func05 rdr
-    printfn "rows2=%A" rows2
-
-    rows <- Array.append rows rows2
-    printfn "rows=%A" rows
-    *)
+    let pvtData2 = BsLogic01.getPivotData pvt1 cfg
+    printfn "pvtData2=%A" pvtData2
 
     (*
     let rt1 = DbUserPg.usrPgMyfunc01 usrConn2

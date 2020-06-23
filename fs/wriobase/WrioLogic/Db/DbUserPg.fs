@@ -6,25 +6,12 @@ open Wrio.Models
 open System
 
 module DbUserPg =
- (*
-def usrPgMyfunc01():
-    sRet = ""
 
-    sql = "select \n"
-    sql += "   b.item_name, sum(a.nof_sales) nof_sales \n"
-    sql += "from t_table01 a \n"
-    sql += "inner join m_item b on a.item_cd = b.item_cd \n"
-    sql += "group by b.item_name \n"
+    let getDbUsrConn (connString: string): NpgsqlConnection = 
+        let conn = new NpgsqlConnection(connString)
+        //conn.Open()
+        conn
 
-    conn = getConn()
-    with conn.cursor() as cur:
-        cur.execute(sql)
-        row = cur.fetchone()
-        sRet = str(row)
-
-    conn.close()
-    return sRet
-*)
     let usrPgMyfunc01 (conn : NpgsqlConnection)  =
         let sql = 
             "select \n" +

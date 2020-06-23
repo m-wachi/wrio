@@ -114,3 +114,15 @@ module BsLogic01 =
                 | None -> None
 
         optPvt
+
+    let getPivotData (pvt: Pivot) (cfg: IMyConfig) : PivotData =
+        let usrConnStr = cfg.GetUsrConnStr()
+
+        use dbUsrConn = DbUserPg.getDbUsrConn usrConnStr
+        dbUsrConn.Open()
+
+        DbUserPg.getPivotData dbUsrConn pvt 
+
+
+
+
