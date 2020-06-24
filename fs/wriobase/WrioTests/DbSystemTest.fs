@@ -33,6 +33,12 @@ module DbSystemTest =
         execSql dbSysConn sql1 |> ignore
         execSql dbSysConn sql2 |> ignore
 
+    let prepMPivot01 (dbSysConn : NpgsqlConnection) =
+        let sql1 = """insert into m_pivot values(4, 'usr1', 3, '{"datasetId":3,"colHdr":["d01.item_name"],"rowHdr":["f01.sales_date"],"cellVal":[{"colName":"nof_sales","abbrev":"f01","aggFuncDiv":1}],"rowOdr":["f01.sales_date"],"colOdr":[]}', CURRENT_TIMESTAMP)"""
+
+        execSql dbSysConn sql1 |> ignore
+
+
 
     [<SetUp>]
     let Setup () =
@@ -92,4 +98,21 @@ module DbSystemTest =
         Assert.AreEqual("m_item", dsTable2.Table)
         Assert.AreEqual(2, dsTable2.TableType)
         Assert.AreEqual(1, dsTable2.JoinDiv)
+
+    [<Test>]
+    let GetPivotBaseTest01 () =
+        let dbSysConn = getTestDbSysConn ()
+        dbSysConn.Open()
+        prepMPivot01 (dbSysConn)
+
+        let datasetId, settingJsonAct = DbSystem.getPivotBase dbSysConn 4
+
+        dbSysConn.Close()
+
+        let settingJsonExp = """{"datasetId":3,"colHdr":["d01.item_name"],"rowHdr":["f01.sales_date"],"cellVal":[{"colName":"nof_sales","abbrev":"f01","aggFuncDiv":1}],"rowOdr":["f01.sales_date"],"colOdr":[]}"""
+
+        Assert.AreEqual(3, datasetId)
+        Assert.AreEqual(settingJsonExp, settingJsonAct)
+
+
 

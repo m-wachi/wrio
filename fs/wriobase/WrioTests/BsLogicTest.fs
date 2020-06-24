@@ -41,6 +41,11 @@ module BsLogicTest =
         }
         [(1, 1, dsJoin21); (1, 2, dsJoin22); (2, 1, dsJoin23)]
 
+    let prepMPivot01 (dbSysConn : NpgsqlConnection) =
+        let sql1 = """insert into m_pivot values(4, 'usr1', 3, '{"datasetId":3,"colHdr":["d01.item_name"],"rowHdr":["f01.sales_date"],"cellVal":[{"colName":"nof_sales","abbrev":"f01","aggFuncDiv":1}],"rowOdr":["f01.sales_date"],"colOdr":[]}', CURRENT_TIMESTAMP)"""
+
+        execSql dbSysConn sql1 |> ignore
+
 
     [<SetUp>]
     let Setup () =
@@ -102,7 +107,7 @@ module BsLogicTest =
         Assert.AreEqual(1, dsTable4.DsJoins.Length)
 
     [<Test>]
-    let getDtSetLogicTest01() =
+    let GetDtSetLogicTest01() =
         let conn = getTestDbSysConn()
         conn.Open()
         prepSysMDsJoin01(conn) |> ignore
@@ -125,4 +130,32 @@ module BsLogicTest =
                 let sDtSet1 = sprintf "%A" dimension
                 let dtJoin1 = dimension.DsJoins.[0]
                 Assert.AreEqual("item_cd", dtJoin1.JoinDstCol)
+
+
+    [<Test>]
+    let GetPivotLogicTest01() =
+        let conn = getTestDbSysConn()
+        conn.Open()
+        prepSysMDsJoin01(conn) |> ignore
+        prepMDsTable01(conn) |> ignore
+        prepMPivot01(conn) |> ignore
+        conn.Close()
+
+        let cfg = MyConfig()
+        cfg.SysConnStr <- connStrDbSys
+    
+        let optPvt = BsLogic01.getPivotLogic 4 cfg
+
+        printfn "ret=%A" optPvt
+
+        match optPvt with
+            | None -> Assert.Fail("Error. return None")
+            | Some pvt ->
+                Assert.AreEqual(4, pvt.PivotId)
+                Assert.AreEqual(3, pvt.DatasetId)
+                Assert.AreEqual(3,pvt.DtSet.DatasetId)
+                Assert.AreEqual("t_table03", pvt.DtSet.Fact.Table)
+                Assert.AreEqual("d01.item_name", pvt.Setting.ColHdr.[0])
+                Assert.AreEqual("nof_sales", pvt.Setting.CellVal.[0].ColName)
+
 

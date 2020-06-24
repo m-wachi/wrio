@@ -121,8 +121,8 @@ module DbUserPgTest =
             " FROM t_main m\n" +
             "  INNER JOIN t_tbl01 t1 \n" +
             "    ON m.col0001 = t1.col0101\n" +
-            " GROUP BY t1.rowHdr01, m.rowHdr02, \n" +
-            "m.col1, m.col2 "
+            " GROUP BY t1.rowHdr01, m.rowHdr02, \nm.col1, m.col2\n" +
+            " ORDER BY t1.rowHdr01, m.rowHdr02, \nm.col1, m.col2 "
 
         let sqlAct1 = DbUserPg.toSql pvt1
 
@@ -138,7 +138,8 @@ module DbUserPgTest =
             " FROM t_table01 f\n" +
             "  INNER JOIN m_item d1 \n" + 
             "    ON f.item_cd = d1.item_cd\n " +
-            "GROUP BY f.sales_date, \nd1.item_name "
+            "GROUP BY f.sales_date, \nd1.item_name\n " +
+            "ORDER BY f.sales_date, \nd1.item_name "
 
         let sqlAct2 = DbUserPg.toSql pvt2
 
@@ -173,14 +174,14 @@ module DbUserPgTest =
         Assert.AreEqual(10, pvtData.Rows.[i].[2])
 
         i <- 1
-        Assert.AreEqual("2019/07/02", pvtData.Rows.[i].[0].ToString().Substring(0, 10))
-        Assert.AreEqual("アイテム０１", pvtData.Rows.[i].[1])
-        Assert.AreEqual(8, pvtData.Rows.[i].[2])
-
-        i <- 2
         Assert.AreEqual("2019/07/01", pvtData.Rows.[i].[0].ToString().Substring(0, 10))
         Assert.AreEqual("アイテム０２", pvtData.Rows.[i].[1])
         Assert.AreEqual(15, pvtData.Rows.[i].[2])
+
+        i <- 2
+        Assert.AreEqual("2019/07/02", pvtData.Rows.[i].[0].ToString().Substring(0, 10))
+        Assert.AreEqual("アイテム０１", pvtData.Rows.[i].[1])
+        Assert.AreEqual(8, pvtData.Rows.[i].[2])
 
         i <- 3
         Assert.AreEqual("2019/07/02", pvtData.Rows.[i].[0].ToString().Substring(0, 10))

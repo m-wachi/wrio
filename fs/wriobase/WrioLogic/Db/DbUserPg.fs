@@ -87,7 +87,8 @@ module DbUserPg =
     
         let sql = sSelectClause + "\n" + sFromClause + "\n"
         let sql2 = sql + sJoin1 + "\n" + 
-                    " GROUP BY " + sDimensionColumns + " "
+                    " GROUP BY " + sDimensionColumns + "\n" +
+                    " ORDER BY " + sDimensionColumns + " "
 
         sql2
 

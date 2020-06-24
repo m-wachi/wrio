@@ -115,7 +115,7 @@ module BsLogic01 =
 
         optPvt
 
-    let getPivotData (pvt: Pivot) (cfg: IMyConfig) : PivotData =
+    let getPivotDataLogic (pvt: Pivot) (cfg: IMyConfig) : PivotData =
         let usrConnStr = cfg.GetUsrConnStr()
 
         use dbUsrConn = DbUserPg.getDbUsrConn usrConnStr
