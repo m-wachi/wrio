@@ -1,0 +1,25 @@
+仮想マシンを作った後、chrome-remote-desktopをインストール
+https://cloud.google.com/solutions/chrome-desktop-remote-on-compute-engine?hl=ja
+
+日本語化/TZ変更
+https://www.apps-gcp.com/gce-casual-knowhow-01/#Debian89
+
+1) $ sudo apt-get install task-japanese
+
+2) /etc/locale.genファイルを編集し、ja_JP.UTF-8 のコメントを解除します。
+ここでは、sedコマンドで編集しています。
+
+$ sudo cp -a /etc/locale.gen /etc/locale.gen.bak
+$ sudo sh -c "sed 's/# *ja_JP\.UTF-8/ja_JP.UTF8/' /etc/locale.gen.bak > /etc/locale.gen"
+
+3) locale-genコマンドを実行し、ja_JP.UTF-8を有効化します。
+$ sudo locale-gen
+
+4) localectlコマンドでシステム言語を変更します。
+$ sudo localectl set-locale LANG=ja_JP.UTF-8 LANGUAGE="ja_JP:ja"
+
+5) TZ変更
+$ sudo timedatectl set-timezone Asia/Tokyo
+
+6) 最後に、インスタンスを再起動します。
+$ sudo shutdown -r now
