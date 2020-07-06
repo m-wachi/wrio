@@ -113,9 +113,13 @@ localhost:5432:wrio_test:wrio_test:wrio_test
     sudo systemctl restart nginx
 
 28. install emacs packages
-    M-x package-list-packages
-    (command) i:install, x:execute, q:quit
-    install packages: typescript-mode, tss
+    M-x package-initialize
+    M-x package-install   typescript-mode
+    M-x package-install   tss
+
+    # M-x package-list-packages
+    # (command) i:install, x:execute, q:quit
+    # install packages: typescript-mode, tss
 
 29. cd ~/src/wrio/db/target
 
@@ -125,8 +129,6 @@ localhost:5432:wrio_test:wrio_test:wrio_test
     psql -f m_item.sql
     psql -f insert_item01.sql
     psql -f insert_table01.sql
-    psql -f ins_ms_ds_table.sql
-    psql -f ins_m_pivot.sql
 
 
 *-01 if you want to use angular new version(how to use ng new)
