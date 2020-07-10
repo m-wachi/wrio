@@ -49,7 +49,7 @@ https://torilon.hatenablog.com/entry/2019/01/05/032516
 
 13. sudo su - postgres
 
-14. createuser wrio_user 
+14. createuser -P wrio_user 
 
 15. psql
   alter user wrio_user password 'wrio_user';
@@ -63,6 +63,19 @@ https://torilon.hatenablog.com/entry/2019/01/05/032516
 
 19. exit  (back to normal user)
 
+
+19. cd ~
+
+19. create .pgpass
+-- .pgpass content --
+localhost:5432:user02db:user02:user02
+localhost:5432:wrio01:wrio_user:wrio_user
+localhost:5432:user02_test:user02_test:user02_test
+localhost:5432:wrio_test:wrio_test:wrio_test
+-- .pgpass content end --
+
+19. chmod 600 .pgpass
+
 20. cd ~/src/wrio/db/system
 
 21. source pgenv.sh
@@ -70,9 +83,11 @@ https://torilon.hatenablog.com/entry/2019/01/05/032516
 22. psql -f m_dataset.sql
     psql -f m_ds_table.sql
     psql -f m_pivot.sql
+    psql -f m_ds_join.sql 
     psql -f ins_m_dataset.sql
-    psql -f ins_ms_ds_table.sql
+    psql -f ins_m_ds_table.sql
     psql -f ins_m_pivot.sql
+    psql -f ins_m_ds_join.sql 
 
 23. sudo apt-get install gcc
     sudo apt-get install python3-dev
@@ -98,9 +113,13 @@ https://torilon.hatenablog.com/entry/2019/01/05/032516
     sudo systemctl restart nginx
 
 28. install emacs packages
-    M-x package-list-packages
-    (command) i:install, x:execute, q:quit
-    install packages: typescript-mode, tss
+    M-x package-initialize
+    M-x package-install   typescript-mode
+    M-x package-install   tss
+
+    # M-x package-list-packages
+    # (command) i:install, x:execute, q:quit
+    # install packages: typescript-mode, tss
 
 29. cd ~/src/wrio/db/target
 
@@ -110,8 +129,6 @@ https://torilon.hatenablog.com/entry/2019/01/05/032516
     psql -f m_item.sql
     psql -f insert_item01.sql
     psql -f insert_table01.sql
-    psql -f ins_ms_ds_table.sql
-    psql -f ins_m_pivot.sql
 
 
 *-01 if you want to use angular new version(how to use ng new)
