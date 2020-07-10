@@ -10,7 +10,7 @@ export class MessagesComponent implements OnInit {
 
   constructor(public messageSvc: MessageService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
 }

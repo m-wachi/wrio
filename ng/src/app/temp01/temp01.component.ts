@@ -13,7 +13,7 @@ export class Temp01Component implements OnInit {
 
   dataRows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
 }
