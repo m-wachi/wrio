@@ -270,7 +270,7 @@ let main argv =
     let pvtData = DbUserPg.getPivotData usrConn2 pvt1
     printfn "pvtData=%A" pvtData
 
-    let pvtData2 = BsLogic01.getPivotData pvt1 cfg
+    let pvtData2 = BsLogic01.getPivotDataLogic pvt1 cfg
     printfn "pvtData2=%A" pvtData2
 
     (*
