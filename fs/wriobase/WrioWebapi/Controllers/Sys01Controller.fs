@@ -31,7 +31,13 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
 
     //http://localhost:5000/sys01/pvt1
     [<HttpGet("pvt1")>]
-    member __.GetPivot01(): Pivot option =
+    member this.GetPivot01(): Pivot option =
+
+        this.HttpContext.Session.Set("testkey", System.Text.Encoding.ASCII.GetBytes("abc"))
+        //.Set("testkey",     ) |> ignore
+
+        this.HttpContext.Response.Cookies.Append("test2key", "test2val") |> ignore
+
         let myCfg = MyConfig()
 
         let a = config.GetSection("AppConfiguration")

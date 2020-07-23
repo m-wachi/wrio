@@ -21,6 +21,16 @@ type Startup private () =
 
     // This method gets called by the runtime. Use this method to add services to the container.
     member this.ConfigureServices(services: IServiceCollection) =
+        //let sesfunc options : Action<SessionOptions> =
+        //    options.IdleTimeout <- TimeSpan.FromSeconds(10)
+        
+        services.AddDistributedMemoryCache() |> ignore
+
+        //services.AddSession(sesfunc) |> ignore
+        services.AddSession(fun options -> 
+                                    options.IdleTimeout <- TimeSpan.FromSeconds(300.0)
+                                    options.Cookie.HttpOnly <- false
+                                    options.Cookie.Name <- "wriosession") |> ignore
         // Add framework services.
         services.AddControllers() |> ignore
 
@@ -30,6 +40,8 @@ type Startup private () =
     member this.Configure(app: IApplicationBuilder, env: IWebHostEnvironment) =
         if (env.IsDevelopment()) then
             app.UseDeveloperExceptionPage() |> ignore
+
+        app.UseSession() |> ignore
 
         //app.UseHttpsRedirection() |> ignore
         app.UseRouting() |> ignore
