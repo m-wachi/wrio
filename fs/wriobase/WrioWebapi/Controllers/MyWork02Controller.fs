@@ -18,9 +18,10 @@ open Wrio.Logic
 type MyWork02Controller (logger : ILogger<MyWork02Controller>, config : IConfiguration) =
     inherit ControllerBase()
 
+    //http://localhost:5000/mywork02/
     [<HttpGet>]
     member __.Get() : MyWork01Model =
-        let a = MyWork01Model(1, "model01")
+        let a = MyWork01Model(3, "model03")
         a
 (*
     [<HttpGet("dim1")>]
