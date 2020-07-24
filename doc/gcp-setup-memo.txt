@@ -115,7 +115,8 @@ localhost:5432:wrio_test:wrio_test:wrio_test
 28. install emacs packages
     M-x package-initialize
     M-x package-install   typescript-mode
-    M-x package-install   tss
+    M-x package-install   tss (NG)
+    M-x package-install   tide
 
     # M-x package-list-packages
     # (command) i:install, x:execute, q:quit
