@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { MaintblComponent } from './maintbl/maintbl.component';
 import { MessagesComponent } from './messages/messages.component';
 import { Temp01Component } from './temp01/temp01.component';
+import { Temp02Component } from './temp02/temp02.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MaintblComponent,
     MessagesComponent,
-    Temp01Component
+    Temp01Component,
+    Temp02Component
   ],
   imports: [
     BrowserModule,
