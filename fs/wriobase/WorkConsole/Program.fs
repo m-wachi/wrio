@@ -205,13 +205,6 @@ let main argv =
     printfn "%A" sqlExecCnt
     *)
     (*
-    let pvt2 = BsLogic01.getPivotLogic 1 cfg
-
-    printfn "pvt2"
-    printfn "%A" pvt2
-
-    *)
-    (*
     let pvtSt1 = PivotSetting()
     pvtSt1.DatasetId <- 3
     pvtSt1.RowHdr <- [|"rowHdr01"; "rowHdr02"|]
@@ -238,10 +231,6 @@ let main argv =
     printfn "pvtSt2.RowHdr[0]=%s" (pvtSt2.RowHdr.[0])
 
     let optPvt1 = BsLogic01.getPivotLogic 1 cfg
-
-
-
-
     printfn "optPvt1=%A" optPvt1
 
     let dummyPivot1 : Pivot = {
@@ -267,12 +256,6 @@ let main argv =
     let usrConn2 = new NpgsqlConnection(connStringUsrTest)
     usrConn2.Open()
 
-    let pvtData = DbUserPg.getPivotData usrConn2 pvt1
-    printfn "pvtData=%A" pvtData
-
-    let pvtData2 = BsLogic01.getPivotDataLogic pvt1 cfg
-    printfn "pvtData2=%A" pvtData2
-
     (*
     let rt1 = DbUserPg.usrPgMyfunc01 usrConn2
     printfn "rt1"
@@ -283,9 +266,13 @@ let main argv =
     printfn "%s" rt2
     *)
 
+    let pvtData = DbUserPg.getPivotData usrConn2 pvt1
+    printfn "pvtData=%A" pvtData
+
     usrConn2.Close()
     
 
-
+    let pvtData2 = BsLogic01.getPivotDataLogic pvt1 cfg
+    printfn "pvtData2=%A" pvtData2
 
     0 // return an integer exit code

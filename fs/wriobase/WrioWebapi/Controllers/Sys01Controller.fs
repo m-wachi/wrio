@@ -44,6 +44,22 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
 
         myCfg.SysConnStr <- a.GetValue("SystemConnectionString")
 
-
         BsLogic01.getPivotLogic 1 myCfg 
 
+    [<HttpGet("pvtdt1")>]
+    member this.GetPivotData01(): PivotData option =
+
+        let myCfg = MyConfig()
+
+        let a = config.GetSection("AppConfiguration")
+
+        myCfg.SysConnStr <- a.GetValue("SystemConnectionString")
+        myCfg.UsrConnStr <- a.GetValue("UserConnectionString")
+
+        let optPvt1 = BsLogic01.getPivotLogic 1 myCfg 
+        
+        match optPvt1 with
+            | Some pvt1 -> 
+                let pvtData =  BsLogic01.getPivotDataLogic pvt1 myCfg
+                Some pvtData
+            | None -> None

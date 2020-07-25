@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PivotData } from '../pivotdata';
+import { PivotData, OptPivotData } from '../pivotdata';
 import { PivotService } from '../pivot.service';
 
 @Component({
@@ -9,8 +9,9 @@ import { PivotService } from '../pivot.service';
 })
 export class Temp02Component implements OnInit {
 
+  optPivotData: OptPivotData = null;
   pivotData: PivotData = null;
-
+  
   constructor(private pivotSvc: PivotService) { }
 
   colnames = ["col1", "col2", "col3"];
@@ -18,11 +19,15 @@ export class Temp02Component implements OnInit {
   dataRows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
 
   getPivotData(): void {
-    //this.pivotSvc.getPivot01().subscribe(pvtDt => this.pivotData = pvtDt);
-    this.pivotData = {
-      colNames: ["colA", "colB"],
-      rows: [[5, 6], [7, 8]]
-    };
+    // this.pivotData = {
+    //   colNames: ["colA", "colB"],
+    //   rows: [[5, 6], [7, 8]]
+    // };
+    this.pivotSvc.getPivotData01().subscribe(
+      optPvtDt => {
+	this.optPivotData = optPvtDt;
+	this.pivotData = optPvtDt.value
+      });
     
   }
 
