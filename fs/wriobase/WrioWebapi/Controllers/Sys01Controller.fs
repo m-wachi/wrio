@@ -29,9 +29,9 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
     member __.GetMyWork01(idVal: int): MyWork01Model =
         MyWork01Model(idVal, "model02")
 
-    //http://localhost:5000/sys01/pvt1
-    [<HttpGet("pvt1")>]
-    member this.GetPivot01(): Pivot option =
+    //http://localhost:5000/sys01/pvt/{pivotId}
+    [<HttpGet("pvt/{pivotId}")>]
+    member this.GetPivot01(pivotId: int): Pivot option =
 
         this.HttpContext.Session.Set("testkey", System.Text.Encoding.ASCII.GetBytes("abc"))
         //.Set("testkey",     ) |> ignore

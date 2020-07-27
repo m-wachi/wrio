@@ -6,3 +6,4 @@ export interface PivotData {
 export interface OptPivotData {
   value: PivotData;
 }
+
