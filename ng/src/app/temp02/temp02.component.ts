@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PivotData, OptPivotData } from '../pivotdata';
+import { Pivot } from '../model';
 import { PivotService } from '../pivot.service';
 
 @Component({
@@ -11,6 +12,10 @@ export class Temp02Component implements OnInit {
 
   optPivotData: OptPivotData = null;
   pivotData: PivotData = null;
+  pivot: Pivot = null;
+  dicPivotData: any = null;
+  sPivot: string = "";
+  sDicPivotData: string = "";
   
   constructor(private pivotSvc: PivotService) { }
 
@@ -26,9 +31,27 @@ export class Temp02Component implements OnInit {
     this.pivotSvc.getPivotData01().subscribe(
       optPvtDt => {
 	this.optPivotData = optPvtDt;
-	this.pivotData = optPvtDt.value
+	this.pivotData = optPvtDt.value;
+	
+	this.pivotSvc.getPivot().subscribe(
+	  optPvt => {
+	    this.pivot = optPvt.value;
+	    let colHdr = this.pivot.setting.colHdr;
+	    this.sPivot = JSON.stringify(this.pivot);
+	    var a = {dummykey: "dummydata"};
+	    console.log("colHdr[0]=" + colHdr[0]);
+	    a[colHdr[0]] = "bbbb";
+	    this.sDicPivotData = JSON.stringify(a);
+	  });
       });
-    
+
+    /*
+    this.pivotSvc.getPivot().subscribe({
+      next(optPvt) {this.pivot = optPvt.value;},
+      error(err) { console.log('Recieved an error: ' + err); }
+    });
+    */
+   
   }
 
   ngOnInit(): void {

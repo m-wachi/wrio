@@ -13,7 +13,11 @@
 </table>
 <div>{{optPivotData}}</div>
 <hr/>
-
+<div *ngIf="pivot != null">colHdr[0]: {{pivot.setting.colHdr[0]}}</div>
+<div>sPivot: {{sPivot}}</div>
+<hr/>
+<div>sDicPivotData: {{this.sDicPivotData}}</div>
+<hr/>
 <a href="http://localhost:5000/mdl01/path4">mdl01/path4</a><br/>
 <a href="http://localhost:5000/mdl01/path5">mdl01/path5</a>
 
