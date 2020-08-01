@@ -24,26 +24,35 @@ export class Temp02Component implements OnInit {
   dataRows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
 
   getPivotData(): void {
-    // this.pivotData = {
-    //   colNames: ["colA", "colB"],
-    //   rows: [[5, 6], [7, 8]]
-    // };
-    this.pivotSvc.getPivotData01().subscribe(
-      optPvtDt => {
-	this.optPivotData = optPvtDt;
-	this.pivotData = optPvtDt.value;
-	
-	this.pivotSvc.getPivot().subscribe(
-	  optPvt => {
-	    this.pivot = optPvt.value;
-	    let colHdr = this.pivot.setting.colHdr;
-	    this.sPivot = JSON.stringify(this.pivot);
-	    var a = {dummykey: "dummydata"};
-	    console.log("colHdr[0]=" + colHdr[0]);
-	    a[colHdr[0]] = "bbbb";
-	    this.sDicPivotData = JSON.stringify(a);
-	  });
+    this.pivotSvc.getPivot().subscribe(
+      optPvt => {
+        this.pivot = optPvt.value;
+        let colHdr = this.pivot.setting.colHdr;
+        let sPivot = JSON.stringify(this.pivot);
+        this.sPivot = sPivot;
+        sessionStorage.setItem("pivot", sPivot);
+
+        this.pivotSvc.getPivotData01().subscribe(
+          optPvtDt => {
+            this.optPivotData = optPvtDt;
+            this.pivotData = optPvtDt.value;
+            let pvtDt = this.pivotData;
+            pvtDt.rows.forEach((row) => {
+              var dctRec = {};
+              for(var i=0; i<pvtDt.colNames.length; i++) {
+                dctRec[pvtDt.colNames[i]] = pvtDt.rows[0][i];
+              }
+              console.log("dctRec=" + JSON.stringify(dctRec));
+              this.sDicPivotData = JSON.stringify(dctRec);
+  
+            });
+            //dctRec[pvtDt.colNames[0]] = pvtDt.rows[0][0];
+            //dctRec[pvtDt.colNames[1]] = pvtDt.rows[0][1];
+	        });
+
+
       });
+    
 
     /*
     this.pivotSvc.getPivot().subscribe({
