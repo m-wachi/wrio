@@ -23,6 +23,26 @@ export class Temp02Component implements OnInit {
 
   dataRows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
 
+  func01(colNames : string[], idx: number, endIdx: number, dic: any, rec: any) : any {
+    if (idx > endIdx) {
+      return dic;
+    } else if (idx === endIdx) {
+        dic[colNames[idx]] = rec;
+        return dic;
+    } else {
+      var d3 = null;
+      var d2 = null;
+      if (colNames[idx] in dic) {
+        d2 = this.func01(colNames, idx + 1, endIdx, dic[colNames[idx]], rec);
+      } else {
+        d3 = {};
+        dic[colNames[idx]] = d3;
+        d2 = this.func01(colNames, idx + 1, endIdx, dic[colNames[idx]], rec);
+      }
+    }
+  }
+
+
   getPivotData(): void {
     this.pivotSvc.getPivot().subscribe(
       optPvt => {
