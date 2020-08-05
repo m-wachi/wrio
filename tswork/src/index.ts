@@ -1,25 +1,24 @@
 ﻿function func01(colNames : string[], idx: number, endIdx: number, dic: any, rec: any) : any {
   console.log("idx=" + String(idx) + ", endIdx=" + String(endIdx));
 
+  let sKey: string = String(rec[colNames[idx]]);
+
   if (idx > endIdx) {
     return dic;
   } else if (idx === endIdx) {
 
-    dic[rec[colNames[idx]]] = rec;
+    dic[sKey] = rec;
     return dic;
   } else {
     var d3 = null;
     var d2 = null;
-    if (rec[colNames[idx]] in dic) {
-      console.log("func01 path A");
-      d2 = func01(colNames, idx + 1, endIdx, dic[rec[colNames[idx]]], rec);
-    } else {
+    if (!(sKey in dic)) {
       console.log("func01 path B");
       d3 = {};
-      dic[rec[colNames[idx]]] = d3;
+      dic[sKey] = d3;
       console.log(dic);
-      d2 = func01(colNames, idx + 1, endIdx, dic[rec[colNames[idx]]], rec);
     }
+    d2 = func01(colNames, idx + 1, endIdx, dic[sKey], rec);
     return dic;
   }
 }
