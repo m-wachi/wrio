@@ -1,9 +1,11 @@
-﻿interface WrioDict<T> {
+﻿import moment from 'moment';
+
+interface WrioDict<T> {
   [key: string] : T;
 }
 
 
-function func01(colNames : string[], idx: number, dic: any, rec: any) : any {
+function func01(colNames : string[], idx: number, dic: WrioDict<any>, rec: WrioDict<any>) : WrioDict<any> {
   //console.log("idx=" + String(idx));
 
   let sKey: string = String(rec[colNames[idx]]);
@@ -26,11 +28,27 @@ function func01(colNames : string[], idx: number, dic: any, rec: any) : any {
 }
 
 /**
+ * apply func01 to array items
+ * @param colNames 
+ * @param recs 
+ */
+function func01s(colNames : string[], recs: WrioDict<any>[]) : WrioDict<any> {
+  var d1 = {};
+  recs.forEach(rec => {
+    func01(colNames, 0, d1, rec);
+  });
+
+  return d1;
+}
+
+
+
+/**
  * Extract Row/Col Header data.
  * @param hdrs row/col header
  * @param recs array of record
  */
-function func02(hdrs: string[], recs: Array<any>) : Set<any> {
+function func02(hdrs: string[], recs: WrioDict<any>[]) : WrioDict<any> {
 
   let xs = recs.map(rec => {
     var x : WrioDict<any> = {};
@@ -39,20 +57,42 @@ function func02(hdrs: string[], recs: Array<any>) : Set<any> {
     });
     return x;
   });
-  let xSets = new Set(xs);
+  //let xSets = new Set(xs);
 
-  return xSets;
+  return func01s(hdrs, xs);
 }
 
+/**
+ * test Objects have same property value.
+ * @param o1 
+ * @param o2 
+ * @param propNames property names compare
+ */
+function objValEq(o1: WrioDict<any>, o2: WrioDict<any>, propNames: string[]) : boolean {
 
+  var i : number;
+
+  for (i=0; i<propNames.length; i++) {
+    let propName = propNames[i];
+    console.log("propName = " + propName);
+    console.log("o1 = " + o1[propName]);
+    console.log("o2 = " + o2[propName]);
+    if (o1[propName] !== o2[propName]) {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 console.log("Hello World.");
 
 var recs = [];
-recs.push({"sales_date":"2019-07-01T00:00:00","item_name":"アイテム０１","nof_sales":10});
-recs.push({"sales_date":"2019-07-01T00:00:00","item_name":"アイテム０２","nof_sales":15});
-recs.push({"sales_date":"2019-07-02T00:00:00","item_name":"アイテム０１","nof_sales":20});
-recs.push({"sales_date":"2019-07-02T00:00:00","item_name":"アイテム０２","nof_sales":25});
+recs.push({"sales_date":moment("2019-07-01T00:00:00"),"item_name":"アイテム０１","nof_sales":10});
+recs.push({"sales_date":moment("2019-07-01T00:00:00"),"item_name":"アイテム０２","nof_sales":15});
+recs.push({"sales_date":moment("2019-07-02T00:00:00"),"item_name":"アイテム０１","nof_sales":20});
+recs.push({"sales_date":moment("2019-07-02T00:00:00"),"item_name":"アイテム０２","nof_sales":25});
+recs.push({"sales_date":moment("2019-07-01T00:00:00"),"item_name":"アイテム０１","nof_sales":3});
 
 
 var pvtColHdrs = ["item_name"];
@@ -114,4 +154,17 @@ let k3Sets = func02(colNames, recs);
 console.log("===== k3Sets ====");
 console.log(k3Sets);
 
+let o1 = {"sales_date":"2019-07-01T00:00:00"};
+let o2 = {"sales_date":"2019-07-01T00:00:00"};
+let o3 = {"sales_date":"2019-07-02T00:00:00"};
+
+console.log("objValEq(o1, o2) = " + String(objValEq(o1, o2, ["sales_date"])));
+console.log("objValEq(o1, o3) = " + String(objValEq(o1, o3, ["sales_date"])));
+console.log("o1 = " + String(o1["sales_date"]));
+console.log("o3 = " + String(o3["sales_date"]));
+
+
+let day1 = moment("2019-07-01T00:00:00");
+console.log("day1 = [" + String(day1) + "]");
+let o1a = {"sales_date": day1};
 
