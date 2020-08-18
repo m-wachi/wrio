@@ -41,6 +41,57 @@ function func01s(colNames : string[], recs: WrioDict<any>[]) : WrioDict<any> {
   return d1;
 }
 
+// func01 Map version
+function func01a(colNames : string[], idx: number, dic: Map<any, any>, rec: WrioDict<any>) : Map<any, any> {
+  console.log("==func01a== dic =");
+  console.log(dic);
+  console.log("idx=" + String(idx) + "==");
+
+  //console.log("idx=" + String(idx));
+
+  //let sKey: string = String(rec[colNames[idx]]);
+  let vKey: any = rec[colNames[idx]];
+  let endIdx: number = colNames.length - 1;
+  console.log("vKey=[" + String(vKey) + "], endIdx=" + String(endIdx) + "==");
+
+  if (idx > endIdx) {
+    return dic;
+  } else if (idx === endIdx) {
+    //dic[sKey] = rec;
+    console.log("==dic==");
+    console.log(dic);
+    dic.set(vKey, rec);
+    return dic;
+  } else {
+    //if (!(sKey in dic)) {
+    if (dic.has(vKey)) {
+      
+      //dic[sKey] = {};
+      dic.set(vKey, new Map<any, any>());
+    }
+    //func01(colNames, idx + 1, dic[sKey], rec);
+    func01a(colNames, idx + 1, dic.get(vKey), rec);
+    return dic;
+  }
+}
+
+/**
+ * apply func01 to array items
+ * @param colNames 
+ * @param recs 
+ */
+function func01as(colNames : string[], recs: WrioDict<any>[]) : Map<any, any> {
+  //var d1 = {};
+  var d1 = new Map<any, any>();
+  console.log("=func01a=d1==");
+  console.log(d1);
+  recs.forEach(rec => {
+    func01a(colNames, 0, d1, rec);
+  });
+
+  return d1;
+}
+
 
 
 /**
@@ -134,6 +185,12 @@ var pvt1 = func01s(colNames, recs);
 
 console.log("==== pvt1 ====");
 console.log(pvt1);
+
+var pvt2 = func01as(colNames, recs);
+
+console.log("==== pvt2 ====");
+console.log(pvt2);
+
 
 let k1s = recs.map(rec => {
   var a : WrioDict<any> = {};
