@@ -43,33 +43,33 @@ function func01s(colNames : string[], recs: WrioDict<any>[]) : WrioDict<any> {
 
 // func01 Map version
 function func01a(colNames : string[], idx: number, dic: Map<any, any>, rec: WrioDict<any>) : Map<any, any> {
+  /*
   console.log("==func01a== dic =");
   console.log(dic);
   console.log("idx=" + String(idx) + "==");
-
-  //console.log("idx=" + String(idx));
+  */
 
   //let sKey: string = String(rec[colNames[idx]]);
   let vKey: any = rec[colNames[idx]];
   let endIdx: number = colNames.length - 1;
-  console.log("vKey=[" + String(vKey) + "], endIdx=" + String(endIdx) + "==");
+  //console.log("vKey=[" + String(vKey) + "], endIdx=" + String(endIdx) + "==");
 
   if (idx > endIdx) {
     return dic;
   } else if (idx === endIdx) {
     //dic[sKey] = rec;
-    console.log("==dic==");
-    console.log(dic);
+    //console.log("==dic==");
+    //console.log(dic);
     dic.set(vKey, rec);
     return dic;
   } else {
     //if (!(sKey in dic)) {
-    if (dic.has(vKey)) {
+    if (!dic.has(vKey)) {
       
       //dic[sKey] = {};
       dic.set(vKey, new Map<any, any>());
     }
-    //func01(colNames, idx + 1, dic[sKey], rec);
+
     func01a(colNames, idx + 1, dic.get(vKey), rec);
     return dic;
   }
@@ -113,6 +113,20 @@ function func02(hdrs: string[], recs: WrioDict<any>[]) : WrioDict<any> {
   return func01s(hdrs, xs);
 }
 
+function func02a(hdrs: string[], recs: WrioDict<any>[]) : Map<any, any> {
+
+  let xs = recs.map(rec => {
+    var x : WrioDict<any> = {};
+    hdrs.forEach(hdr => {
+      x[hdr] = rec[hdr];
+    });
+    return x;
+  });
+  return func01as(hdrs, xs);
+}
+
+
+
 /**
  * test Objects have same property value.
  * @param o1 
@@ -139,11 +153,11 @@ function objValEq(o1: WrioDict<any>, o2: WrioDict<any>, propNames: string[]) : b
 console.log("Hello World.");
 
 var recs = [];
-recs.push({"sales_date":moment("2019-07-01T00:00:00"),"item_name":"アイテム０１","nof_sales":10});
-recs.push({"sales_date":moment("2019-07-01T00:00:00"),"item_name":"アイテム０２","nof_sales":15});
-recs.push({"sales_date":moment("2019-07-02T00:00:00"),"item_name":"アイテム０１","nof_sales":20});
-recs.push({"sales_date":moment("2019-07-02T00:00:00"),"item_name":"アイテム０２","nof_sales":25});
-recs.push({"sales_date":moment("2019-07-01T00:00:00"),"item_name":"アイテム０１","nof_sales":3});
+recs.push({"sales_date":moment("2019-07-01T00:00:00").toDate(),"item_name":"アイテム０１","nof_sales":10});
+recs.push({"sales_date":moment("2019-07-01T00:00:00").toDate(),"item_name":"アイテム０２","nof_sales":15});
+recs.push({"sales_date":moment("2019-07-02T00:00:00").toDate(),"item_name":"アイテム０１","nof_sales":20});
+recs.push({"sales_date":moment("2019-07-02T00:00:00").toDate(),"item_name":"アイテム０２","nof_sales":25});
+recs.push({"sales_date":moment("2019-07-01T00:00:00").toDate(),"item_name":"アイテム０１","nof_sales":3});
 
 console.log("ismoment");
 console.log(isMoment(recs[0]["sales_date"]));
@@ -210,9 +224,19 @@ let k2Sets = func02(pvtRowHdrs, recs);
 console.log("===== k2Sets ====");
 console.log(k2Sets);
 
+const k2Sets2 = func02a(pvtRowHdrs, recs);
+console.log("===== k2Sets2 ====");
+console.log(k2Sets2);
+
+
 let k3Sets = func02(colNames, recs);
 console.log("===== k3Sets ====");
 console.log(k3Sets);
+
+let k3Sets2 = func02a(colNames, recs);
+console.log("===== k3Sets2 ====");
+console.log(k3Sets2);
+
 /*
 let o1 = {"sales_date":"2019-07-01T00:00:00"};
 let o2 = {"sales_date":"2019-07-01T00:00:00"};
