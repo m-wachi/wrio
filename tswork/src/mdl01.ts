@@ -29,8 +29,11 @@ export class WrioDate implements IWrioBase {
     }
 
     equals(v: any) : boolean {
+        /*
         let vTypeName = v.getTyepName();
         if (vTypeName === "WrioDate") {
+        */
+        if (v instanceof WrioDate) {
             return this.momentValue.isSame(v.momentValue);
         }
         return false;
