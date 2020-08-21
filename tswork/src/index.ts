@@ -1,4 +1,5 @@
 ﻿import moment, { isMoment } from 'moment';
+import {WrioDate} from './mdl01';
 
 interface WrioDict<T> {
   [key: string] : T;
@@ -305,3 +306,19 @@ for (const colHdr of pvtColHdr3) {
 console.log(s1);
 console.log("-----------------------");
 
+console.log("abc=%d", 3);
+let s99 = "abc";
+console.log("s99 type=" + String(typeof s99));  // string
+let o99 = {abc: 123};
+console.log("o99 type=" + String(typeof o99));  // object
+
+let wd1 = new WrioDate("2019-07-01T00:00:00");
+let wd2 = new WrioDate("2019-07-01T00:00:00");
+let wd3 = new WrioDate("2019-07-02T00:00:00");
+
+console.log("wd1=" + new String(wd1));
+console.log("wd2=" + new String(wd1));
+console.log("wd3=" + new String(wd1));
+
+console.log("wd1.equals(wd2)=" + String(wd1.equals(wd2)));
+console.log("wd1.equals(wd3)=" + String(wd1.equals(wd3)));
