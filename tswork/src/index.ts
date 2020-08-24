@@ -1,5 +1,5 @@
 ﻿import moment, { isMoment } from 'moment';
-import {WrioDate} from './mdl01';
+import {WrioDate, WrioMap, WrioValue, WrioRecord} from './mdl01';
 
 interface WrioDict<T> {
   [key: string] : T;
@@ -153,12 +153,41 @@ function objValEq(o1: WrioDict<any>, o2: WrioDict<any>, propNames: string[]) : b
 
 console.log("Hello World.");
 
-var recs = [];
+let recs = [];
+
 recs.push({"sales_date":moment("2019-07-01T00:00:00").toDate(),"item_name":"アイテム０１","nof_sales":10});
 recs.push({"sales_date":moment("2019-07-01T00:00:00").toDate(),"item_name":"アイテム０２","nof_sales":15});
 recs.push({"sales_date":moment("2019-07-02T00:00:00").toDate(),"item_name":"アイテム０１","nof_sales":20});
 recs.push({"sales_date":moment("2019-07-02T00:00:00").toDate(),"item_name":"アイテム０２","nof_sales":25});
 recs.push({"sales_date":moment("2019-07-01T00:00:00").toDate(),"item_name":"アイテム０１","nof_sales":3});
+
+let rec2s = [];
+let r1 = new Map<string, WrioValue>();
+r1.set("sales_date", new WrioDate("2019-07-01T00:00:00"));
+r1.set("item_name", "アイテム０１");
+r1.set("nof_sales", 10);
+rec2s.push(r1);
+let r2 = new Map<string, WrioValue>();
+r2.set("sales_date", new WrioDate("2019-07-01T00:00:00"));
+r2.set("item_name", "アイテム０２");
+r2.set("nof_sales", 15);
+rec2s.push(r2);
+let r3 = new Map<string, WrioValue>();
+r3.set("sales_date", new WrioDate("2019-07-02T00:00:00"));
+r3.set("item_name", "アイテム０１");
+r3.set("nof_sales", 20);
+rec2s.push(r3);
+let r4 = new Map<string, WrioValue>();
+r4.set("sales_date", new WrioDate("2019-07-02T00:00:00"));
+r4.set("item_name", "アイテム０２");
+r4.set("nof_sales", 25);
+rec2s.push(r4);
+let r5 = new Map<string, WrioValue>();
+r1.set("sales_date", new WrioDate("2019-07-01T00:00:00"));
+r1.set("item_name", "アイテム０１");
+r1.set("nof_sales", 10);
+
+
 
 console.log("ismoment");
 console.log(isMoment(recs[0]["sales_date"]));
@@ -322,3 +351,13 @@ console.log("wd3=" + new String(wd1));
 
 console.log("wd1.equals(wd2)=" + String(wd1.equals(wd2)));
 console.log("wd1.equals(wd3)=" + String(wd1.equals(wd3)));
+
+let wrMap = new WrioMap();
+wrMap.set(wd1, "wd1");
+wrMap.set(wd2, "wd2");
+wrMap.set(wd3, "wd3");
+
+console.log("wrMap.get(wd1)=%s", wrMap.get(wd1));
+console.log("wrMap.get(wd2)=%s", wrMap.get(wd2));
+console.log("wrMap.get(wd3)=%s", wrMap.get(wd3));
+
