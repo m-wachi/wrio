@@ -9,18 +9,34 @@ export interface IWrioBase {
   equals(v: any) : boolean;
 }
 
-export function equals(v1: WrioValue, v2: WrioValue) : boolean {
-  if (v1 === null || v2 === null) {
-    return (v1 === v2);
+export function equals(v1: WrioValue | undefined, v2: WrioValue | undefined) : boolean {
+  if (v1 === undefined) {
+    return (v2 === undefined);
   }
-  if ("string" === typeof v1 || "string" === typeof v2) {
-    return (v1 === v2)
-  }
-  if ("number" === typeof v1 || "number" === typeof v2) {
-    return (v1 === v2)
-  }
-  //TODO!!!
 
+  if (v1 === null) {
+    return (v2 === null);
+  }
+
+  if ("string" === typeof v1) {
+    if ("string" === typeof v2) {
+      return (v1 === v2);
+    } else {
+      return false;
+    }
+  }
+  
+  if ("number" === typeof v1) {
+    if ("number" === typeof v2) {
+      return (v1 === v2);
+    } else {
+      return false;
+    }
+  }
+
+  const iwb = v1 as IWrioBase;
+  return iwb.equals(v2);
+  
 }
 
 
@@ -64,31 +80,55 @@ export class WrioRecord implements IWrioBase {
   constructor() {
     this.map_ = new Map();
   }
-  getTypeName() : string {
+
+  public get(k: string) : WrioValue | undefined {
+    const v = this.map_.get(k);
+    return v;
+  }
+  public set(k: string, v: WrioValue) : void{
+    this.map_.set(k, v);
+  }
+
+  public getSize() {
+    return this.map_.size;
+  }
+
+  public entries() {
+    return this.map_.entries();
+  }
+
+  public getTypeName() : string {
     return WrioRecord.TYPENAME;
   }
 
-  equals(wr: any) : boolean {
+  public equals(wr: any) : boolean {
     if (!(wr instanceof WrioRecord)) {
       return false;
     }
 
+    const wr2 = wr as WrioRecord;
+
+    //size check
+    if (this.getSize() !== wr2.getSize()) {
+      return false;
+    }
+
     const ite = this.map_.entries();
+
     let iteResult = ite.next();
     while(!iteResult.done) {
       const kvPair = iteResult.value;
       const k = kvPair[0];
       const v = kvPair[1];
-      if ()
+      if (!equals(v, wr2.get(k))) {
+        return false;
+      }
     }
-
-      return this.momentValue.isSame(v.momentValue);
-    }
-    return false;
+    return true;
   }
 
-  toString(): string {
-    return this.momentValue.toString();
+  public toString(): string {
+    return String(this.map_);
   }
 
 }
@@ -146,10 +186,25 @@ export class WrioMap {
       }
       iteResult = ite.next();
     }
-    
     //console.log("WrioMap.set() endset.")
     this.map_.set(theKey, theValue);
 
+  }
+
+  public entries() {
+    return this.map_.entries();
+  }
+
+  public keys() {
+    return this.map_.keys();
+  }
+
+  public getSize() {
+    return this.map_.size;
+  }
+
+  public toString(): string {
+    return String(this.map_);
   }
 
 }
