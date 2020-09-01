@@ -32,7 +32,7 @@ describe("A suite", function() {
 
     let wrMap = new WrioMap();
     wrMap.set(wd1, "wd1");
-    wrMap.set(wd2, "wd2");  // override wd1
+    wrMap.set(wd2, "wd2");  // overwrite wd1
     wrMap.set(wd3, "wd3");
 
     expect(wrMap.get(wd1)).toBe("wd2");

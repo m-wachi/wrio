@@ -128,11 +128,14 @@ export class WrioRecord implements IWrioBase {
   }
 
   public toString(): string {
-    return String(this.map_);
+    let lstKv : string[] = [];
+    this.map_.forEach((v, k, mp) => {
+      lstKv.push(String(k) + ": " + String(v));
+    });
+    return ("WrioRecord {" + lstKv.join(", ") + "}");
   }
 
 }
-
 
 
 export class WrioMap {

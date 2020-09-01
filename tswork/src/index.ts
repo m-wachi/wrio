@@ -361,3 +361,7 @@ console.log("wrMap.get(wd1)=%s", wrMap.get(wd1));
 console.log("wrMap.get(wd2)=%s", wrMap.get(wd2));
 console.log("wrMap.get(wd3)=%s", wrMap.get(wd3));
 
+let wrRec1 = new WrioRecord();
+wrRec1.set("k1", 5);
+wrRec1.set("k2", "strValue1");
+console.log("wrRec1=%s", String(wrRec1));
