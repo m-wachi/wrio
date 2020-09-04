@@ -123,6 +123,7 @@ export class WrioRecord implements IWrioBase {
       if (!equals(v, wr2.get(k))) {
         return false;
       }
+      iteResult = ite.next();
     }
     return true;
   }

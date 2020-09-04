@@ -41,4 +41,20 @@ describe("A suite", function() {
 
   });
 
+  it("WrioRecord.equals() test 01", function() {
+    let wrRec1 = new WrioRecord();
+    wrRec1.set("k1", 5);
+    wrRec1.set("k2", "strValue1");
+    let wrRec2 = new WrioRecord();
+    wrRec2.set("k1", 5);
+    wrRec2.set("k2", "strValue2");
+    let wrRec3 = new WrioRecord();
+    wrRec3.set("k1", 5);
+    wrRec3.set("k2", "strValue1");
+
+    expect(wrRec1.equals(wrRec2)).toBe(false);
+    expect(wrRec1.equals(wrRec3)).toBe(true);
+
+  });
+
 });

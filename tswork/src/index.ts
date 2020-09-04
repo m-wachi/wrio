@@ -364,4 +364,15 @@ console.log("wrMap.get(wd3)=%s", wrMap.get(wd3));
 let wrRec1 = new WrioRecord();
 wrRec1.set("k1", 5);
 wrRec1.set("k2", "strValue1");
+let wrRec2 = new WrioRecord();
+wrRec2.set("k1", 5);
+wrRec2.set("k2", "strValue2");
+let wrRec3 = new WrioRecord();
+wrRec3.set("k1", 5);
+wrRec3.set("k2", "strValue1");
+
 console.log("wrRec1=%s", String(wrRec1));
+console.log("wrRec2=%s", String(wrRec2));
+console.log("wrRec3=%s", String(wrRec3));
+console.log("wrRec1.equals(wrRec2)=" + String(wrRec1.equals(wrRec2)));
+console.log("wrRec1.equals(wrRec3)=" + String(wrRec1.equals(wrRec3)));
