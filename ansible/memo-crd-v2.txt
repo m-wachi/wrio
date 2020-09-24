@@ -1,0 +1,10 @@
+0) create 'dev01' user and add 'sudo' authority.
+
+1) ansible-playbook crd01v2.yml
+
+2) access https://remotedesktop.google.com/headless
+   then copy command
+
+3) paste command on target-host shell input, then enter-key
+
+

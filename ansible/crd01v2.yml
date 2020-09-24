@@ -1,0 +1,71 @@
+- hosts: svr5
+  remote_user: dev01
+  become: yes
+  tasks:
+  - name: Install the package "task-japanese"
+    apt:
+      pkg:
+      - task-japanese
+      - locales-all
+
+  - name: run localectl
+    command: localectl set-locale LANG=ja_JP.UTF-8 LANGUAGE="ja_JP:ja"
+
+  - name: change TZ
+    command: timedatectl set-timezone Asia/Tokyo
+    
+  - name: reboot
+    reboot:
+
+  - name: Download chrome-remote-desktop
+    get_url:
+      url: https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb
+      dest: /tmp/chrome-remote-desktop_current_amd64.deb
+
+  - name: install chrome-remote-desktop then apt --fix-broken
+    script: /home/dev01/dpkg-install-crd01.sh
+    args:
+      creates: /tmp/crdinst.txt
+
+  - name: install xfce4 desktop-base
+    script: /home/dev01/apt-install-xfce4.sh
+    args:
+      creates: /tmp/xfce4inst.txt
+
+  - name: set /etc/chrome-remote-desktop-session
+    copy:
+      src: /home/dev01/chrome-remote-desktop-session
+      dest: /etc/chrome-remote-desktop-session
+      owner: root
+      group: root
+      mode: '0644'
+           
+  - name: Install the package "xscreensaver"
+    apt:
+      name: xscreensaver
+
+  - name: Install the package "task-xfce-desktop"
+    apt:
+      name: task-xfce-desktop
+
+  - name: disable lightdm
+    systemd:
+      name: lightdm
+      enabled: no
+      
+  - name: Download Chrome Browser
+    get_url:
+      url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+      dest: /tmp/google-chrome-stable_current_amd64.deb
+
+  - name: install chrome-browser then apt --fix-broken
+    script: /home/dev01/dpkg-install-cb01.sh
+    args:
+      creates: /tmp/cbinst.txt
+
+  - name: append the group 'chrome-remote-desktop' to the 'dev01's groups
+    user:
+      name: dev01
+      groups: chrome-remote-desktop
+      append: yes
+
