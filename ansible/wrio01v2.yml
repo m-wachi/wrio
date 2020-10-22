@@ -1,0 +1,44 @@
+- hosts: svr5
+  remote_user: dev01
+  become: yes
+  vars:
+    v_home_dir: /home/dev01/
+    v_base_dir: "{{v_home_dir}}/nvm-work"
+
+  tasks:
+  - name: Install packages "posgresql, nginx, etc.."
+    apt:
+      pkg:
+      - emacs
+      - postgresql
+      - git
+      - vnc4server
+      - default-jdk
+      - libpostgresql-jdbc-java
+      - nginx
+
+- hosts: svr5
+  remote_user: dev01
+  vars:
+    v_home_dir: /home/dev01/
+    v_base_dir: "{{v_home_dir}}/nvm-work"
+  tasks:
+  - name: create working dir 'nvm-work'
+    file: path={{v_base_dir}} state=directory
+
+  - name: Download nvm install script
+    get_url:
+      url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh
+      dest: "{{v_base_dir}}/nvm-install.sh"
+      mode: 0755
+
+  - name: run nvm install script
+    shell: ./nvm-install.sh > nvm-install.log
+    args:
+      chdir: "{{v_base_dir}}"
+      creates: "{{v_base_dir}}/nvm-install.log"
+      
+  - name: install node js and angular latest
+    script: /home/dev01/install-ndjs-ng.sh
+    args:
+      creates: "{{v_base_dir}}/install-ndjs-ng.txt"
