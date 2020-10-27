@@ -1,0 +1,46 @@
+- hosts: svr5
+  remote_user: dev01
+  vars:
+    v_home_dir: /home/dev01
+    v_src_dir: "{{v_home_dir}}/src/wrio"
+
+  tasks:
+    - name: create 'src' dir
+      file: path="{{v_src_dir}}" state=directory
+
+    - name: git clone
+      git:
+        repo: https://github.com/m-wachi/wrio.git
+        dest: "{{v_src_dir}}"
+
+    - name: copy .pgpass
+      shell: cp -p ~/src/wrio/db/dot-pgpass ~/.pgpass
+      args:
+        creates: "{{v_home_dir}}/.pgpass"
+
+    - name: chmod .pgpass
+      file:
+        path: "{{v_home_dir}}/.pgpass"
+        mode: '0600'
+
+    - name: create system tables
+      shell: ./setup-tables.sh
+      args:
+        chdir: "{{v_home_dir}}/src/wrio/db/system"
+
+    - name: create system table data
+      shell: ./setup-data.sh
+      args:
+        chdir: "{{v_home_dir}}/src/wrio/db/system"
+
+    - name: create target tables
+      shell: ./setup-tables.sh
+      args:
+        chdir: "{{v_home_dir}}/src/wrio/db/target"
+
+    - name: create target table data
+      shell: ./setup-data.sh
+      args:
+        chdir: "{{v_home_dir}}/src/wrio/db/target"
+
+

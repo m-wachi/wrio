@@ -1,0 +1,10 @@
+#install required softwares
+ansible-playbook wrio01v2.yml
+
+#setup postgresql user, database
+ansible-playbook wrio02.yml  #for production
+ansible-playbook wrio02_2.yml  #for unit-test
+
+#setup database tables and data
+ansible-playbook wrio03.yml
+

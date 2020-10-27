@@ -1,0 +1,11 @@
+- hosts: svr5
+  remote_user: dev01
+  vars:
+    v_home_dir: /home/dev01/
+    v_base_dir: "{{v_home_dir}}/nvm-work"
+  tasks:
+    - name: create postgresql user
+      script: /home/dev01/wrio_pg01.sh
+      args:
+        creates: /tmp/wrio_pg01.log
+
