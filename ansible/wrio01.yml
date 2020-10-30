@@ -1,0 +1,36 @@
+- hosts: svr5
+  remote_user: dev01
+  become: yes
+  tasks:
+  - name: Install packages "posgresql, nginx, etc.."
+    apt:
+      pkg:
+      - emacs
+      - postgresql
+      - git
+      - vnc4server
+      - default-jdk
+      - libpostgresql-jdbc-java
+      - nginx
+
+- hosts: svr5
+  remote_user: dev01
+  tasks:
+  - name: create working dir 'nvm-work'
+    file: path=/home/dev01/nvm-work state=directory
+
+  - name: Download nvm install script
+    get_url:
+      url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh
+      dest: /home/dev01/nvm-work/nvm-install.sh
+      mode: 0755
+
+  - name: run nvm install script
+    shell: /home/dev01/nvm-work/nvm-install.sh > /home/dev01/nvm-work/nvm-install.log
+    args:
+      creates: /home/dev01/nvm-work/nvm-install.log
+      
+  - name: install node js latest
+    script: /home/dev01/install-nodejs.sh
+    args:
+      creates: /home/dev01/nvm-work/install-nodejs.txt
