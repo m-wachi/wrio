@@ -40,13 +40,12 @@
       group: root
       mode: '0644'
            
-  - name: Install the package "xscreensaver"
+  - name: Install the package "xscreensaver", "task-xfce-desktop", "vnc4server"
     apt:
-      name: xscreensaver
-
-  - name: Install the package "task-xfce-desktop"
-    apt:
-      name: task-xfce-desktop
+      pkg:
+        - xscreensaver
+        - task-xfce-desktop
+        - vnc4server
 
   - name: disable lightdm
     systemd:
