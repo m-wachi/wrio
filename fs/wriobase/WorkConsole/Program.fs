@@ -204,13 +204,7 @@ let main argv =
 
     printfn "%A" sqlExecCnt
     *)
-    (*
-    let pvtSt1 = PivotSetting()
-    pvtSt1.DatasetId <- 3
-    pvtSt1.RowHdr <- [|"rowHdr01"; "rowHdr02"|]
-    pvtSt1.ColHdr <- [|"col1"; "col2"|]
-    pvtSt1.RowOdr <- [|"row1"|]
-    *)
+
     let pvtSt1 = PivotSetting()
     pvtSt1.DatasetId <- 4
     pvtSt1.RowHdr <- [|"f.sales_date"|]
@@ -274,5 +268,34 @@ let main argv =
 
     let pvtData2 = BsLogic01.getPivotDataLogic pvt1 cfg
     printfn "pvtData2=%A" pvtData2
+
+
+    let pvtSt3 = PivotSetting()
+    pvtSt3.DatasetId <- 2
+    pvtSt3.RowHdr <- [|"f02.sales_date"|]
+    pvtSt3.ColHdr <- [|"d02.merc_name"|]
+    pvtSt3.CellVal <- [|CellVal("nof_sales", "f02", 1)|]
+    pvtSt3.RowOdr <- [|"f02.sales_date"|]
+
+
+    printfn "pvtSt3"
+    printfn "%A" pvtSt3
+
+    let sPvtSt3 = JsonSerializer.Serialize(pvtSt3, sOpt)
+
+    printfn "sPvtSt3=%s" sPvtSt3
+
+    let optPvt2 = BsLogic01.getPivotLogic 2 cfg
+    printfn "optPvt2=%A" optPvt2
+
+    let pvt2 = match optPvt2 with
+                | Some x -> x
+                | None -> dummyPivot1
+
+    printfn "pvt2=%A" pvt2
+
+    let pvtData3 = BsLogic01.getPivotDataLogic pvt2 cfg
+    printfn "pvtData3=%A" pvtData3
+
 
     0 // return an integer exit code
