@@ -46,6 +46,33 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
 
         BsLogic01.getPivotLogic 1 myCfg 
 
+
+    // return PivotData option
+    // PUT: http://localhost:5000/sys01/pvt/{pivotId}
+    [<HttpPut("pvt/{pivotId}")>]
+    member this.PutPivot01(pivotId: int, pvt: Pivot): string =
+
+        let myCfg = MyConfig()
+
+        let a = config.GetSection("AppConfiguration")
+
+        myCfg.SysConnStr <- a.GetValue("SystemConnectionString")
+        myCfg.UsrConnStr <- a.GetValue("UserConnectionString")
+
+        (*
+        let optPvt1 = BsLogic01.getPivotLogic 1 myCfg 
+        
+        match optPvt1 with
+            | Some pvt1 -> 
+                let pvtData =  BsLogic01.getPivotDataLogic pvt1 myCfg
+                Some pvtData
+            | None -> None
+        *)
+        //Some (BsLogic01.getPivotDataLogic pvt myCfg)
+        pvt.PivotId.ToString()
+
+
+
     [<HttpGet("pvtdt1")>]
     member this.GetPivotData01(): PivotData option =
 
@@ -63,3 +90,6 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
                 let pvtData =  BsLogic01.getPivotDataLogic pvt1 myCfg
                 Some pvtData
             | None -> None
+
+
+

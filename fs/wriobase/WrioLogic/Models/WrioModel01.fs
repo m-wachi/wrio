@@ -99,19 +99,28 @@ type PivotSetting() =
     override this.ToString(): string =
         sprintf "PivotSetting { datasetId=%d, colHdr=%A, rowHdr=%A, CellVal=%A, rowOdr=%A, colOdr=%A }" datasetId colHdr rowHdr cellVal rowOdr colOdr
 
-
+(*
 type Pivot = {
     PivotId : int
     DatasetId : int
     Setting : PivotSetting
     DtSet : DtSet
 }
-(*
-type Pivot(datasetId : int, settingJson : string, dtSet : Dataset)
+*)
+
+type Pivot(pivotId : int, datasetId : int, settingJson : string, dataSet : DtSet) =
+    (*
+    let mutable pivotId : int
+    let mutable datasetId : int = pDatasetId
+    let mutable settingJson : string
+    let mutable dataSet : DtSet
+    *)
+    new() = Pivot(-1, -1, "", DtSet())
+    member this.PivotId: int  = pivotId
     member this.DatasetId : int = datasetId
     member this.SettingJson : string = settingJson
-    member this.Dataset : DtSet = dtSet
-*)
+    member this.Dataset : DtSet = dataSet
+
 
 type PivotData(pColNames: string array, pRows: (obj array) array) = 
     let mutable colNames: string array = pColNames
