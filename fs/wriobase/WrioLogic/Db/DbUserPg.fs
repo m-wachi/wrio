@@ -33,7 +33,7 @@ module DbUserPg =
             ("", 0)
 
     let usrPgMyfunc02 (conn : NpgsqlConnection) (pvt: Pivot) =
-        let dtSet = pvt.DtSet
+        let dtSet = pvt.DataSet
         let dim1 = dtSet.Dimensions.[0]
 
         //let sSelectClause = "SELECT " + pvt.SettingJson["rowhdr"][0]
@@ -66,7 +66,7 @@ module DbUserPg =
         String.Format("{0}.{1} = {2}.{3}", dtJoin.DstAbbrev, dtJoin.JoinDstCol, srcAbbrev, dtJoin.JoinSrcCol)
 
     let toSql (pvt: Pivot) : string =
-        let dtSet = pvt.DtSet
+        let dtSet = pvt.DataSet
         let dim1 = dtSet.Dimensions.[0]
 
         let getAccumFuncExp (x: CellVal) = "SUM(" + x.Abbrev + "." + x.ColName + ") " + x.ColName

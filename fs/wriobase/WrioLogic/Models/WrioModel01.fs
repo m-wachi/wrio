@@ -108,19 +108,20 @@ type Pivot = {
 }
 *)
 
-type Pivot(pivotId : int, datasetId : int, settingJson : string, dataSet : DtSet) =
+type Pivot(pivotId : int, datasetId : int, setting : PivotSetting, pDataSet : DtSet) =
     (*
     let mutable pivotId : int
     let mutable datasetId : int = pDatasetId
     let mutable settingJson : string
-    let mutable dataSet : DtSet
     *)
-    new() = Pivot(-1, -1, "", DtSet())
+    let mutable dataSet : DtSet = pDataSet
+    new() = Pivot(-1, -1, PivotSetting(), DtSet())
     member this.PivotId: int  = pivotId
     member this.DatasetId : int = datasetId
-    member this.SettingJson : string = settingJson
-    member this.Dataset : DtSet = dataSet
-
+    member this.Setting : PivotSetting = setting
+    member this.DataSet 
+        with get() : DtSet = dataSet
+        and set(v : DtSet) = dataSet <- v
 
 type PivotData(pColNames: string array, pRows: (obj array) array) = 
     let mutable colNames: string array = pColNames

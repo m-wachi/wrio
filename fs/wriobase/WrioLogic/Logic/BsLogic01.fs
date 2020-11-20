@@ -104,12 +104,15 @@ module BsLogic01 =
         let optPvt = 
             match optDtset with
                 | Some dtSet -> 
+(*
                     let pvt : Pivot = {
                         PivotId = pivotId
                         DatasetId = datasetId
                         Setting = pvtSetting
                         DtSet = dtSet
                     }
+*)
+                    let pvt = Pivot(pivotId, datasetId, pvtSetting, dtSet)
                     Some pvt
                 | None -> None
 

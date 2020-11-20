@@ -227,12 +227,15 @@ let main argv =
     let optPvt1 = BsLogic01.getPivotLogic 1 cfg
     printfn "optPvt1=%A" optPvt1
 
+    (*
     let dummyPivot1 : Pivot = {
         PivotId = -1
         DatasetId = -1
         Setting = pvtSt1
         DtSet = DtSet()
     }
+    *)
+    let dummyPivot1 = Pivot(-1, -1, pvtSt1, DtSet())
 
     let pvt1 = match optPvt1 with
                 | Some x -> x

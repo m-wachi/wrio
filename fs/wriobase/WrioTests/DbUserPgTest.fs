@@ -31,12 +31,7 @@ module DbUserPgTest =
         pvtSt1.ColHdr <- [|"m.col1"; "m.col2"|]
         pvtSt1.RowOdr <- [|"t1.row1"|]
         pvtSt1.CellVal <- [|CellVal("col3", "m", 0); CellVal("col4", "m", 1)|]
-        let pvt1 : Pivot = {
-            PivotId = 2
-            DatasetId = 4
-            Setting = pvtSt1
-            DtSet = dtSet1
-        }
+        let pvt1 = Pivot(2, 4, pvtSt1, dtSet1)
         pvt1
 
 
@@ -54,12 +49,7 @@ module DbUserPgTest =
         pvtSt1.CellVal <- [|CellVal("nof_sales", "f", 1)|]
         pvtSt1.RowOdr <- [|"f.sales_date"|]
         
-        let pvt1 : Pivot = {
-            PivotId = 2
-            DatasetId = 4
-            Setting = pvtSt1
-            DtSet = dtSet1
-        }
+        let pvt1 = Pivot(2, 4, pvtSt1, dtSet1)
         pvt1
 
     let execSql (conn: NpgsqlConnection) (sql: string) : int =

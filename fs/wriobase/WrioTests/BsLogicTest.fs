@@ -153,8 +153,8 @@ module BsLogicTest =
             | Some pvt ->
                 Assert.AreEqual(4, pvt.PivotId)
                 Assert.AreEqual(3, pvt.DatasetId)
-                Assert.AreEqual(3,pvt.DtSet.DatasetId)
-                Assert.AreEqual("t_table03", pvt.DtSet.Fact.Table)
+                Assert.AreEqual(3,pvt.DataSet.DatasetId)
+                Assert.AreEqual("t_table03", pvt.DataSet.Fact.Table)
                 Assert.AreEqual("d01.item_name", pvt.Setting.ColHdr.[0])
                 Assert.AreEqual("nof_sales", pvt.Setting.CellVal.[0].ColName)
 

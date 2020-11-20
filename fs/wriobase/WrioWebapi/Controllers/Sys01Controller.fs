@@ -50,7 +50,7 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
     // return PivotData option
     // PUT: http://localhost:5000/sys01/pvt/{pivotId}
     [<HttpPut("pvt/{pivotId}")>]
-    member this.PutPivot01(pivotId: int, pvt: Pivot): string =
+    member this.PutPivot01(pivotId: int, pvt: Pivot): PivotData option =
 
         let myCfg = MyConfig()
 
@@ -68,9 +68,14 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
                 Some pvtData
             | None -> None
         *)
-        //Some (BsLogic01.getPivotDataLogic pvt myCfg)
-        pvt.PivotId.ToString()
 
+        //let dtSet = 
+        let optDtSet = BsLogic01.getDtSetLogic pvt.DatasetId myCfg
+        match optDtSet with
+            | Some dtSet -> 
+                pvt.DataSet <- dtSet
+                Some (BsLogic01.getPivotDataLogic pvt myCfg)
+            | None -> None
 
 
     [<HttpGet("pvtdt1")>]
