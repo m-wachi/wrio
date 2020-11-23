@@ -158,6 +158,12 @@ let main argv =
 
     let pvtSt3 : PivotSetting = JsonSerializer.Deserialize<PivotSetting>(settingJsonStr1, sOpt)
     printfn "pvtSt3=%A" pvtSt3
+    
+    
+    let lstDsTbl = DbSystem.getDsTable conn1 2
+    printfn "lstDsTbl=%A" lstDsTbl
+
+
     conn1.Close()
 
     let conn2 = new NpgsqlConnection(connStringTest)
