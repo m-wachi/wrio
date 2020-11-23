@@ -1,8 +1,8 @@
-drop table m_merc_grp;
+ï»¿drop table m_merc_grp;
 
 create table m_merc_grp(
-    merc_grp_cd numeric(2) NOT NULL, -- •ª—ŞCD
-	merc_grp_name character varying(40) NOT NULL, -- •ª—Ş–¼
+    merc_grp_cd numeric(2) NOT NULL, -- åˆ†é¡CD
+	merc_grp_name character varying(40) NOT NULL, -- åˆ†é¡å
 	constraint pk_m_merc_grp primary key (merc_grp_cd)
 );
 

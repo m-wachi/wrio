@@ -1,9 +1,9 @@
-drop table m_kitchenware_item;
+ï»¿drop table m_kitchenware_item;
 
 create table m_kitchenware_item(
-	merc_cd character varying(9) NOT NULL, -- ¤•iCD
-	merc_name character varying(40) NOT NULL, -- ¤•i–¼
-    merc_grp_cd numeric(2) NOT NULL, -- •ª—ŞCD
+	merc_cd character varying(9) NOT NULL, -- å•†å“CD
+	merc_name character varying(40) NOT NULL, -- å•†å“å
+    merc_grp_cd numeric(2) NOT NULL, -- åˆ†é¡CD
 	constraint pk_m_kitchenware_item primary key (merc_cd)
 );
 
