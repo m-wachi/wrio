@@ -1,0 +1,5 @@
+dot net add package log4net
+
+https://docs.microsoft.com/ja-jp/nuget/quickstart/install-and-use-a-package-using-the-dotnet-cli
+
+https://logging.apache.org/log4net/
