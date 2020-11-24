@@ -16,6 +16,10 @@ module Program =
 
     let CreateHostBuilder args =
         Host.CreateDefaultBuilder(args)
+            .ConfigureLogging(fun hostingContext logging ->
+                logging.ClearProviders() |> ignore
+                logging.AddLog4Net() |> ignore
+            )
             .ConfigureWebHostDefaults(fun webBuilder ->
                 webBuilder.UseStartup<Startup>() |> ignore
             )

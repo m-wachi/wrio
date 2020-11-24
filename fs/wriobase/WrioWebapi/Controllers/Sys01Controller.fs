@@ -18,7 +18,7 @@ open Wrio.Logic
 type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration) =
     inherit ControllerBase()
 
-    let summaries = [| "Freezing"; "Bracing"; "Chilly"; "Cool"; "Mild"; "Warm"; "Balmy"; "Hot"; "Sweltering"; "Scorching" |]
+    //let summaries = [| "Freezing"; "Bracing"; "Chilly"; "Cool"; "Mild"; "Warm"; "Balmy"; "Hot"; "Sweltering"; "Scorching" |]
 
     [<HttpGet>]
     member __.Get() : MyWork01Model =
@@ -32,6 +32,8 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
     //http://localhost:5000/sys01/pvt/{pivotId}
     [<HttpGet("pvt/{pivotId}")>]
     member this.GetPivot01(pivotId: int): Pivot option =
+
+        logger.LogInformation("Sys01Controller.GetPivot01 called. pivotId=%d", pivotId)
 
         this.HttpContext.Session.Set("testkey", System.Text.Encoding.ASCII.GetBytes("abc"))
         //.Set("testkey",     ) |> ignore
