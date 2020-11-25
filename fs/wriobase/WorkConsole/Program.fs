@@ -4,11 +4,18 @@ open System
 open System.Data.Common
 open System.Text.Json
 open Npgsql
+open log4net
+open log4net.Config
 
 open Wrio.Util
 open Wrio.Models
 open Wrio.Logic
 open Wrio.Db
+
+(*
+[<assembly: log4net.Config.XmlConfigurator(ConfigFile="log4net.config",Watch=true)>]
+do()
+*)
 
 let execSql (conn: NpgsqlConnection) (sql: string) : int =
     let cmd = new NpgsqlCommand(sql, conn)
@@ -40,14 +47,45 @@ let func01 acc (lstDsJoin1: DbSysDsJoin list) (lstDsJoin2 : DbSysDsJoin list) =
         (dsJoin1, lst1, lst2)
 *)
 
+type MyLogger(pDummy: string) =
+    let mutable logger : ILog = LogManager.GetLogger(typeof<MyLogger>)
+    //let mutable dataSet : DtSet = pDataSet
+    (*
+    let mutable pivotId : int
+    let mutable datasetId : int = pDatasetId
+    let mutable settingJson : string
+    *)
+    (*
+    member this.PivotId: int  = pivotId
+    member this.DatasetId : int = datasetId
+    member this.Setting : PivotSetting = setting
+    member this.DataSet 
+        with get() : DtSet = dataSet
+        and set(v : DtSet) = dataSet <- v
+        *)
+    new() = MyLogger("")
+    member this.LogInfo(s : string) = 
+        logger.Info(s)
+
+
 
 [<EntryPoint>]
 let main argv =
     printfn "Hello World from F#!"
 
-    let sJson1 = JsonSerializer.Serialize("hey hey")
+    let logger: ILog = LogManager.GetLogger("main")
+
+    BasicConfigurator.Configure() |> ignore
+
+    let sJson1 = JsonSerializer.Serialize("hey hey2")
 
     printfn "%s" sJson1
+
+    logger.Info("logging: " + sJson1)
+
+    let lg2 = MyLogger()
+    lg2.LogInfo("aabbcc")
+
 (*
     let dsJoin21: DbSysDsJoin = {
         DsTableId = 1; SeqNo = 1; DatasetId = 1;
@@ -287,6 +325,7 @@ let main argv =
     pvtSt3.RowOdr <- [|"f02.sales_date"|]
 
 
+    (*
     printfn "pvtSt3"
     printfn "%A" pvtSt3
 
@@ -305,6 +344,6 @@ let main argv =
 
     let pvtData3 = BsLogic01.getPivotDataLogic pvt2 cfg
     printfn "pvtData3=%A" pvtData3
-
+    *)
 
     0 // return an integer exit code
