@@ -1,4 +1,4 @@
-namespace Wrio.Logic
+namespace Wrio.Common
 
 type IMyConfig = 
     abstract member GetSysConnStr : unit -> string

@@ -7,6 +7,7 @@ open Npgsql
 open log4net
 open log4net.Config
 
+open Wrio.Common
 open Wrio.Util
 open Wrio.Models
 open Wrio.Logic
@@ -82,6 +83,12 @@ let main argv =
     printfn "%s" sJson1
 
     logger.Info("logging: " + sJson1)
+
+    let ctx = WrioContext()
+
+    ctx.SetLogger(Log4jLogger(logger)) |> ignore
+
+    ctx.LogDebug("hello ctx.logging")
 
     let lg2 = MyLogger()
     lg2.LogInfo("aabbcc")

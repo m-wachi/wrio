@@ -4,16 +4,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Util/MyUtil.fs" />
+    <Compile Include="Common/MyConfig.fs" />
     <Compile Include="Common/WrioContext.fs" />
     <Compile Include="Models/WrioModel01.fs" />
     <Compile Include="Models/MyWork01Model.fs" />
     <Compile Include="Db/DbSystem.fs" />
     <Compile Include="Db/DbUserPg.fs" />
     <Compile Include="Logic/Library.fs" />
-    <Compile Include="Logic/MyConfig.fs" />
     <Compile Include="Logic/BsLogic01.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="4.1.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.12" />
   </ItemGroup>
 </Project>

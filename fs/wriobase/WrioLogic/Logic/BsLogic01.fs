@@ -3,6 +3,7 @@ namespace Wrio.Logic
 open System.Text.Json
 open Npgsql
 
+open Wrio.Common
 open Wrio.Util
 open Wrio.Models
 open Wrio.Db
