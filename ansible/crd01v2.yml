@@ -1,6 +1,8 @@
-- hosts: svr5
+- hosts: svrs
   remote_user: dev01
   become: yes
+  vars:
+    v_playbook_dir: /home/dev01/src/wrio/ansible
   tasks:
   - name: Install the package "task-japanese"
     apt:
@@ -23,18 +25,18 @@
       dest: /tmp/chrome-remote-desktop_current_amd64.deb
 
   - name: install chrome-remote-desktop then apt --fix-broken
-    script: /home/dev01/dpkg-install-crd01.sh
+    script: "{{v_playbook_dir}}/dpkg-install-crd01.sh"
     args:
       creates: /tmp/crdinst.txt
 
   - name: install xfce4 desktop-base
-    script: /home/dev01/apt-install-xfce4.sh
+    script: "{{v_playbook_dir}}/apt-install-xfce4.sh"
     args:
       creates: /tmp/xfce4inst.txt
 
   - name: set /etc/chrome-remote-desktop-session
     copy:
-      src: /home/dev01/chrome-remote-desktop-session
+      src: "{{v_playbook_dir}}/chrome-remote-desktop-session"
       dest: /etc/chrome-remote-desktop-session
       owner: root
       group: root
@@ -58,7 +60,7 @@
       dest: /tmp/google-chrome-stable_current_amd64.deb
 
   - name: install chrome-browser then apt --fix-broken
-    script: /home/dev01/dpkg-install-cb01.sh
+    script: "{{v_playbook_dir}}/dpkg-install-cb01.sh"
     args:
       creates: /tmp/cbinst.txt
 
