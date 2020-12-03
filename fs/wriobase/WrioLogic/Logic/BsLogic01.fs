@@ -53,11 +53,16 @@ module BsLogic01 =
 
 
     //let getDtSetLogic (connStrSys: string) (datasetId: int) = 
-    let getDtSetLogic (datasetId: int) (cfg: IMyConfig) : DtSet option = 
-        //let dbSysConn = DbSystem.getDbSysConn connStrSys
-        let sysConnStr = cfg.GetSysConnStr()
-        let dbSysConn = DbSystem.getDbSysConn sysConnStr
+    //let getDtSetLogic (datasetId: int) (cfg: IMyConfig) : DtSet option = 
+    let getDtSetLogic (ctx: WrioContext) (datasetId: int) : DtSet option = 
+        ctx.LogDebug("BsLogic01.getDtSetLogic start")
+
+        let sysConnStr = ctx.Config.GetSysConnStr()
+        //let dbSysConn = DbSystem.getDbSysConn sysConnStr
+        let dbSysConn = DbSystem.connectDbSysConn ctx
         dbSysConn.Open()
+
+        ctx.LogDebug("getDtSetLogic start")
         (*
         let lstDsTable = DbSystem.getDsTable dbSysConn datasetId
 

@@ -1,6 +1,8 @@
 namespace Wrio.Db
 
 open Npgsql
+
+open Wrio.Common
 open Wrio.Models
 (*
 type DbSysDsTable = {
@@ -24,11 +26,17 @@ type DbSysDsJoin = {
 module DbSystem =
  
     //let private connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01; Pooling=True; Maximum Pool Size=5;"
-
+    (*
     let getDbSysConn (connString: string): NpgsqlConnection = 
         let conn = new NpgsqlConnection(connString)
         //conn.Open()
         conn
+    *)
+
+    let connectDbSysConn (ctx: WrioContext) : NpgsqlConnection = 
+
+        ctx.ConnDbSys <- new NpgsqlConnection(ctx.Config.GetSysConnStr())
+        ctx.ConnDbSys
 
     let private getDsJoinFromRdr (rdr :NpgsqlDataReader) : (int * int * DtJoin) =
         let dsJoin : DtJoin =

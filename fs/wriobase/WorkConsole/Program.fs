@@ -84,7 +84,15 @@ let main argv =
 
     logger.Info("logging: " + sJson1)
 
-    let ctx = WrioContext()
+    let connStringTest = "Host=localhost;Username=wrio_test;Password=wrio_test;Database=wrio_test"
+    let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
+    let connStringUsr = "Host=localhost;Username=user02;Password=user02;Database=user02db"
+
+    let cfg = MyConfig()
+    cfg.SysConnStr <- connString
+    cfg.UsrConnStr <- connStringUsr
+
+    let ctx = WrioContext(cfg)
 
     ctx.SetLogger(Log4jLogger(logger)) |> ignore
 
@@ -92,6 +100,9 @@ let main argv =
 
     let lg2 = MyLogger()
     lg2.LogInfo("aabbcc")
+
+
+
 
 (*
     let dsJoin21: DbSysDsJoin = {
@@ -188,10 +199,6 @@ let main argv =
     printfn "zdtjRet1.Head = %A" zdtjRet1.Head
 
 
-    let connStringTest = "Host=localhost;Username=wrio_test;Password=wrio_test;Database=wrio_test"
-    let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
-    let connStringUsr = "Host=localhost;Username=user02;Password=user02;Database=user02db"
-
     let conn1 = new NpgsqlConnection(connString)
     conn1.Open()
 
@@ -222,13 +229,11 @@ let main argv =
     conn2.Close()
 
     printfn "BsLogic01.getDtSetLogic"
-    let cfg = MyConfig()
-    cfg.SysConnStr <- connString
-    cfg.UsrConnStr <- connStringUsr
 
     //let ds1 = BsLogic01.getDtSetLogic connStringTest 1
     //let sysConnStr = cfg.GetSysconnStr()
-    let ds1 = BsLogic01.getDtSetLogic 1 cfg
+    //let ds1 = BsLogic01.getDtSetLogic 1 cfg
+    let ds1 = BsLogic01.getDtSetLogic ctx 1 
 
     printfn "%s" (JsonSerializer.Serialize(ds1, sOpt))
 
