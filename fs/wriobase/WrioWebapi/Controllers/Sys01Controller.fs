@@ -9,6 +9,8 @@ open Microsoft.Extensions.Logging
 open Microsoft.Extensions.Configuration
 open Npgsql
 open Wrio
+open Wrio.Common
+open Wrio.Util
 open Wrio.Models
 open Wrio.Db.DbSystem
 open Wrio.Logic
@@ -46,7 +48,9 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
 
         myCfg.SysConnStr <- a.GetValue("SystemConnectionString")
 
-        BsLogic01.getPivotLogic 1 myCfg 
+        let ctx = WrioContext(myCfg)
+
+        BsLogic01.getPivotLogic ctx 1
 
 
     // return PivotData option
@@ -90,7 +94,9 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
         myCfg.SysConnStr <- a.GetValue("SystemConnectionString")
         myCfg.UsrConnStr <- a.GetValue("UserConnectionString")
 
-        let optPvt1 = BsLogic01.getPivotLogic 1 myCfg 
+        let ctx = WrioContext(myCfg)
+
+        let optPvt1 = BsLogic01.getPivotLogic ctx 1
         
         match optPvt1 with
             | Some pvt1 -> 

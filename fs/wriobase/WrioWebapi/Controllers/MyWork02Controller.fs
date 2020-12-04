@@ -9,6 +9,8 @@ open Microsoft.Extensions.Logging
 open Microsoft.Extensions.Configuration
 open Npgsql
 open Wrio
+open Wrio.Common
+open Wrio.Util
 open Wrio.Models
 open Wrio.Db.DbSystem
 open Wrio.Logic
@@ -73,7 +75,7 @@ type MyWork02Controller (logger : ILogger<MyWork02Controller>, config : IConfigu
         dbSysConn.Close()
 
         dm
-*)
+
     [<HttpGet("dts1")>]
     member __.GetMyWork04(): DtSet =
         let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
@@ -85,18 +87,18 @@ type MyWork02Controller (logger : ILogger<MyWork02Controller>, config : IConfigu
         dbSysConn.Close()
 
         dtSet
-    
+*)
 
     [<HttpGet("dts2")>]
     member __.GetMyWork05(): DtSet =
-
-        //let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
 
         let myCfg = MyConfig()
         let a = config.GetSection("AppConfiguration")
         myCfg.SysConnStr <- a.GetValue("SystemConnectionString")
 
-        let ret = BsLogic01.getDtSetLogic 1 myCfg
+        let ctx = WrioContext(myCfg)
+
+        let ret = BsLogic01.getDtSetLogic ctx 1
         
         match ret with
             | Some dtSet -> dtSet

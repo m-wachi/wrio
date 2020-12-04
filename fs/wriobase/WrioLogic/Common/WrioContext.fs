@@ -19,10 +19,11 @@ type Log4jLogger(pLog4jLogger: ILog) =
         member this.LogDebug(s: string) =
             logger.Debug(s)
 
-(*
+
 type IWrioContext =
     abstract member LogDebug : s:string -> unit
-*)
+    abstract member ConnectDbSys: unit -> unit
+    abstract member OpenDbSys: unit -> unit
 
 type WrioContext(pConfig: IMyConfig) =
     let mutable logger: IWrioLogger = ConsoleLogger() :> IWrioLogger
@@ -38,3 +39,4 @@ type WrioContext(pConfig: IMyConfig) =
     member this.ConnDbSys
         with get() : NpgsqlConnection = connDbSys
         and set(v: NpgsqlConnection) = connDbSys <- v
+    

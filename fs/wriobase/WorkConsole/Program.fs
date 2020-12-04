@@ -98,10 +98,14 @@ let main argv =
 
     ctx.LogDebug("hello ctx.logging")
 
+
     let lg2 = MyLogger()
     lg2.LogInfo("aabbcc")
 
+    let cfgTest = MyConfig()
+    cfgTest.SysConnStr <- connStringTest
 
+    let ctxTest = WrioContext(cfgTest)
 
 
 (*
@@ -199,10 +203,11 @@ let main argv =
     printfn "zdtjRet1.Head = %A" zdtjRet1.Head
 
 
-    let conn1 = new NpgsqlConnection(connString)
-    conn1.Open()
+    //let conn1 = new NpgsqlConnection(connString)
+    //conn1.Open()
+    DbSystem.connectDbSys ctx |> DbSystem.openDbSys |> ignore
 
-    let (datasetId1, settingJsonStr1) = DbSystem.getPivotBase conn1 1
+    let (datasetId1, settingJsonStr1) = DbSystem.getPivotBase ctx 1
 
     printfn "datasetId1=%d" datasetId1
     printfn "settingJsonStr1"
@@ -212,21 +217,22 @@ let main argv =
     printfn "pvtSt3=%A" pvtSt3
     
     
-    let lstDsTbl = DbSystem.getDsTable conn1 2
+    let lstDsTbl = DbSystem.getDsTable ctx 2
     printfn "lstDsTbl=%A" lstDsTbl
 
+    DbSystem.closeDbSys ctx |> ignore
 
-    conn1.Close()
+    //let conn2 = new NpgsqlConnection(connStringTest)
+    //conn2.Open()
+    DbSystem.connectDbSys ctxTest |> DbSystem.openDbSys |> ignore
 
-    let conn2 = new NpgsqlConnection(connStringTest)
-
-    conn2.Open()
-    let lstDsJoin1 = DbSystem.getDsJoin conn2 1
+    let lstDsJoin1 = DbSystem.getDsJoin ctxTest 1
 
     printfn "lstDsJoin1"
     printfn "%A" lstDsJoin1
 
-    conn2.Close()
+    //conn2.Close()
+    DbSystem.closeDbSys ctxTest |> ignore
 
     printfn "BsLogic01.getDtSetLogic"
 
@@ -280,7 +286,8 @@ let main argv =
     
     printfn "pvtSt2.RowHdr[0]=%s" (pvtSt2.RowHdr.[0])
 
-    let optPvt1 = BsLogic01.getPivotLogic 1 cfg
+    //let optPvt1 = BsLogic01.getPivotLogic 1 cfg
+    let optPvt1 = BsLogic01.getPivotLogic ctx 1
     printfn "optPvt1=%A" optPvt1
 
     (*

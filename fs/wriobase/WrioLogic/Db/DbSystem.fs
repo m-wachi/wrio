@@ -33,10 +33,18 @@ module DbSystem =
         conn
     *)
 
-    let connectDbSysConn (ctx: WrioContext) : NpgsqlConnection = 
+    let connectDbSys (ctx: WrioContext) : WrioContext = 
 
         ctx.ConnDbSys <- new NpgsqlConnection(ctx.Config.GetSysConnStr())
-        ctx.ConnDbSys
+        ctx
+
+    let openDbSys (ctx: WrioContext) : WrioContext = 
+        ctx.ConnDbSys.Open() |> ignore
+        ctx
+
+    let closeDbSys (ctx: WrioContext) : WrioContext =
+        ctx.ConnDbSys.Close()
+        ctx
 
     let private getDsJoinFromRdr (rdr :NpgsqlDataReader) : (int * int * DtJoin) =
         let dsJoin : DtJoin =
@@ -57,8 +65,8 @@ module DbSystem =
         else
             acc
 
-
-    let getDsJoin (conn : NpgsqlConnection) (datasetId : int) : (int * int * DtJoin) list =
+    //let getDsJoin (conn : NpgsqlConnection) (datasetId : int) : (int * int * DtJoin) list =
+    let getDsJoin (ctx : WrioContext) (datasetId : int) : (int * int * DtJoin) list =
         let sql = 
             "SELECT " + 
             "    ds_table_id, seq, dataset_id, " +
@@ -68,7 +76,7 @@ module DbSystem =
             "    dataset_id = @dataset_id " +
             "ORDER BY ds_table_id, seq "
 
-        let cmd = new NpgsqlCommand(sql, conn)
+        let cmd = new NpgsqlCommand(sql, ctx.ConnDbSys)
         cmd.Parameters.AddWithValue("dataset_id", datasetId) |> ignore
         let rdr = cmd.ExecuteReader()
 
@@ -96,8 +104,8 @@ module DbSystem =
         else
             acc
 
-
-    let getDsTable (conn : NpgsqlConnection) (datasetId : int) : DsTable list =
+    //let getDsTable (conn : NpgsqlConnection) (datasetId : int) : DsTable list =
+    let getDsTable (ctx : WrioContext) (datasetId : int) : DsTable list =
         let sql = 
             "select " + 
             "    ds_table_id, table_abbrev, table_name, table_type, join_div " +
@@ -106,23 +114,25 @@ module DbSystem =
             "    dataset_id = @dataset_id " +
             "order by table_type"
 
-        let cmd = new NpgsqlCommand(sql, conn)
+        let cmd = new NpgsqlCommand(sql, ctx.ConnDbSys)
         cmd.Parameters.AddWithValue("dataset_id", datasetId) |> ignore
         let rdr = cmd.ExecuteReader()
 
-        //再帰で逆順になっているので戻す
+        
         let lstDsTbl = getDsTables [] rdr
         rdr.Close()
-        List.rev lstDsTbl 
+        List.rev lstDsTbl   //再帰で逆順になっているので戻す
 
 
-    let getPivotBase (conn : NpgsqlConnection) (pivotId : int)  = 
+    
+    //let getPivotBase (conn : NpgsqlConnection) (pivotId : int)  = 
+    let getPivotBase (ctx : WrioContext) (pivotId : int)  = 
         let sql = 
             "select dataset_id, setting_json from m_pivot " +
             "where " +
             "    pivot_id = @pivot_id "
 
-        let cmd = new NpgsqlCommand(sql, conn)
+        let cmd = new NpgsqlCommand(sql, ctx.ConnDbSys)
         cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
         use rdr = cmd.ExecuteReader()   // use = c# using
 

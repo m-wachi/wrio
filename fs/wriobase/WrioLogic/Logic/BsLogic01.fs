@@ -38,10 +38,13 @@ module BsLogic01 =
 *)
 
 
-    let getDtSetBase (dbSysConn: NpgsqlConnection) (datasetId: int) : DtSet option  =
-        let lstDsTable = DbSystem.getDsTable dbSysConn datasetId
+    //let getDtSetBase (dbSysConn: NpgsqlConnection) (datasetId: int) : DtSet option  =
+    let getDtSetBase (ctx: WrioContext) (datasetId: int) : DtSet option  =
+        //let lstDsTable = DbSystem.getDsTable dbSysConn datasetId
+        let lstDsTable = DbSystem.getDsTable ctx datasetId
 
-        let lstTupleDsJoin = DbSystem.getDsJoin dbSysConn datasetId
+        //let lstTupleDsJoin = DbSystem.getDsJoin dbSysConn datasetId
+        let lstTupleDsJoin = DbSystem.getDsJoin ctx datasetId
      
         let fact = lstDsTable.Head
 
@@ -57,10 +60,10 @@ module BsLogic01 =
     let getDtSetLogic (ctx: WrioContext) (datasetId: int) : DtSet option = 
         ctx.LogDebug("BsLogic01.getDtSetLogic start")
 
-        let sysConnStr = ctx.Config.GetSysConnStr()
+        //let sysConnStr = ctx.Config.GetSysConnStr()
         //let dbSysConn = DbSystem.getDbSysConn sysConnStr
-        let dbSysConn = DbSystem.connectDbSysConn ctx
-        dbSysConn.Open()
+        DbSystem.connectDbSys ctx |> ignore
+        DbSystem.openDbSys ctx |> ignore
 
         ctx.LogDebug("getDtSetLogic start")
         (*
@@ -74,23 +77,27 @@ module BsLogic01 =
 
         let dtSet = DtSet(datasetId, fact, dimensions)
         *)
-        let optDtSet = getDtSetBase dbSysConn datasetId
-        
-        dbSysConn.Close()
-        
+        //let optDtSet = getDtSetBase dbSysConn datasetId
+        let optDtSet = getDtSetBase ctx datasetId
+
+        DbSystem.closeDbSys ctx |> ignore
+
         optDtSet
 
 
-    let getPivotLogic (pivotId: int) (cfg: IMyConfig) : Pivot option =
-        let sysConnStr = cfg.GetSysConnStr()
-        use dbSysConn = DbSystem.getDbSysConn sysConnStr
-        dbSysConn.Open()
+    //let getPivotLogic (pivotId: int) (cfg: IMyConfig) : Pivot option =
+    let getPivotLogic (ctx: WrioContext) (pivotId: int)  : Pivot option =
+        //let sysConnStr = cfg.GetSysConnStr()
+        //use dbSysConn = DbSystem.getDbSysConn sysConnStr
+        //dbSysConn.Open()
+        DbSystem.connectDbSys ctx |> ignore
+        DbSystem.openDbSys ctx |> ignore
 
+        //let (datasetId, sSettingJson) = DbSystem.getPivotBase dbSysConn pivotId
+        let (datasetId, sSettingJson) = DbSystem.getPivotBase ctx pivotId
 
-        let (datasetId, sSettingJson) = DbSystem.getPivotBase dbSysConn pivotId
-
-        //let dtSet = DbSystem.getDtSet dbSysConn datasetId
-        let optDtset = getDtSetBase dbSysConn datasetId
+        //let optDtset = getDtSetBase dbSysConn datasetId
+        let optDtset = getDtSetBase ctx datasetId
 
         let sOpt = JsonSerializerOptions()
         sOpt.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
@@ -131,6 +138,8 @@ module BsLogic01 =
         dbUsrConn.Open()
 
         DbUserPg.getPivotData dbUsrConn pvt 
+
+        
 
 
 
