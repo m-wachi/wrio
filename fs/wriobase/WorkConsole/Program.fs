@@ -87,6 +87,7 @@ let main argv =
     let connStringTest = "Host=localhost;Username=wrio_test;Password=wrio_test;Database=wrio_test"
     let connString = "Host=localhost;Username=wrio_user;Password=wrio_user;Database=wrio01"
     let connStringUsr = "Host=localhost;Username=user02;Password=user02;Database=user02db"
+    let connStringUsrTest = "Host=localhost;Username=user02_test;Password=user02_test;Database=user02_test"
 
     let cfg = MyConfig()
     cfg.SysConnStr <- connString
@@ -104,6 +105,7 @@ let main argv =
 
     let cfgTest = MyConfig()
     cfgTest.SysConnStr <- connStringTest
+    cfgTest.UsrConnStr <- connStringUsrTest
 
     let ctxTest = WrioContext(cfgTest)
 
@@ -311,10 +313,12 @@ let main argv =
 
     printfn "toSql pvt1 = [%s]" sql1
 
-    let connStringUsrTest = "Host=localhost;Username=user02_test;Password=user02_test;Database=user02_test"
 
-    let usrConn2 = new NpgsqlConnection(connStringUsrTest)
-    usrConn2.Open()
+    // let usrConn2 = new NpgsqlConnection(connStringUsrTest)
+    // usrConn2.Open()
+
+    DbUserPg.connectDbUsr ctxTest |> DbUserPg.openDbUsr |> ignore
+
 
     (*
     let rt1 = DbUserPg.usrPgMyfunc01 usrConn2
@@ -326,13 +330,16 @@ let main argv =
     printfn "%s" rt2
     *)
 
-    let pvtData = DbUserPg.getPivotData usrConn2 pvt1
+    //let pvtData = DbUserPg.getPivotData usrConn2 pvt1
+    let pvtData = DbUserPg.getPivotData ctxTest pvt1
     printfn "pvtData=%A" pvtData
 
-    usrConn2.Close()
+    //usrConn2.Close()
+    DbUserPg.connectDbUsr ctxTest |> ignore
     
 
-    let pvtData2 = BsLogic01.getPivotDataLogic pvt1 cfg
+    //let pvtData2 = BsLogic01.getPivotDataLogic pvt1 cfg
+    let pvtData2 = BsLogic01.getPivotDataLogic ctxTest pvt1 
     printfn "pvtData2=%A" pvtData2
 
 

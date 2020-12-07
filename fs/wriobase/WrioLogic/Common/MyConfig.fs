@@ -19,3 +19,4 @@ type MyConfig() =
     member this.UsrConnStr
         with get () = usrConnStr
         and set (value) = usrConnStr <- value
+

@@ -29,6 +29,7 @@ type WrioContext(pConfig: IMyConfig) =
     let mutable logger: IWrioLogger = ConsoleLogger() :> IWrioLogger
     let mutable cfg: IMyConfig = pConfig
     let mutable connDbSys: NpgsqlConnection = null
+    let mutable connDbUsr: NpgsqlConnection = null
     member this.LogDebug(s: string) =
         logger.LogDebug(s) |> ignore
     member this.SetLogger(pLogger: IWrioLogger) =
@@ -39,4 +40,6 @@ type WrioContext(pConfig: IMyConfig) =
     member this.ConnDbSys
         with get() : NpgsqlConnection = connDbSys
         and set(v: NpgsqlConnection) = connDbSys <- v
-    
+    member this.ConnDbUsr
+        with get() : NpgsqlConnection = connDbUsr
+        and set(v: NpgsqlConnection) = connDbUsr <- v

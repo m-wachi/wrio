@@ -2,15 +2,30 @@ namespace Wrio.Db
 
 open System.Data.Common
 open Npgsql
+
+open Wrio.Common
 open Wrio.Models
 open System
 
 module DbUserPg =
 
-    let getDbUsrConn (connString: string): NpgsqlConnection = 
-        let conn = new NpgsqlConnection(connString)
-        //conn.Open()
-        conn
+    // let getDbUsrConn (connString: string): NpgsqlConnection = 
+    //     let conn = new NpgsqlConnection(connString)
+    //     //conn.Open()
+    //     conn
+
+    let connectDbUsr (ctx: WrioContext) : WrioContext = 
+
+        ctx.ConnDbUsr <- new NpgsqlConnection(ctx.Config.GetUsrConnStr())
+        ctx
+
+    let openDbUsr (ctx: WrioContext) : WrioContext = 
+        ctx.ConnDbUsr.Open() |> ignore
+        ctx
+
+    let closeDbUsr (ctx: WrioContext) : WrioContext =
+        ctx.ConnDbUsr.Close() |> ignore
+        ctx
 
     let usrPgMyfunc01 (conn : NpgsqlConnection)  =
         let sql = 
@@ -92,8 +107,8 @@ module DbUserPg =
 
         sql2
 
-
-    let getPivotData (conn : NpgsqlConnection) (pvt: Pivot) =
+    //let getPivotData (conn : NpgsqlConnection) (pvt: Pivot) =
+    let getPivotData (ctx : WrioContext) (pvt: Pivot) =
 
         let getRowVals (rdr: DbDataReader) = 
             Array.map (fun i -> rdr.GetValue(i)) [|0 .. rdr.FieldCount - 1|]
@@ -103,7 +118,7 @@ module DbUserPg =
 
         let sql = toSql pvt
 
-        let cmd = new NpgsqlCommand(sql, conn)
+        let cmd = new NpgsqlCommand(sql, ctx.ConnDbUsr)
             //cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
 
         let mutable rows: (obj array) array = [||]

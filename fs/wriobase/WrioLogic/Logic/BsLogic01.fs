@@ -131,13 +131,16 @@ module BsLogic01 =
 
         optPvt
 
-    let getPivotDataLogic (pvt: Pivot) (cfg: IMyConfig) : PivotData =
-        let usrConnStr = cfg.GetUsrConnStr()
+    //let getPivotDataLogic (pvt: Pivot) (cfg: IMyConfig) : PivotData =
+    let getPivotDataLogic (ctx: WrioContext) (pvt: Pivot)  : PivotData =
+        // let usrConnStr = cfg.GetUsrConnStr()
+        // use dbUsrConn = DbUserPg.getDbUsrConn usrConnStr
+        // dbUsrConn.Open()
 
-        use dbUsrConn = DbUserPg.getDbUsrConn usrConnStr
-        dbUsrConn.Open()
+        DbUserPg.connectDbUsr ctx |> DbUserPg.openDbUsr |> ignore
 
-        DbUserPg.getPivotData dbUsrConn pvt 
+        //DbUserPg.getPivotData dbUsrConn pvt 
+        DbUserPg.getPivotData ctx pvt 
 
         
 
