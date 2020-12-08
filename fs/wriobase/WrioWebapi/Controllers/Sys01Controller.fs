@@ -65,6 +65,8 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
         myCfg.SysConnStr <- a.GetValue("SystemConnectionString")
         myCfg.UsrConnStr <- a.GetValue("UserConnectionString")
 
+        let ctx = WrioContext(myCfg)
+
         (*
         let optPvt1 = BsLogic01.getPivotLogic 1 myCfg 
         
@@ -76,11 +78,13 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
         *)
 
         //let dtSet = 
-        let optDtSet = BsLogic01.getDtSetLogic pvt.DatasetId myCfg
+        //let optDtSet = BsLogic01.getDtSetLogic pvt.DatasetId myCfg
+        let optDtSet = BsLogic01.getDtSetLogic ctx pvt.DatasetId
         match optDtSet with
             | Some dtSet -> 
                 pvt.DataSet <- dtSet
-                Some (BsLogic01.getPivotDataLogic pvt myCfg)
+                //Some (BsLogic01.getPivotDataLogic pvt myCfg)
+                Some (BsLogic01.getPivotDataLogic ctx pvt)
             | None -> None
 
 
@@ -100,7 +104,8 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
         
         match optPvt1 with
             | Some pvt1 -> 
-                let pvtData =  BsLogic01.getPivotDataLogic pvt1 myCfg
+                //let pvtData =  BsLogic01.getPivotDataLogic pvt1 myCfg
+                let pvtData =  BsLogic01.getPivotDataLogic ctx pvt1
                 Some pvtData
             | None -> None
 
