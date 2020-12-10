@@ -3,6 +3,7 @@ namespace Wrio.Tests
 open NUnit.Framework
 open Npgsql
 
+open Wrio.Common
 open Wrio.Models
 open Wrio.Logic
 open Wrio.Db
@@ -16,6 +17,12 @@ module DbSystemTest =
     let execSql (conn: NpgsqlConnection) (sql: string) : int =
         let cmd = new NpgsqlCommand(sql, conn)
         cmd.ExecuteNonQuery()
+
+    let getWrioContext () : WrioContext =
+        let cfg = MyConfig()
+        cfg.SysConnStr <- connStrDbSys
+        let ctx = WrioContext(cfg)
+        ctx
 
     let prepSysMDsJoin01 (dbSysConn : NpgsqlConnection) =
 
@@ -55,13 +62,19 @@ module DbSystemTest =
 
     [<Test>]
     let GetDtJoinTest01 () =
-        let dbSysConn = getTestDbSysConn ()
-        dbSysConn.Open()
-        prepSysMDsJoin01 (dbSysConn)
+        // let dbSysConn = getTestDbSysConn ()
+        // dbSysConn.Open()
+        let ctx = getWrioContext()
+        DbSystem.connectDbSys ctx |> DbSystem.openDbSys |> ignore        
+        //prepSysMDsJoin01 (dbSysConn)
+        prepSysMDsJoin01 (ctx.ConnDbSys)
 
-        let lstTplDsJoin1 = DbSystem.getDsJoin dbSysConn 3
 
-        dbSysConn.Close()
+        //let lstTplDsJoin1 = DbSystem.getDsJoin dbSysConn 3
+        let lstTplDsJoin1 = DbSystem.getDsJoin ctx 3
+
+        //dbSysConn.Close()
+        DbSystem.closeDbSys ctx |> ignore
 
         Assert.AreEqual(1, lstTplDsJoin1.Length)
 
@@ -75,13 +88,19 @@ module DbSystemTest =
 
     [<Test>]
     let GetDtTableTest01 () =
-        let dbSysConn = getTestDbSysConn ()
-        dbSysConn.Open()
-        prepMDsTable01 (dbSysConn)
+        //let dbSysConn = getTestDbSysConn ()
+        //dbSysConn.Open()
+        let ctx = getWrioContext()
+        DbSystem.connectDbSys ctx |> DbSystem.openDbSys |> ignore        
 
-        let lstDsTable1 = DbSystem.getDsTable dbSysConn 3
+        //prepMDsTable01 (dbSysConn)
+        prepMDsTable01 (ctx.ConnDbSys)
 
-        dbSysConn.Close()
+        //let lstDsTable1 = DbSystem.getDsTable dbSysConn 3
+        let lstDsTable1 = DbSystem.getDsTable ctx 3
+
+        //dbSysConn.Close()
+        DbSystem.closeDbSys ctx |> ignore
 
         Assert.AreEqual(2, lstDsTable1.Length)
 
@@ -101,13 +120,20 @@ module DbSystemTest =
 
     [<Test>]
     let GetPivotBaseTest01 () =
-        let dbSysConn = getTestDbSysConn ()
-        dbSysConn.Open()
-        prepMPivot01 (dbSysConn)
+        //let dbSysConn = getTestDbSysConn ()
+        //dbSysConn.Open()
 
-        let datasetId, settingJsonAct = DbSystem.getPivotBase dbSysConn 4
+        let ctx = getWrioContext()
+        DbSystem.connectDbSys ctx |> DbSystem.openDbSys |> ignore        
 
-        dbSysConn.Close()
+        //prepMPivot01 (dbSysConn)
+        prepMPivot01 (ctx.ConnDbSys)
+
+        //let datasetId, settingJsonAct = DbSystem.getPivotBase dbSysConn 4
+        let datasetId, settingJsonAct = DbSystem.getPivotBase ctx 4
+
+        //dbSysConn.Close()
+        DbSystem.closeDbSys ctx |> ignore
 
         let settingJsonExp = """{"datasetId":3,"colHdr":["d01.item_name"],"rowHdr":["f01.sales_date"],"cellVal":[{"colName":"nof_sales","abbrev":"f01","aggFuncDiv":1}],"rowOdr":["f01.sales_date"],"colOdr":[]}"""
 
