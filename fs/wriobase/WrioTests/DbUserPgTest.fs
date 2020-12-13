@@ -3,6 +3,7 @@ namespace Wrio.Tests
 open NUnit.Framework
 open Npgsql
 
+open Wrio.Common
 open Wrio.Models
 open Wrio.Logic
 open Wrio.Db
@@ -13,6 +14,11 @@ module DbUserPgTest =
     let getTestDbUsrConn() =
         new NpgsqlConnection(connStrDbUsr)
 
+    let getWrioContext () : WrioContext =
+        let cfg = MyConfig()
+        cfg.UsrConnStr <- connStrDbUsr
+        let ctx = WrioContext(cfg)
+        ctx
 
     let getDsJoinData01() = 
         let dtJoin1: DtJoin = {JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"}
@@ -138,17 +144,22 @@ module DbUserPgTest =
 
     [<Test>]
     let UserPgGetPivotDataTest01 () =
-        let dbUsrConn = getTestDbUsrConn()
-        dbUsrConn.Open()
+        // let dbUsrConn = getTestDbUsrConn()
+        // dbUsrConn.Open()
 
-        prepUsrMItem01(dbUsrConn)
-        prepUsrTTable01(dbUsrConn)
+        let ctx = getWrioContext()
+        DbUserPg.connectDbUsr ctx |> DbUserPg.openDbUsr |> ignore        
+
+        prepUsrMItem01(ctx.ConnDbUsr)
+        prepUsrTTable01(ctx.ConnDbUsr)
 
         let pvt1 = getTestPivot02()
 
-        let pvtData = DbUserPg.getPivotData dbUsrConn pvt1
+        //let pvtData = DbUserPg.getPivotData dbUsrConn pvt1
+        let pvtData = DbUserPg.getPivotData ctx pvt1
 
-        dbUsrConn.Close()
+        //dbUsrConn.Close()
+        DbUserPg.closeDbUsr ctx |> ignore
 
         //printfn "pvtData=%A" pvtData
 

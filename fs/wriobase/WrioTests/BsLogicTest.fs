@@ -3,6 +3,7 @@ namespace Wrio.Tests
 open NUnit.Framework
 open Npgsql
 
+open Wrio.Common
 open Wrio.Models
 open Wrio.Logic
 open Wrio.Db
@@ -12,6 +13,12 @@ module BsLogicTest =
 
     let getTestDbSysConn () =
         new NpgsqlConnection(connStrDbSys)
+
+    let getWrioContext () : WrioContext =
+        let cfg = MyConfig()
+        cfg.SysConnStr <- connStrDbSys
+        let ctx = WrioContext(cfg)
+        ctx
 
     let execSql (conn: NpgsqlConnection) (sql: string) : int =
         let cmd = new NpgsqlCommand(sql, conn)
@@ -108,16 +115,21 @@ module BsLogicTest =
 
     [<Test>]
     let GetDtSetLogicTest01() =
-        let conn = getTestDbSysConn()
-        conn.Open()
-        prepSysMDsJoin01(conn) |> ignore
-        prepMDsTable01(conn) |> ignore
-        conn.Close()
+        //let conn = getTestDbSysConn()
+        //conn.Open()
+        let ctx = getWrioContext()
+        DbSystem.connectDbSys ctx |> DbSystem.openDbSys |> ignore
+
+        prepSysMDsJoin01(ctx.ConnDbSys) |> ignore
+        prepMDsTable01(ctx.ConnDbSys) |> ignore
+        
+        DbSystem.closeDbSys ctx |> ignore
 
         let cfg = MyConfig()
         cfg.SysConnStr <- connStrDbSys
     
-        let ret: DtSet option = BsLogic01.getDtSetLogic 3 cfg
+        //let ret: DtSet option = BsLogic01.getDtSetLogic 3 cfg
+        let ret: DtSet option = BsLogic01.getDtSetLogic ctx 3
 
         match ret with
             | None -> Assert.Fail("return None Error.")
@@ -134,17 +146,22 @@ module BsLogicTest =
 
     [<Test>]
     let GetPivotLogicTest01() =
-        let conn = getTestDbSysConn()
-        conn.Open()
-        prepSysMDsJoin01(conn) |> ignore
-        prepMDsTable01(conn) |> ignore
-        prepMPivot01(conn) |> ignore
-        conn.Close()
+        // let conn = getTestDbSysConn()
+        // conn.Open()
+
+        let ctx = getWrioContext()
+        DbSystem.connectDbSys ctx |> DbSystem.openDbSys |> ignore
+
+        prepSysMDsJoin01(ctx.ConnDbSys) |> ignore
+        prepMDsTable01(ctx.ConnDbSys) |> ignore
+        prepMPivot01(ctx.ConnDbSys) |> ignore
+
+        DbSystem.closeDbSys ctx |> ignore
 
         let cfg = MyConfig()
         cfg.SysConnStr <- connStrDbSys
     
-        let optPvt = BsLogic01.getPivotLogic 4 cfg
+        let optPvt = BsLogic01.getPivotLogic ctx 4
 
         printfn "ret=%A" optPvt
 
