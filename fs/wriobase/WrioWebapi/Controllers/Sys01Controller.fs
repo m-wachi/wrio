@@ -1,4 +1,4 @@
-﻿namespace Wrio.Controllers
+﻿namespace Wrio.Webapi.Controllers
 
 open System
 open System.Collections.Generic
@@ -14,6 +14,7 @@ open Wrio.Util
 open Wrio.Models
 open Wrio.Db.DbSystem
 open Wrio.Logic
+open Wrio.Webapi.Common
 
 [<ApiController>]
 [<Route("[controller]")>]
@@ -66,6 +67,14 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
         myCfg.UsrConnStr <- a.GetValue("UserConnectionString")
 
         let ctx = WrioContext(myCfg)
+
+        let aspLogger = AspLogger(logger)
+
+        ctx.SetLogger(aspLogger)
+
+        logger.LogInformation("logger.LogDebug on PutPivot01.")
+
+        ctx.LogInformation("PutPivot01 start.")
 
         (*
         let optPvt1 = BsLogic01.getPivotLogic 1 myCfg 
