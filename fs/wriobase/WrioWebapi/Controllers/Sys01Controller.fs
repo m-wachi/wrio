@@ -75,6 +75,7 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
         logger.LogInformation("logger.LogDebug on PutPivot01.")
 
         ctx.LogInformation("PutPivot01 start.")
+        sprintf "pivotId=%d, pvt.DatasetId=%d" pivotId pvt.DatasetId |> WrioCommon.logInformation ctx |> ignore
 
         (*
         let optPvt1 = BsLogic01.getPivotLogic 1 myCfg 

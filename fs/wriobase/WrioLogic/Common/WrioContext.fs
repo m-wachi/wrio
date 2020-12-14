@@ -50,3 +50,8 @@ type WrioContext(pConfig: IMyConfig) =
     member this.ConnDbUsr
         with get() : NpgsqlConnection = connDbUsr
         and set(v: NpgsqlConnection) = connDbUsr <- v
+
+
+module WrioCommon =
+    let logInformation (ctx: WrioContext) (s: string) =
+        ctx.LogInformation(s) |> ignore
