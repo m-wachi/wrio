@@ -108,12 +108,10 @@ type Pivot = {
 }
 *)
 
-type Pivot(pPivotId : int, pDatasetId : int, setting : PivotSetting, pDataSet : DtSet) =
+type Pivot(pPivotId : int, pDatasetId : int, pSetting : PivotSetting, pDataSet : DtSet) =
     let mutable pivotId : int = pPivotId
     let mutable datasetId : int = pDatasetId
-    (*
-    let mutable settingJson : string
-    *)
+    let mutable setting : PivotSetting = pSetting
     let mutable dataSet : DtSet = pDataSet
     new() = Pivot(-1, -1, PivotSetting(), DtSet())
     member this.PivotId
@@ -122,7 +120,9 @@ type Pivot(pPivotId : int, pDatasetId : int, setting : PivotSetting, pDataSet : 
     member this.DatasetId
         with get() : int = datasetId
         and set(v : int) = datasetId <- v
-    member this.Setting : PivotSetting = setting
+    member this.Setting
+        with get() : PivotSetting = setting
+        and set(v : PivotSetting) = setting <- v
     member this.DataSet 
         with get() : DtSet = dataSet
         and set(v : DtSet) = dataSet <- v
