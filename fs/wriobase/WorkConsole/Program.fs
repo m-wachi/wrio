@@ -226,6 +226,7 @@ let main argv =
 
     //let conn2 = new NpgsqlConnection(connStringTest)
     //conn2.Open()
+(*
     DbSystem.connectDbSys ctxTest |> DbSystem.openDbSys |> ignore
 
     let lstDsJoin1 = DbSystem.getDsJoin ctxTest 1
@@ -244,6 +245,7 @@ let main argv =
     let ds1 = BsLogic01.getDtSetLogic ctx 1 
 
     printfn "%s" (JsonSerializer.Serialize(ds1, sOpt))
+    *)
 
     (*
     let func02Ret = func02 1 lstDsJoin2
@@ -331,6 +333,7 @@ let main argv =
     *)
 
     //let pvtData = DbUserPg.getPivotData usrConn2 pvt1
+    (*
     let pvtData = DbUserPg.getPivotData ctxTest pvt1
     printfn "pvtData=%A" pvtData
 
@@ -349,7 +352,7 @@ let main argv =
     pvtSt3.ColHdr <- [|"d02.merc_name"|]
     pvtSt3.CellVal <- [|CellVal("nof_sales", "f02", 1)|]
     pvtSt3.RowOdr <- [|"f02.sales_date"|]
-
+    *)
 
     (*
     printfn "pvtSt3"
@@ -358,8 +361,9 @@ let main argv =
     let sPvtSt3 = JsonSerializer.Serialize(pvtSt3, sOpt)
 
     printfn "sPvtSt3=%s" sPvtSt3
+    *)
 
-    let optPvt2 = BsLogic01.getPivotLogic 2 cfg
+    let optPvt2 = BsLogic01.getPivotLogic ctx 2 
     printfn "optPvt2=%A" optPvt2
 
     let pvt2 = match optPvt2 with
@@ -368,8 +372,7 @@ let main argv =
 
     printfn "pvt2=%A" pvt2
 
-    let pvtData3 = BsLogic01.getPivotDataLogic pvt2 cfg
+    let pvtData3 = BsLogic01.getPivotDataLogic ctx pvt2
     printfn "pvtData3=%A" pvtData3
-    *)
 
     0 // return an integer exit code

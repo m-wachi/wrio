@@ -1,0 +1,10 @@
+sudo apt-get install uim uim-anthy
+
+
+mkdir /usr/share/fonts/RictyDiminished/
+git clone https://github.com/edihbrandon/RictyDiminished
+cd RictyDiminished/
+cp *.ttf /usr/share/fonts/RictyDiminished/
+
+fc-cache -fv
+fc-list | grep Ricty

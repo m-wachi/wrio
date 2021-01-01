@@ -118,6 +118,10 @@ module DbUserPg =
 
         let sql = toSql pvt
 
+        WrioCommon.logInformation ctx ("pvt.Setting=" + pvt.Setting.ToString())
+
+        WrioCommon.logInformation ctx sql        
+
         let cmd = new NpgsqlCommand(sql, ctx.ConnDbUsr)
             //cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
 
