@@ -370,7 +370,10 @@ let main argv =
                 | Some x -> x
                 | None -> dummyPivot1
 
-    printfn "pvt2=%A" pvt2
+    let sPvt2 = JsonSerializer.Serialize(pvt2, sOpt)
+
+
+    printfn "pvt2=%A" sPvt2
 
     let pvtData3 = BsLogic01.getPivotDataLogic ctx pvt2
     printfn "pvtData3=%A" pvtData3

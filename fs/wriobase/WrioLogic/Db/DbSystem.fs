@@ -47,6 +47,7 @@ module DbSystem =
         ctx
 
     let private getDsJoinFromRdr (rdr :NpgsqlDataReader) : (int * int * DtJoin) =
+(*
         let dsJoin : DtJoin =
             {
                 JoinSrcCol =  rdr.GetString(3)
@@ -54,6 +55,8 @@ module DbSystem =
                 JoinDstCol = rdr.GetString(5)
                 //JoinDiv = rdr.GetInt32(6)
             }
+*)
+        let dsJoin = DtJoin(rdr.GetString(3), rdr.GetString(4), rdr.GetString(5))
         let dsTableId = rdr.GetInt32(0)
         let seqNo = rdr.GetInt32(1)
         (dsTableId, seqNo, dsJoin)

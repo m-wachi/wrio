@@ -2,11 +2,20 @@ namespace Wrio.Models
 
 open System
 
-type DtJoin = {
-    JoinSrcCol: string
-    DstAbbrev: string
-    JoinDstCol: string
-}
+type DtJoin(pJoinSrcCol: string, pDstAbbrev: string, pJoinDstCol: string) = 
+    let mutable joinSrcCol: string =""
+    let mutable dstAbbrev: string = ""
+    let mutable joinDstCol: string = ""
+    new() = DtJoin("", "", "")
+    member this.JoinSrcCol
+        with get(): string = joinSrcCol
+        and set(v: string) = joinSrcCol <- v
+    member this.DstAbbrev
+        with get(): string = dstAbbrev
+        and set(v: string) = dstAbbrev <- v
+    member this.JoinDstCol
+        with get(): string = joinDstCol
+        and set(v: string) = joinDstCol <- v
 
 (*
 type Dimension(table: string, abbrev: string, joinDiv: int, lstDsJoin: DtJoin array) =
