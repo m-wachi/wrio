@@ -44,7 +44,7 @@ export class Temp02Component implements OnInit {
 
 
   getPivotData(): void {
-    this.pivotSvc.getPivot().subscribe(
+    this.pivotSvc.getPivot(1).subscribe(
       optPvt => {
         this.pivot = optPvt.value;
         let colHdr = this.pivot.setting.colHdr;

@@ -51,7 +51,7 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
 
         let ctx = WrioContext(myCfg)
 
-        BsLogic01.getPivotLogic ctx 1
+        BsLogic01.getPivotLogic ctx pivotId
 
 
     // return PivotData option

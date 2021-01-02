@@ -8,6 +8,7 @@ import { MaintblComponent } from './maintbl/maintbl.component';
 import { MessagesComponent } from './messages/messages.component';
 import { Temp01Component } from './temp01/temp01.component';
 import { Temp02Component } from './temp02/temp02.component';
+import { Temp03Component } from './temp03/temp03.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { Temp02Component } from './temp02/temp02.component';
     MaintblComponent,
     MessagesComponent,
     Temp01Component,
-    Temp02Component
+    Temp02Component,
+    Temp03Component
   ],
   imports: [
     BrowserModule,
