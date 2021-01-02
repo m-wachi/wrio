@@ -3,9 +3,9 @@ namespace Wrio.Models
 open System
 
 type DtJoin(pJoinSrcCol: string, pDstAbbrev: string, pJoinDstCol: string) = 
-    let mutable joinSrcCol: string =""
-    let mutable dstAbbrev: string = ""
-    let mutable joinDstCol: string = ""
+    let mutable joinSrcCol: string = pJoinSrcCol
+    let mutable dstAbbrev: string = pDstAbbrev
+    let mutable joinDstCol: string = pJoinDstCol
     new() = DtJoin("", "", "")
     member this.JoinSrcCol
         with get(): string = joinSrcCol
@@ -36,10 +36,13 @@ type Dimension(table: string, abbrev: string, joinDiv: int, lstDsJoin: DtJoin ar
         //"%s.%s = %s.%s" % (row[4], row[5], dim1.abbrev, row[3])
 *)
 
-type DsTable(dsTableId: int, table: string, abbrev: string, tableType: int, joinDiv: int, pAryDsJoin: DtJoin array) =
+type DsTable(pDsTableId: int, table: string, abbrev: string, tableType: int, joinDiv: int, pAryDsJoin: DtJoin array) =
+    let mutable dsTableId = pDsTableId
     let mutable aryDsJoin = pAryDsJoin
     new() = DsTable(0, "", "", 0, 1, [||])
-    member this.DsTableId: int = dsTableId
+    member this.DsTableId
+        with get() : int = dsTableId
+        and set(v: int) = dsTableId <- v
     member this.Table: string = table
     member this.Abbrev: string = abbrev
     member this.TableType: int = tableType
