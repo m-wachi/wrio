@@ -12,6 +12,8 @@ export class Temp03Component implements OnInit {
 
   pivot: Pivot = null;
   sPivot: string = "";
+  optPivotData: OptPivotData = null;
+  pivotData: PivotData = null;
 
   constructor(private pivotSvc: PivotService) { }
 
@@ -31,7 +33,15 @@ export class Temp03Component implements OnInit {
   }
 
   button1_Click(): void {
-    alert('button1 click');
+    this.sPivot = sessionStorage.getItem("pivot");
+    this.pivot = JSON.parse(this.sPivot);
+    //alert('button1 click');
+    this.pivotSvc.putPivotData01(this.pivot).subscribe(
+      optPvtDt => {
+        this.optPivotData = optPvtDt;
+        this.pivotData = optPvtDt.value;
+      }
+    );
   }
 
 

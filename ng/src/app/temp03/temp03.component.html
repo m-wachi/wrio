@@ -1,3 +1,17 @@
 <h2>temp03 component</h2>
 <button id="button1" (click)="button1_Click()">put</button>
 <div>sPivot: {{sPivot}}</div>
+<hr/>
+<table border="1">
+    <tr>
+      <th *ngFor="let col of pivotData.colNames">
+        {{col}}
+      </th>
+    </tr>
+    <tr *ngFor="let dataRow of pivotData.rows">
+      <td *ngFor="let cellValue of dataRow">
+        {{cellValue}}
+      </td>
+    </tr>
+  </table>
+  
