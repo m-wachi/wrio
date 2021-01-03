@@ -125,15 +125,27 @@ module BsLogic01 =
         DbUserPg.getPivotData ctx pvt 
 
         
-    let getColumnsLogic (ctx: WrioContext) (dtSet: DtSet) =
+    //let getColumnsLogic (ctx: WrioContext) (dtSet: DtSet) =
+    let getColumnsLogic (ctx: WrioContext) (datasetId: int) =
 
-        DbUserPg.connectDbUsr ctx |> DbUserPg.openDbUsr |> ignore
+        WrioCommon.logInformation ctx "getColumnsLogic called."
 
-        let aryColNames = DbUserPg.getColumns ctx dtSet.Fact.Table
+        DbSystem.connectDbSys ctx |> DbSystem.openDbSys |> ignore
+
+        let optDtset = getDtSetBase ctx datasetId
 
         DbSystem.closeDbSys ctx |> ignore
 
-        aryColNames
+        let retVal = 
+            match optDtset with
+                | Some dtSet -> 
+                    DbUserPg.connectDbUsr ctx |> DbUserPg.openDbUsr |> ignore
+                    let aryColNames = DbUserPg.getColumns ctx dtSet.Fact.Table
+                    DbSystem.closeDbSys ctx |> ignore
+                    aryColNames
+                | None -> [||]
+
+        retVal
 
 
 

@@ -64,21 +64,29 @@ export class PivotService {
 
     this.log('putPivotData01 log');
     this.log('pvt.pivotId = ' + pvt.pivotId.toString());
-    //return of(pvtData);
-    
-    //let ret = this.http.get<OptPivot>('/wrio/api/sys01/pvt/2');
-
     
     let ret = this.http.put<OptPivotData>('/wrio/api/sys01/pvt/2', pvt, httpOptions)
       .pipe(
         catchError(this.handleError('putPivotData', pvt))
       );
     
-    //return this.http.get<OptPivotData>('/wrio/api/sys01/pvtdt1');
     this.log('putPivotData01 end.');
     return ret;
   }
 
+  getDatasetColumn01(datasetId: number): Observable<any> {
+
+    this.log('getDatasetColumn01 log');
+    this.log('datasetId = ' + datasetId.toString());
+    
+    let ret = this.http.get<Array<string>>('/wrio/api/sys01/dataset/2')
+      .pipe(
+        catchError(this.handleError('getDatasetColumn01', datasetId))
+      );
+    
+    this.log('getDatasetColumn01 end.');
+    return ret;
+  }
 
   /** MaintblServiceのメッセージをMessageServiceを使って記録 */
   private log(message: string) {

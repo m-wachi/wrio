@@ -120,4 +120,25 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
             | None -> None
 
 
+    // GET: http://localhost:5000/sys01/dataset/{datasetId}
+    [<HttpGet("dataset/{datasetId}")>]
+    member this.GetDatasetColumn01(datasetId: int): string array =
+
+        let myCfg = MyConfig()
+
+        let a = config.GetSection("AppConfiguration")
+
+        myCfg.SysConnStr <- a.GetValue("SystemConnectionString")
+        myCfg.UsrConnStr <- a.GetValue("UserConnectionString")
+
+        let ctx = WrioContext(myCfg)
+
+        let aspLogger = AspLogger(logger)
+
+        ctx.SetLogger(aspLogger)
+        WrioCommon.logInformation ctx "GetDatasetColumn01 start."
+
+        let aryColumn = BsLogic01.getColumnsLogic ctx datasetId
+
+        aryColumn
 

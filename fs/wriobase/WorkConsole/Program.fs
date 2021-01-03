@@ -377,7 +377,7 @@ let main argv =
     let pvtData3 = BsLogic01.getPivotDataLogic ctx pvt2
     printfn "pvtData3=%A" pvtData3
 
-    let aryColName1 = BsLogic01.getColumnsLogic ctx pvt1.DataSet
+    let aryColName1 = BsLogic01.getColumnsLogic ctx 1
     printfn "aryColName1=%A" aryColName1
 
     0 // return an integer exit code
