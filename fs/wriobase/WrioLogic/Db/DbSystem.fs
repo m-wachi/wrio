@@ -46,17 +46,8 @@ module DbSystem =
         ctx.ConnDbSys.Close()
         ctx
 
-    let private getDsJoinFromRdr (rdr :NpgsqlDataReader) : (int * int * DtJoin) =
-(*
-        let dsJoin : DtJoin =
-            {
-                JoinSrcCol =  rdr.GetString(3)
-                DstAbbrev =  rdr.GetString(4)
-                JoinDstCol = rdr.GetString(5)
-                //JoinDiv = rdr.GetInt32(6)
-            }
-*)
-        let dsJoin = DtJoin(rdr.GetString(3), rdr.GetString(4), rdr.GetString(5))
+    let private getDsJoinFromRdr (rdr :NpgsqlDataReader) : (int * int * DsJoin) =
+        let dsJoin = DsJoin(rdr.GetString(3), rdr.GetString(4), rdr.GetString(5))
         let dsTableId = rdr.GetInt32(0)
         let seqNo = rdr.GetInt32(1)
         (dsTableId, seqNo, dsJoin)
@@ -68,8 +59,7 @@ module DbSystem =
         else
             acc
 
-    //let getDsJoin (conn : NpgsqlConnection) (datasetId : int) : (int * int * DtJoin) list =
-    let getDsJoin (ctx : WrioContext) (datasetId : int) : (int * int * DtJoin) list =
+    let getDsJoin (ctx : WrioContext) (datasetId : int) : (int * int * DsJoin) list =
         let sql = 
             "SELECT " + 
             "    ds_table_id, seq, dataset_id, " +

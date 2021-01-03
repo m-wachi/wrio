@@ -2,11 +2,11 @@ namespace Wrio.Models
 
 open System
 
-type DtJoin(pJoinSrcCol: string, pDstAbbrev: string, pJoinDstCol: string) = 
+type DsJoin(pJoinSrcCol: string, pDstAbbrev: string, pJoinDstCol: string) = 
     let mutable joinSrcCol: string = pJoinSrcCol
     let mutable dstAbbrev: string = pDstAbbrev
     let mutable joinDstCol: string = pJoinDstCol
-    new() = DtJoin("", "", "")
+    new() = DsJoin("", "", "")
     member this.JoinSrcCol
         with get(): string = joinSrcCol
         and set(v: string) = joinSrcCol <- v
@@ -17,26 +17,8 @@ type DtJoin(pJoinSrcCol: string, pDstAbbrev: string, pJoinDstCol: string) =
         with get(): string = joinDstCol
         and set(v: string) = joinDstCol <- v
 
-(*
-type Dimension(table: string, abbrev: string, joinDiv: int, lstDsJoin: DtJoin array) =
-    new() = Dimension("", "", 1, [||])
-    // joinSrcCol: string, dstAbbrev: string, joinDstCol: 
-    member this.Table: string = table
-    member this.Abbrev: string = abbrev
-    //member this.JoinSrcCol: string = joinSrcCol //will be deleted
-    //member this.DstAbbrev: string = dstAbbrev   //will be deleted
-    //member this.JoinDstCol: string = joinDstCol //will be deleted
-    // member this.JoinDiv: int = joinDiv          //will be deleted
-    member this.LstDsJoin: DtJoin array = lstDsJoin
 
-
-    // 暫定コード
-    member this.JoinCond: string = 
-        String.Format("{0}.{1} = {2}.{3}", lstDsJoin.[0].DstAbbrev, lstDsJoin.[0].JoinDstCol, abbrev, lstDsJoin.[0].JoinSrcCol)
-        //"%s.%s = %s.%s" % (row[4], row[5], dim1.abbrev, row[3])
-*)
-
-type DsTable(pDsTableId: int, table: string, abbrev: string, tableType: int, joinDiv: int, pAryDsJoin: DtJoin array) =
+type DsTable(pDsTableId: int, table: string, abbrev: string, tableType: int, joinDiv: int, pAryDsJoin: DsJoin array) =
     let mutable dsTableId = pDsTableId
     let mutable aryDsJoin = pAryDsJoin
     new() = DsTable(0, "", "", 0, 1, [||])
@@ -48,8 +30,8 @@ type DsTable(pDsTableId: int, table: string, abbrev: string, tableType: int, joi
     member this.TableType: int = tableType
     member this.JoinDiv: int = joinDiv
     member this.DsJoins
-        with get() : DtJoin array = aryDsJoin
-        and set(v: DtJoin array) = aryDsJoin <- v
+        with get() : DsJoin array = aryDsJoin
+        and set(v: DsJoin array) = aryDsJoin <- v
     override this.ToString(): string = 
         sprintf "DsTable { DsTableId=%d, LstDsJoin=%A }" dsTableId aryDsJoin
 

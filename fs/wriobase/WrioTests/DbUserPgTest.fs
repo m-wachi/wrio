@@ -21,11 +21,11 @@ module DbUserPgTest =
         ctx
 
     let getDsJoinData01() = 
-        let dtJoin1: DtJoin = {JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"}
+        let dtJoin1 = DsJoin("col1", "b", "col1_1")
         dtJoin1
 
     let getTestPivot01() =
-        let dtJoin1: DtJoin = {JoinSrcCol = "col0101"; DstAbbrev = "m"; JoinDstCol = "col0001"}
+        let dtJoin1= DsJoin("col0101", "m", "col0001")
         let dim1: DsTable = DsTable(2, "t_tbl01", "t1", 1, 1, [|dtJoin1|])
         let fact: DsTable = DsTable(1, "t_main", "m", 1, 1, [||])
 
@@ -42,7 +42,7 @@ module DbUserPgTest =
 
 
     let getTestPivot02() =
-        let dtJoin1: DtJoin = {JoinSrcCol = "item_cd"; DstAbbrev = "f"; JoinDstCol = "item_cd"}
+        let dtJoin1 = DsJoin("item_cd", "f", "item_cd")
         let dim1: DsTable = DsTable(2, "m_item", "d1", 1, 1, [|dtJoin1|])
         let fact: DsTable = DsTable(1, "t_table01", "f", 1, 1, [||])
 

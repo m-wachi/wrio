@@ -47,38 +47,8 @@ module DbUserPg =
             //rdr.Close()
             ("", 0)
 
-    let usrPgMyfunc02 (conn : NpgsqlConnection) (pvt: Pivot) =
-        let dtSet = pvt.DataSet
-        let dim1 = dtSet.Dimensions.[0]
-
-        //let sSelectClause = "SELECT " + pvt.SettingJson["rowhdr"][0]
-        let sSelectClause = "SELECT " + pvt.Setting.RowHdr.[0]
-        let sFromClause = String.Format(" FROM {0} {1}", dtSet.Fact.Table, dtSet.Fact.Abbrev)
-
-        //let sJoin1 = String.Format("  INNER JOIN {0} {1} \n    ON {2}", dim1.Table, dim1.Abbrev, dim1.JoinCond)
-        let sJoin1 = String.Format("  INNER JOIN {0} {1} \n    ON {2}", dim1.Table, dim1.Abbrev, "")
-        
-        let sql = sSelectClause + "\n" + sFromClause + "\n"
-        let sql2 = sql + sJoin1 + "\n"
-
-        sql2
-        (*
-        let cmd = new NpgsqlCommand(sql, conn)
-            //cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
-        use rdr = cmd.ExecuteReader()   // use = c# using
-
-        if rdr.Read() then
-            let itemName = rdr.GetString(0)
-            let nofSales = rdr.GetInt32(1)
-            (itemName, nofSales)
-        else
-            //rdr.Close()
-            ("", 0)
-        *)
-
-    let joinCondSql (srcAbbrev: string) (dtJoin: DtJoin) : string =
-        //sprintf "%s.%s=%s.%s" dsJoin.DstAbbrev dsJoin.JoinDstCol srcAbbrev dsJoin.JoinSrcCol
-        String.Format("{0}.{1} = {2}.{3}", dtJoin.DstAbbrev, dtJoin.JoinDstCol, srcAbbrev, dtJoin.JoinSrcCol)
+    let joinCondSql (srcAbbrev: string) (dsJoin: DsJoin) : string =
+        String.Format("{0}.{1} = {2}.{3}", dsJoin.DstAbbrev, dsJoin.JoinDstCol, srcAbbrev, dsJoin.JoinSrcCol)
 
     let toSql (pvt: Pivot) : string =
         let dtSet = pvt.DataSet
@@ -106,6 +76,29 @@ module DbUserPg =
                     " ORDER BY " + sDimensionColumns + " "
 
         sql2
+
+    let getColumns (ctx: WrioContext) (sTable: string) : string array =
+        (*
+        let getRows (rdr: DbDataReader) = 
+            [| while rdr.Read() do yield (rdr.GetString(0)) |]
+        *)
+        let sql1 = "SELECT column_name " + "\n" +
+                   " FROM information_schema.columns \n" +
+                   " WHERE table_name='{0}'"
+        let sql2 = String.Format(sql1, sTable)
+
+        let cmd = new NpgsqlCommand(sql2, ctx.ConnDbUsr)
+
+        let rdr = cmd.ExecuteReader() 
+        (*
+        if rdr.Read() then
+            let col1st = rdr.GetString(0)
+
+        else
+            [||]
+        *)
+        [| while rdr.Read() do yield (rdr.GetString(0)) |]
+
 
     //let getPivotData (conn : NpgsqlConnection) (pvt: Pivot) =
     let getPivotData (ctx : WrioContext) (pvt: Pivot) =

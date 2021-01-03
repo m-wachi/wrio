@@ -36,6 +36,7 @@ module BsLogicTest =
         execSql dbSysConn sql1 |> ignore
         execSql dbSysConn sql2 |> ignore    
 
+(*
     let prepLstTplData01 =
         let dsJoin21: DtJoin = {
             JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"
@@ -46,6 +47,13 @@ module BsLogicTest =
         let dsJoin23 = {
             JoinSrcCol = "col3"; DstAbbrev = "c"; JoinDstCol = "col1_1"
         }
+        [(1, 1, dsJoin21); (1, 2, dsJoin22); (2, 1, dsJoin23)]
+*)
+    let prepLstTplData01 =
+        let dsJoin21 = DsJoin("col1", "b", "col1_1")
+        let dsJoin22 = DsJoin("col2", "b", "col1_1")
+        let dsJoin23 = DsJoin("col3", "c", "col1_1")
+        
         [(1, 1, dsJoin21); (1, 2, dsJoin22); (2, 1, dsJoin23)]
 
     let prepMPivot01 (dbSysConn : NpgsqlConnection) =

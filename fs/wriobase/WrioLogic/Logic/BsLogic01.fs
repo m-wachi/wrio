@@ -12,13 +12,13 @@ module BsLogic01 =
     let hello name =
         sprintf "Hello %s" name
 
-    let spanByDsTableId dsTableId (lstTupleDtJoin: (int * int * DtJoin) list) =
-        let pred (x : (int * int * DtJoin)) = 
+    let spanByDsTableId dsTableId (lstTupleDtJoin: (int * int * DsJoin) list) =
+        let pred (x : (int * int * DsJoin)) = 
             let (dsTableIdTuple, seqNo, dsJoin) = x
             dsTableId = dsTableIdTuple
         MyUtil.span pred lstTupleDtJoin
 
-    let rec zipDsTblJoin (lstDsTable : DsTable list) (lstTplDsJoin : (int * int * DtJoin) list) : DsTable list =
+    let rec zipDsTblJoin (lstDsTable : DsTable list) (lstTplDsJoin : (int * int * DsJoin) list) : DsTable list =
         let getDsJoinFromTuple lstTplDtJoin3 =
             let (_, _, lstDsJoin3)= lstTplDtJoin3
             lstDsJoin3
@@ -62,29 +62,13 @@ module BsLogic01 =
         Some dtSet
 
 
-    //let getDtSetLogic (connStrSys: string) (datasetId: int) = 
-    //let getDtSetLogic (datasetId: int) (cfg: IMyConfig) : DtSet option = 
     let getDtSetLogic (ctx: WrioContext) (datasetId: int) : DtSet option = 
         ctx.LogInformation("BsLogic01.getDtSetLogic start")
         sprintf "datasetId=%d" datasetId |> WrioCommon.logInformation ctx |> ignore
 
-        //let sysConnStr = ctx.Config.GetSysConnStr()
-        //let dbSysConn = DbSystem.getDbSysConn sysConnStr
         DbSystem.connectDbSys ctx |> ignore
         DbSystem.openDbSys ctx |> ignore
 
-        (*
-        let lstDsTable = DbSystem.getDsTable dbSysConn datasetId
-
-        let lstTupleDsJoin = DbSystem.getDsJoin dbSysConn datasetId
-     
-        let fact = lstDsTable.Head
-
-        let dimensions = List.toArray <| zipDsTblJoin lstDsTable.Tail lstTupleDsJoin
-
-        let dtSet = DtSet(datasetId, fact, dimensions)
-        *)
-        //let optDtSet = getDtSetBase dbSysConn datasetId
         let optDtSet = getDtSetBase ctx datasetId
 
         DbSystem.closeDbSys ctx |> ignore
@@ -92,18 +76,13 @@ module BsLogic01 =
         optDtSet
 
 
-    //let getPivotLogic (pivotId: int) (cfg: IMyConfig) : Pivot option =
     let getPivotLogic (ctx: WrioContext) (pivotId: int)  : Pivot option =
-        //let sysConnStr = cfg.GetSysConnStr()
-        //use dbSysConn = DbSystem.getDbSysConn sysConnStr
-        //dbSysConn.Open()
+
         DbSystem.connectDbSys ctx |> ignore
         DbSystem.openDbSys ctx |> ignore
 
-        //let (datasetId, sSettingJson) = DbSystem.getPivotBase dbSysConn pivotId
         let (datasetId, sSettingJson) = DbSystem.getPivotBase ctx pivotId
 
-        //let optDtset = getDtSetBase dbSysConn datasetId
         let optDtset = getDtSetBase ctx datasetId
 
         let sOpt = JsonSerializerOptions()
@@ -138,19 +117,23 @@ module BsLogic01 =
 
         optPvt
 
-    //let getPivotDataLogic (pvt: Pivot) (cfg: IMyConfig) : PivotData =
+
     let getPivotDataLogic (ctx: WrioContext) (pvt: Pivot)  : PivotData =
-        // let usrConnStr = cfg.GetUsrConnStr()
-        // use dbUsrConn = DbUserPg.getDbUsrConn usrConnStr
-        // dbUsrConn.Open()
 
         DbUserPg.connectDbUsr ctx |> DbUserPg.openDbUsr |> ignore
 
-        //DbUserPg.getPivotData dbUsrConn pvt 
         DbUserPg.getPivotData ctx pvt 
 
         
+    let getColumnsLogic (ctx: WrioContext) (dtSet: DtSet) =
 
+        DbUserPg.connectDbUsr ctx |> DbUserPg.openDbUsr |> ignore
+
+        let aryColNames = DbUserPg.getColumns ctx dtSet.Fact.Table
+
+        DbSystem.closeDbSys ctx |> ignore
+
+        aryColNames
 
 
 

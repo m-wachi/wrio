@@ -139,17 +139,24 @@ let main argv =
 
     let lstDsJoin2 = [dsJoin21; dsJoin22; dsJoin23]
 *)
-    let dsJoin21: DtJoin = {
+    (*
+    let dsJoin21: DsJoin = {
         JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"
     }
-
+    *)
+    let dsJoin21 = DsJoin("col1", "b", "col1_1")
+    (*
     let dsJoin22 = {
         JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"
     }
-
+    *)
+    let dsJoin22 = DsJoin("col1", "b", "col1_1")
+    (*
     let dsJoin23 = {
         JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"
     }
+    *)
+    let dsJoin23 = DsJoin("col1", "b", "col1_1")
 
     let lstTupleDsJoin2 = [(1, 1, dsJoin21); (1, 2, dsJoin22); (2, 1, dsJoin23)]
 
@@ -168,12 +175,14 @@ let main argv =
 
     let lstDsTable2 = [dsTable21; dsTable22]
 
-
+    (*
     let dsJoin3 = {
         JoinSrcCol = "col1"
         DstAbbrev = "b"
         JoinDstCol = "col1_1"
     }
+    *)
+    let dsJoin3 = DsJoin("col1", "b", "col1_1")
 
     let sOpt = JsonSerializerOptions()
     sOpt.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
@@ -260,16 +269,6 @@ let main argv =
     let sbdtRet1 = BsLogic01.spanByDsTableId 1 lstTupleDsJoin2
 
     printfn "sbdtRet1=%A" sbdtRet1
-
-    (*
-    let conn1 = new NpgsqlConnection(connStringTest)
-    conn1.Open()
-    let sql1 =  "insert into m_dataset values(2, 'usr1', 'ds02', CURRENT_TIMESTAMP)"
-  
-    let sqlExecCnt = execSql conn1 sql1
-
-    printfn "%A" sqlExecCnt
-    *)
 
     let pvtSt1 = PivotSetting()
     pvtSt1.DatasetId <- 4
@@ -377,5 +376,8 @@ let main argv =
 
     let pvtData3 = BsLogic01.getPivotDataLogic ctx pvt2
     printfn "pvtData3=%A" pvtData3
+
+    let aryColName1 = BsLogic01.getColumnsLogic ctx pvt1.DataSet
+    printfn "aryColName1=%A" aryColName1
 
     0 // return an integer exit code
