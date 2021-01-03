@@ -189,6 +189,27 @@ module DbUserPgTest =
         Assert.AreEqual("アイテム０２", pvtData.Rows.[i].[1])
         Assert.AreEqual(12, pvtData.Rows.[i].[2])
 
+    [<Test>]
+    let UserPgGetColumnsTest01 () =
+
+        let ctx = getWrioContext()
+        DbUserPg.connectDbUsr ctx |> DbUserPg.openDbUsr |> ignore        
+
+        //prepUsrMItem01(ctx.ConnDbUsr)
+        //prepUsrTTable01(ctx.ConnDbUsr)
+        let aryColumn = DbUserPg.getColumns ctx "t_table01"
+        DbUserPg.closeDbUsr ctx |> ignore
+
+        Assert.AreEqual(5, aryColumn.Length)
+
+        Assert.AreEqual("item_cd", aryColumn.[0])
+        Assert.AreEqual("item_grp_cd", aryColumn.[1])
+        Assert.AreEqual("nof_sales", aryColumn.[2])
+        Assert.AreEqual("sales_amount", aryColumn.[3])
+        Assert.AreEqual("sales_date", aryColumn.[4])
+        
+
+
 
 
    

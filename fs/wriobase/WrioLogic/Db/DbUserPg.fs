@@ -84,7 +84,9 @@ module DbUserPg =
         *)
         let sql1 = "SELECT column_name " + "\n" +
                    " FROM information_schema.columns \n" +
-                   " WHERE table_name='{0}'"
+                   " WHERE table_name='{0}'\n" +
+                   " ORDER BY column_name "
+                   
         let sql2 = String.Format(sql1, sTable)
 
         let cmd = new NpgsqlCommand(sql2, ctx.ConnDbUsr)
