@@ -1,5 +1,14 @@
+#   キーボードを日本語キーボード設定にする
+localectl set-keymap jp106
+
+アプリケーションメニューからの設定＞キーボードの
+レイアウトタブで「システムデフォルトを使用する」をONにする
+
+
+#日本語IMEをインストール
 sudo apt-get install uim uim-anthy
 
+#日本語font install
 
 mkdir /usr/share/fonts/RictyDiminished/
 git clone https://github.com/edihbrandon/RictyDiminished
