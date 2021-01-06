@@ -170,8 +170,8 @@ let main argv =
     }
     let lstDsTable2 = [dsTable21; dsTable22]
     *)
-    let dsTable21 = DsTable(1, "tbl01", "a", 1, 0, [||])
-    let dsTable22 = DsTable(2, "tbl02", "b", 2, 1, [||])
+    let dsTable21 = DsTable(1, "tbl01", "a", 1, 0, [||], [||])
+    let dsTable22 = DsTable(2, "tbl02", "b", 2, 1, [||], [||])
 
     let lstDsTable2 = [dsTable21; dsTable22]
 

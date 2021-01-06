@@ -88,7 +88,7 @@ module DbSystem =
                 -1
             else
                 rdr.GetInt32(4)
-        DsTable(dsTableId, tableName, abbrev, tableType, joinDiv, [||])
+        DsTable(dsTableId, tableName, abbrev, tableType, joinDiv, [||], [||])
 
     let rec private getDsTables acc (rdr :NpgsqlDataReader) =
         if rdr.Read() then

@@ -2,6 +2,18 @@ namespace Wrio.Models
 
 open System
 
+// Dataset Column 
+type DsColumn(pColName: string, pColType: string) =
+    let mutable colName: string = pColName
+    let mutable colType: string = pColType
+    new() = DsColumn("", "")
+    member this.ColName
+        with get(): string = colName
+        and set(v: string) = colName <- v
+    member this.coltype
+        with get(): string = colType
+        and set(v: string) = colType <- v
+
 type DsJoin(pJoinSrcCol: string, pDstAbbrev: string, pJoinDstCol: string) = 
     let mutable joinSrcCol: string = pJoinSrcCol
     let mutable dstAbbrev: string = pDstAbbrev
@@ -18,10 +30,12 @@ type DsJoin(pJoinSrcCol: string, pDstAbbrev: string, pJoinDstCol: string) =
         and set(v: string) = joinDstCol <- v
 
 
-type DsTable(pDsTableId: int, table: string, abbrev: string, tableType: int, joinDiv: int, pAryDsJoin: DsJoin array) =
+type DsTable(pDsTableId: int, table: string, abbrev: string, tableType: int, 
+             joinDiv: int, pAryDsJoin: DsJoin array, pAryColumn: DsColumn array) =
     let mutable dsTableId = pDsTableId
     let mutable aryDsJoin = pAryDsJoin
-    new() = DsTable(0, "", "", 0, 1, [||])
+    let mutable aryColumn = pAryColumn
+    new() = DsTable(0, "", "", 0, 1, [||], [||])
     member this.DsTableId
         with get() : int = dsTableId
         and set(v: int) = dsTableId <- v
@@ -32,9 +46,11 @@ type DsTable(pDsTableId: int, table: string, abbrev: string, tableType: int, joi
     member this.DsJoins
         with get() : DsJoin array = aryDsJoin
         and set(v: DsJoin array) = aryDsJoin <- v
-    override this.ToString(): string = 
+    member this.Columns
+        with get() : DsColumn array = aryColumn
+        and set(v: DsColumn array) = aryColumn <- v
+    override this.ToString(): string =
         sprintf "DsTable { DsTableId=%d, LstDsJoin=%A }" dsTableId aryDsJoin
-
 
 type DtSet(datasetId: int, fact: DsTable, pDimensions: DsTable array) =
     let mutable dimensions: DsTable array = pDimensions
