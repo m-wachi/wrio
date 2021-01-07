@@ -77,12 +77,9 @@ module DbUserPg =
 
         sql2
 
-    let getColumns (ctx: WrioContext) (sTable: string) : string array =
-        (*
-        let getRows (rdr: DbDataReader) = 
-            [| while rdr.Read() do yield (rdr.GetString(0)) |]
-        *)
-        let sql1 = "SELECT column_name " + "\n" +
+    let getColumns (ctx: WrioContext) (sTable: string) : DsColumn array =
+
+        let sql1 = "SELECT column_name, data_type " + "\n" +
                    " FROM information_schema.columns \n" +
                    " WHERE table_name='{0}'\n" +
                    " ORDER BY column_name "
@@ -92,14 +89,8 @@ module DbUserPg =
         let cmd = new NpgsqlCommand(sql2, ctx.ConnDbUsr)
 
         let rdr = cmd.ExecuteReader() 
-        (*
-        if rdr.Read() then
-            let col1st = rdr.GetString(0)
 
-        else
-            [||]
-        *)
-        [| while rdr.Read() do yield (rdr.GetString(0)) |]
+        [| while rdr.Read() do yield (DsColumn(rdr.GetString(0), rdr.GetString(1))) |]
 
 
     //let getPivotData (conn : NpgsqlConnection) (pvt: Pivot) =

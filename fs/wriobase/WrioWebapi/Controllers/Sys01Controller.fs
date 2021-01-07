@@ -122,7 +122,7 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
 
     // GET: http://localhost:5000/sys01/dataset/{datasetId}
     [<HttpGet("dataset/{datasetId}")>]
-    member this.GetDatasetColumn01(datasetId: int): string array =
+    member this.GetDatasetColumn01(datasetId: int): DsColumn array =
 
         let myCfg = MyConfig()
 

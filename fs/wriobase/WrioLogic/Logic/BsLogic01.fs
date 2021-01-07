@@ -38,22 +38,22 @@ module BsLogic01 =
 *)
 
 
-    //let getDtSetBase (dbSysConn: NpgsqlConnection) (datasetId: int) : DtSet option  =
     let getDtSetBase (ctx: WrioContext) (datasetId: int) : DtSet option  =
         ctx.LogInformation("BsLogic01.getDtSetBase start")
-        //let lstDsTable = DbSystem.getDsTable dbSysConn datasetId
+
         sprintf "datasetId=%d" datasetId |> WrioCommon.logInformation ctx |> ignore
 
         let lstDsTable = DbSystem.getDsTable ctx datasetId
 
         sprintf "lstDsTable.Length=%d" lstDsTable.Length |> WrioCommon.logInformation ctx |> ignore
 
-        //let lstTupleDsJoin = DbSystem.getDsJoin dbSysConn datasetId
         let lstTupleDsJoin = DbSystem.getDsJoin ctx datasetId
      
         sprintf "lstTupleDsJoin.Length=%d" lstTupleDsJoin.Length |> WrioCommon.logInformation ctx |> ignore
 
         let fact = lstDsTable.Head
+
+        fact.Columns <- DbUserPg.getColumns ctx fact.Table
 
         let dimensions = List.toArray <| zipDsTblJoin lstDsTable.Tail lstTupleDsJoin
 
@@ -69,9 +69,12 @@ module BsLogic01 =
         DbSystem.connectDbSys ctx |> ignore
         DbSystem.openDbSys ctx |> ignore
 
+        DbUserPg.connectDbUsr ctx |> DbUserPg.openDbUsr |> ignore
+
         let optDtSet = getDtSetBase ctx datasetId
 
         DbSystem.closeDbSys ctx |> ignore
+        DbUserPg.closeDbUsr ctx |> ignore
 
         optDtSet
 
