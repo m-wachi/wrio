@@ -43,9 +43,15 @@ module BsLogic01 =
 
         sprintf "datasetId=%d" datasetId |> WrioCommon.logInformation ctx |> ignore
 
-        let lstDsTable = DbSystem.getDsTable ctx datasetId
+        let lstDsTable0 = DbSystem.getDsTable ctx datasetId
 
-        sprintf "lstDsTable.Length=%d" lstDsTable.Length |> WrioCommon.logInformation ctx |> ignore
+        sprintf "lstDsTable0.Length=%d" lstDsTable0.Length |> WrioCommon.logInformation ctx |> ignore
+
+        let setColumns (x: DsTable) = 
+            x.Columns <- DbUserPg.getColumns ctx x.Table
+            x
+
+        let lstDsTable : DsTable list = List.map setColumns lstDsTable0 
 
         let lstTupleDsJoin = DbSystem.getDsJoin ctx datasetId
      
@@ -53,7 +59,7 @@ module BsLogic01 =
 
         let fact = lstDsTable.Head
 
-        fact.Columns <- DbUserPg.getColumns ctx fact.Table
+        // fact.Columns <- DbUserPg.getColumns ctx fact.Table
 
         let dimensions = List.toArray <| zipDsTblJoin lstDsTable.Tail lstTupleDsJoin
 
@@ -81,8 +87,9 @@ module BsLogic01 =
 
     let getPivotLogic (ctx: WrioContext) (pivotId: int)  : Pivot option =
 
-        DbSystem.connectDbSys ctx |> ignore
-        DbSystem.openDbSys ctx |> ignore
+        DbSystem.connectDbSys ctx |> DbSystem.openDbSys |> ignore
+
+        DbUserPg.connectDbUsr ctx |> DbUserPg.openDbUsr |> ignore
 
         let (datasetId, sSettingJson) = DbSystem.getPivotBase ctx pivotId
 
@@ -117,6 +124,9 @@ module BsLogic01 =
                     let pvt = Pivot(pivotId, datasetId, pvtSetting, dtSet)
                     Some pvt
                 | None -> None
+
+        DbSystem.closeDbSys ctx |> ignore
+        DbUserPg.closeDbUsr ctx |> ignore
 
         optPvt
 

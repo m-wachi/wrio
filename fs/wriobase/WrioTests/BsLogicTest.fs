@@ -10,6 +10,7 @@ open Wrio.Db
 
 module BsLogicTest =
     let connStrDbSys = "Host=localhost;Username=wrio_test;Password=wrio_test;Database=wrio_test"
+    let connStrDbUsr = "Host=localhost;Username=user02_test;Password=user02_test;Database=user02_test"
 
     let getTestDbSysConn () =
         new NpgsqlConnection(connStrDbSys)
@@ -17,6 +18,7 @@ module BsLogicTest =
     let getWrioContext () : WrioContext =
         let cfg = MyConfig()
         cfg.SysConnStr <- connStrDbSys
+        cfg.UsrConnStr <- connStrDbUsr
         let ctx = WrioContext(cfg)
         ctx
 
@@ -145,12 +147,19 @@ module BsLogicTest =
                 Assert.AreEqual(3, dtSet1.DatasetId)
                 let fact = dtSet1.Fact
                 Assert.AreEqual(1, fact.DsTableId)
+
+                Assert.AreEqual(5, fact.Columns.Length)
+                Assert.AreEqual("item_cd", fact.Columns.[0].ColName)
+                Assert.AreEqual("item_grp_cd", fact.Columns.[1].ColName)
+                Assert.AreEqual("nof_sales", fact.Columns.[2].ColName)
+                Assert.AreEqual("sales_amount", fact.Columns.[3].ColName)
+                Assert.AreEqual("sales_date", fact.Columns.[4].ColName)
+
                 let dimension = dtSet1.Dimensions.[0]
                 Assert.AreEqual(2, dimension.DsTableId)
                 let sDtSet1 = sprintf "%A" dimension
                 let dtJoin1 = dimension.DsJoins.[0]
                 Assert.AreEqual("item_cd", dtJoin1.JoinDstCol)
-
 
     [<Test>]
     let GetPivotLogicTest01() =
@@ -168,6 +177,7 @@ module BsLogicTest =
 
         let cfg = MyConfig()
         cfg.SysConnStr <- connStrDbSys
+        cfg.UsrConnStr <- connStrDbUsr
     
         let optPvt = BsLogic01.getPivotLogic ctx 4
 

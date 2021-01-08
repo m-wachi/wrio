@@ -202,11 +202,11 @@ module DbUserPgTest =
 
         Assert.AreEqual(5, aryColumn.Length)
 
-        Assert.AreEqual("item_cd", aryColumn.[0])
-        Assert.AreEqual("item_grp_cd", aryColumn.[1])
-        Assert.AreEqual("nof_sales", aryColumn.[2])
-        Assert.AreEqual("sales_amount", aryColumn.[3])
-        Assert.AreEqual("sales_date", aryColumn.[4])
+        Assert.AreEqual("item_cd", aryColumn.[0].ColName)
+        Assert.AreEqual("item_grp_cd", aryColumn.[1].ColName)
+        Assert.AreEqual("nof_sales", aryColumn.[2].ColName)
+        Assert.AreEqual("sales_amount", aryColumn.[3].ColName)
+        Assert.AreEqual("sales_date", aryColumn.[4].ColName)
         
 
 

@@ -90,7 +90,11 @@ module DbUserPg =
 
         let rdr = cmd.ExecuteReader() 
 
-        [| while rdr.Read() do yield (DsColumn(rdr.GetString(0), rdr.GetString(1))) |]
+        let ret = [| while rdr.Read() do yield (DsColumn(rdr.GetString(0), rdr.GetString(1))) |]
+
+        rdr.Close() |> ignore
+
+        ret
 
 
     //let getPivotData (conn : NpgsqlConnection) (pvt: Pivot) =

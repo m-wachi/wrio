@@ -23,14 +23,14 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
 
     //let summaries = [| "Freezing"; "Bracing"; "Chilly"; "Cool"; "Mild"; "Warm"; "Balmy"; "Hot"; "Sweltering"; "Scorching" |]
 
-    [<HttpGet>]
-    member __.Get() : MyWork01Model =
-        let a = MyWork01Model(1, "model01")
-        a
+    // [<HttpGet>]
+    // member __.Get() : MyWork01Model =
+    //     let a = MyWork01Model(1, "model01")
+    //     a
 
-    [<HttpGet("{idVal}")>]
-    member __.GetMyWork01(idVal: int): MyWork01Model =
-        MyWork01Model(idVal, "model02")
+    // [<HttpGet("{idVal}")>]
+    // member __.GetMyWork01(idVal: int): MyWork01Model =
+    //     MyWork01Model(idVal, "model02")
 
     //http://localhost:5000/sys01/pvt/{pivotId}
     [<HttpGet("pvt/{pivotId}")>]
