@@ -3,6 +3,11 @@
 
 細かいTodo
 
+- Sys01ControllerのGetPivot01の見直し
+　- ctxの初期化とクローズの共通関数をWebApi用共通コードを作って定義
+　- ctx処理をきちんと組み込む
+　- log出力をCommonのものに変える
+
 - Datasetの中に各テーブルのカラム情報を持たせる
   - model内のクラス作成 done.
   - getDatasetの処理でカラム情報を取得・設定する処理　not yet.
