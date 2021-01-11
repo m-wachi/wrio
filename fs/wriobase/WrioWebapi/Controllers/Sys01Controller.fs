@@ -138,7 +138,10 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
         ctx.SetLogger(aspLogger)
         WrioCommon.logInformation ctx "GetDatasetColumn01 start."
 
-        let aryColumn = BsLogic01.getColumnsLogic ctx datasetId
+        let optDtSet = BsLogic01.getDtSetLogic ctx datasetId
 
-        aryColumn
+        match optDtSet with
+            | None -> [||]
+            | Some dtSet1 -> 
+                dtSet1.Fact.Columns
 

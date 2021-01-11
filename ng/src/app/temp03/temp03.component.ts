@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PivotData, OptPivotData } from '../pivotdata';
-import { Pivot } from '../model';
+import { Pivot, DsColumn } from '../model';
 import { PivotService } from '../pivot.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class Temp03Component implements OnInit {
   optPivotData: OptPivotData = null;
   pivotData: PivotData = null;
 
-  aryColumn: Array<string> = [];
+  aryColumn: Array<DsColumn> = [];
 
   constructor(private pivotSvc: PivotService) { }
 

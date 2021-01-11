@@ -1,16 +1,22 @@
-export interface DtJoin {
+export interface DsColumn {
+  colName: string;
+  colType: string;
+}
+
+export interface DsJoin {
     joinSrcCol: string;
     dstAbbrev: string;
     joinDstCol: string;
 }
 
 export interface DsTable {
-  dsJoins: DtJoin[];
   dsTableId: number;
   table: string;
   abbrev: string;
   tableType: number;
   joinDiv: number;
+  dsJoins: DsJoin[];
+  columns: DsColumn[];
 }
 
 export interface DtSet {

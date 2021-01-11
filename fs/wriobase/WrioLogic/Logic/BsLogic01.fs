@@ -139,7 +139,7 @@ module BsLogic01 =
         DbUserPg.getPivotData ctx pvt 
 
         
-    //let getColumnsLogic (ctx: WrioContext) (dtSet: DtSet) =
+    (*
     let getColumnsLogic (ctx: WrioContext) (datasetId: int) =
 
         WrioCommon.logInformation ctx "getColumnsLogic called."
@@ -160,6 +160,6 @@ module BsLogic01 =
                 | None -> [||]
 
         retVal
-
+    *)
 
 
