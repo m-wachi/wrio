@@ -32,7 +32,7 @@ module BsLogicTest =
         ()
 
     let prepMDsTable01 (dbSysConn : NpgsqlConnection) =
-        let sql1 = "insert into m_ds_table values(1, 3, 'f03', 't_table03', 1, NULL, CURRENT_TIMESTAMP)"
+        let sql1 = "insert into m_ds_table values(1, 3, 'f03', 't_table01', 1, NULL, CURRENT_TIMESTAMP)"
         let sql2 = "insert into m_ds_table values(2, 3, 'd01', 'm_item', 2, 1, CURRENT_TIMESTAMP)"
 
         execSql dbSysConn sql1 |> ignore
@@ -157,7 +157,10 @@ module BsLogicTest =
 
                 let dimension = dtSet1.Dimensions.[0]
                 Assert.AreEqual(2, dimension.DsTableId)
-                let sDtSet1 = sprintf "%A" dimension
+
+                Assert.AreEqual(3, dimension.Columns.Length)
+                Assert.AreEqual("item_grp_cd", dimension.Columns.[1].ColName)
+
                 let dtJoin1 = dimension.DsJoins.[0]
                 Assert.AreEqual("item_cd", dtJoin1.JoinDstCol)
 
@@ -189,7 +192,7 @@ module BsLogicTest =
                 Assert.AreEqual(4, pvt.PivotId)
                 Assert.AreEqual(3, pvt.DatasetId)
                 Assert.AreEqual(3,pvt.DataSet.DatasetId)
-                Assert.AreEqual("t_table03", pvt.DataSet.Fact.Table)
+                Assert.AreEqual("t_table01", pvt.DataSet.Fact.Table)
                 Assert.AreEqual("d01.item_name", pvt.Setting.ColHdr.[0])
                 Assert.AreEqual("nof_sales", pvt.Setting.CellVal.[0].ColName)
 

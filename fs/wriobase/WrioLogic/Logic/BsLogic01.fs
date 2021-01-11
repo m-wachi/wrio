@@ -48,6 +48,7 @@ module BsLogic01 =
         sprintf "lstDsTable0.Length=%d" lstDsTable0.Length |> WrioCommon.logInformation ctx |> ignore
 
         let setColumns (x: DsTable) = 
+            //WrioCommon.logInformation ctx ("setColumns: table=" + x.Table)
             x.Columns <- DbUserPg.getColumns ctx x.Table
             x
 
