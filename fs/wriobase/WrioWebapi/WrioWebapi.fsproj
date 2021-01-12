@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Include="WeatherForecast.fs" />
     <Compile Include="Common/AspLogger.fs" />
+    <Compile Include="Common/WebapiCommon.fs" />
     <Compile Include="Controllers/WeatherForecastController.fs" />
     <Compile Include="Controllers/MyWork02Controller.fs" />
     <Compile Include="Controllers/Sys01Controller.fs" />

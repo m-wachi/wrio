@@ -36,20 +36,21 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
     [<HttpGet("pvt/{pivotId}")>]
     member this.GetPivot01(pivotId: int): Pivot option =
 
-        logger.LogInformation("Sys01Controller.GetPivot01 called. pivotId=%d", pivotId)
+        let ctx = WebapiCommon.setupContext<Sys01Controller> config logger
 
+        //logger.LogInformation("Sys01Controller.GetPivot01 called. pivotId=%d", pivotId)
+        sprintf "Sys01Controller.GetPivot01 called. pivotId=%d" pivotId 
+            |> WrioCommon.logInformation ctx |> ignore
         this.HttpContext.Session.Set("testkey", System.Text.Encoding.ASCII.GetBytes("abc"))
-        //.Set("testkey",     ) |> ignore
-
         this.HttpContext.Response.Cookies.Append("test2key", "test2val") |> ignore
 
-        let myCfg = MyConfig()
+        //let myCfg = MyConfig()
 
-        let a = config.GetSection("AppConfiguration")
+        //let a = config.GetSection("AppConfiguration")
 
-        myCfg.SysConnStr <- a.GetValue("SystemConnectionString")
+        //myCfg.SysConnStr <- a.GetValue("SystemConnectionString")
 
-        let ctx = WrioContext(myCfg)
+        //let ctx = WrioContext(myCfg)
 
         BsLogic01.getPivotLogic ctx pivotId
 
