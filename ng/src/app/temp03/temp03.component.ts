@@ -14,7 +14,7 @@ export class Temp03Component implements OnInit {
   sPivot: string = "";
   optPivotData: OptPivotData = null;
   pivotData: PivotData = null;
-
+  factColumns: Array<DsColumn> = [];
   aryColumn: Array<DsColumn> = [];
 
   constructor(private pivotSvc: PivotService) { }
@@ -53,4 +53,19 @@ export class Temp03Component implements OnInit {
       }
     );
   }
+
+  button3_Click(): void {
+    alert('button3 click');
+    this.pivotSvc.getPivot(2).subscribe(
+      optPvt => {
+        this.pivot = optPvt.value;
+        let colHdr = this.pivot.setting.colHdr;
+        let sPivot = JSON.stringify(this.pivot);
+        this.sPivot = sPivot;
+        this.factColumns = this.pivot.dataSet.fact.columns;
+        sessionStorage.setItem("pivot", sPivot);
+      }
+    );
+  }
+
 }

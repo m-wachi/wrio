@@ -1,11 +1,27 @@
 <h2>temp03 component</h2>
+
+<button id="button3" (click)="button3_Click()">get pivot</button><br/>
+<div *ngIf="pivot">fact table: {{pivot.dataSet.fact.table}}</div>
+<div *ngIf="pivot">fact column
+  <table border="1">
+    <tr *ngFor="let col2 of pivot.dataSet.fact.columns">
+      <td>{{col2.colName}}</td>
+    </tr>
+  </table>
+  <div>pivot.dataSet.fact.columns.length= {{pivot.dataSet.fact.columns.length}} </div>
+  <div>pivot.dataSet.fact.columns[1].colName= {{pivot.dataSet.fact.columns[1].colName}} </div>
+</div>
+
+<div>sPivot: {{sPivot}}</div>
+
 <button id="button2" (click)="button2_Click()">get columns</button><br/>
 <div>aryColumn: {{aryColumn}}</div>
 
 <button id="button1" (click)="button1_Click()">put</button>
 <div>sPivot: {{sPivot}}</div>
 <hr/>
-<table border="1">
+
+<table border="1" *ngIf="pivotData">
     <tr>
       <th *ngFor="let col of pivotData.colNames">
         {{col}}

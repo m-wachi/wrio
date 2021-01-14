@@ -44,7 +44,7 @@ export interface Pivot {
     pivotId: number;
     datasetId: number;
     setting: PivotSetting;
-    DtSet: DtSet;
+    dataSet: DtSet;
 }
 
 export interface OptPivot {
