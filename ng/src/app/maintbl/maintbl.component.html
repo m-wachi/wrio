@@ -1,9 +1,8 @@
 <p>
   maintbl works!
-  <br>
   {{aaa}}
-  <br>
-  mainTbl id:{{mainTbl.id}}, name: {{mainTbl.name}}
-  <br>
+  <div *ngIf="mainTbl">
+    mainTbl id:{{mainTbl.id}}, name: {{mainTbl.name}}
+  </div>
   cccc
-</p>
+

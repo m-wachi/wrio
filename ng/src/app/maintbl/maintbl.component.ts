@@ -13,7 +13,6 @@ export class MaintblComponent implements OnInit {
   mainTbl : MainTbl = null;
   
   constructor(private maintblSvc: MaintblService) { }
-  //constructor() { }
 
   getAbc(): void {
     //this.mainTbl = this.maintblSvc.getAbc();

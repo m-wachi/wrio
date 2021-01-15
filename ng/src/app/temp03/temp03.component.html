@@ -1,13 +1,31 @@
 <h2>temp03 component</h2>
 
 <button id="button3" (click)="button3_Click()">get pivot</button><br/>
-<div *ngIf="pivot">fact table: {{pivot.dataSet.fact.table}}</div>
-<div *ngIf="pivot">fact column
+<div *ngIf="pivot">
+  <div>
+    <div>column header</div>
+    <div dropzone="copy">(put here)</div>
+    <table border="1">
+      <tr *ngFor="let colName of pivot.setting.colHdr">
+        <td>{{colName}}</td>
+      </tr>
+    </table>
+  </div>
+
+  fact column
   <table border="1">
+    <tr><th>{{pivot.dataSet.fact.table}}</th></tr>
     <tr *ngFor="let col2 of pivot.dataSet.fact.columns">
-      <td>{{col2.colName}}</td>
+      <td draggable="true">{{col2.colName}}</td>
     </tr>
   </table>
+  <table border="1">
+    <tr><th>{{pivot.dataSet.dimensions[0].table}}</th></tr>
+    <tr *ngFor="let col of pivot.dataSet.dimensions[0].columns">
+      <td draggable="true">{{col.colName}}</td>
+    </tr>
+  </table>
+
   <div>pivot.dataSet.fact.columns.length= {{pivot.dataSet.fact.columns.length}} </div>
   <div>pivot.dataSet.fact.columns[1].colName= {{pivot.dataSet.fact.columns[1].colName}} </div>
 </div>
@@ -22,15 +40,15 @@
 <hr/>
 
 <table border="1" *ngIf="pivotData">
-    <tr>
-      <th *ngFor="let col of pivotData.colNames">
-        {{col}}
-      </th>
-    </tr>
-    <tr *ngFor="let dataRow of pivotData.rows">
-      <td *ngFor="let cellValue of dataRow">
-        {{cellValue}}
-      </td>
-    </tr>
-  </table>
+  <tr>
+    <th *ngFor="let col of pivotData.colNames">
+      {{col}}
+    </th>
+  </tr>
+  <tr *ngFor="let dataRow of pivotData.rows">
+    <td *ngFor="let cellValue of dataRow">
+      {{cellValue}}
+    </td>
+  </tr>
+</table>
   

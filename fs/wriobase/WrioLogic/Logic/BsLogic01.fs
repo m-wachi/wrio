@@ -136,9 +136,11 @@ module BsLogic01 =
 
         DbUserPg.connectDbUsr ctx |> DbUserPg.openDbUsr |> ignore
 
-        DbUserPg.getPivotData ctx pvt 
+        let pvtData = DbUserPg.getPivotData ctx pvt 
 
-        
+        DbUserPg.closeDbUsr ctx |> ignore
+
+        pvtData
     (*
     let getColumnsLogic (ctx: WrioContext) (datasetId: int) =
 
