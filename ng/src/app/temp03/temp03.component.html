@@ -4,10 +4,10 @@
 <div *ngIf="pivot">
   <div>
     <div>column header</div>
-    <div dropzone="copy">(put here)</div>
+    <div dropzone="copy" id="puthere" (dragover)="f_dragover($event)" (drop)="f_drop($event)">(put here)</div>
     <table border="1">
       <tr *ngFor="let colName of pivot.setting.colHdr">
-        <td>{{colName}}</td>
+        <td id="{{colName}}">{{colName}}</td>
       </tr>
     </table>
   </div>
@@ -15,14 +15,14 @@
   fact column
   <table border="1">
     <tr><th>{{pivot.dataSet.fact.table}}</th></tr>
-    <tr *ngFor="let col2 of pivot.dataSet.fact.columns">
-      <td draggable="true">{{col2.colName}}</td>
+    <tr *ngFor="let col of pivot.dataSet.fact.columns">
+      <td id="{{col.colName}}" draggable="true" (dragstart)="f_dragstart($event)">{{col.colName}}</td>
     </tr>
   </table>
   <table border="1">
     <tr><th>{{pivot.dataSet.dimensions[0].table}}</th></tr>
     <tr *ngFor="let col of pivot.dataSet.dimensions[0].columns">
-      <td draggable="true">{{col.colName}}</td>
+      <td id="{{col.colName}}" draggable="true">{{col.colName}}</td>
     </tr>
   </table>
 
