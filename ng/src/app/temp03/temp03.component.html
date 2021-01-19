@@ -11,12 +11,13 @@
       </tr>
     </table>
   </div>
-
+  <div>pivot.setting.colHdr:<span *ngFor="let colHdr of pivot.setting.colHdr">{{colHdr}}, </span></div>
+  <div>pivot.setting.rowHdr:<span *ngFor="let rowHdr of pivot.setting.rowHdr">{{rowHdr}}, </span></div>
   fact column
   <table border="1">
     <tr><th>{{pivot.dataSet.fact.table}}</th></tr>
     <tr *ngFor="let col of pivot.dataSet.fact.columns">
-      <td id="{{col.colName}}" draggable="true" (dragstart)="f_dragstart($event)">{{col.colName}}</td>
+      <td><span id="{{col.colName}}" draggable="true" (dragstart)="f_dragstart($event)">{{col.colName}}</span></td>
     </tr>
   </table>
   <table border="1">

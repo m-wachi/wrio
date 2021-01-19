@@ -75,6 +75,7 @@ export class Temp03Component implements OnInit {
   f_dragstart(event){
     //this.messageSvc.add("drag start.");
     console.log("drag start.");
+    event.dataTransfer.effectAllowed = "copy";
     //ドラッグするデータのid名をDataTransferオブジェクトにセット
     event.dataTransfer.setData("text", event.target.id);
   }
@@ -100,8 +101,11 @@ export class Temp03Component implements OnInit {
     console.log("drag_elm=" + drag_elm);
     console.log("drag_elem_txt=" + drag_elem_txt);
     //ドロップ先にドラッグされた要素を追加
-    event.currentTarget.appendChild(drag_elem_txt);
+    event.currentTarget.appendChild(drag_elm);
     //エラー回避のため、ドロップ処理の最後にdropイベントをキャンセルしておく
+    
+    this.pivot.setting.colHdr.push(drag_elem_txt);
+    
     event.preventDefault();
   }
 
