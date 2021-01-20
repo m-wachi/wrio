@@ -73,9 +73,9 @@ export class Temp03Component implements OnInit {
 
   /***** ドラッグ開始時の処理 *****/
   f_dragstart(event){
+    event.dataTransfer.effectAllowed = "copy";
     //this.messageSvc.add("drag start.");
     console.log("drag start.");
-    event.dataTransfer.effectAllowed = "copy";
     //ドラッグするデータのid名をDataTransferオブジェクトにセット
     event.dataTransfer.setData("text", event.target.id);
   }
@@ -85,28 +85,36 @@ export class Temp03Component implements OnInit {
     //dragoverイベントをキャンセルして、ドロップ先の要素がドロップを受け付けるようにする
     //console.log("dragover start.");
     event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
   }
   
 
   /***** ドロップ時の処理 *****/
   f_drop(event){
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
     console.log("drop start.");
     //ドラッグされたデータのid名をDataTransferオブジェクトから取得
     var id_name = event.dataTransfer.getData("text");
     console.log("id_name=" + id_name);
     //id名からドラッグされた要素を取得
     var drag_elm =document.getElementById(id_name);
-
     let drag_elem_txt = drag_elm.textContent;
     console.log("drag_elm=" + drag_elm);
     console.log("drag_elem_txt=" + drag_elem_txt);
+
+    //let dropElm = drag_elm.cloneNode(true) as HTMLElement;
+    let dropElm = document.createElement("span");
+    dropElm.id = "rowHdr_" + id_name;
+    dropElm.textContent = drag_elem_txt;
+
     //ドロップ先にドラッグされた要素を追加
-    event.currentTarget.appendChild(drag_elm);
+    //event.currentTarget.appendChild(drag_elm); //これだと移動になる模様
+    event.currentTarget.appendChild(dropElm); //これだと移動になる模様
     //エラー回避のため、ドロップ処理の最後にdropイベントをキャンセルしておく
     
-    this.pivot.setting.colHdr.push(drag_elem_txt);
+    //this.pivot.setting.colHdr.push(drag_elem_txt);  // これはなにも影響しない
     
-    event.preventDefault();
   }
 
 }

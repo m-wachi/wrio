@@ -4,7 +4,7 @@
 <div *ngIf="pivot">
   <div>
     <div>column header</div>
-    <div dropzone="copy" id="puthere" (dragover)="f_dragover($event)" (drop)="f_drop($event)">(put here)</div>
+    <div id="puthere" (dragover)="f_dragover($event)" (drop)="f_drop($event)">(put here)</div>
     <table border="1">
       <tr *ngFor="let colName of pivot.setting.colHdr">
         <td id="{{colName}}">{{colName}}</td>
