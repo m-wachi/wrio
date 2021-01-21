@@ -138,3 +138,18 @@ module DbSystem =
             //rdr.Close()
             (-1, "")
 
+    let updatePivot (pivotId: int) (datasetId: int, sSettingJson: string)  (ctx: WrioContext) =
+        let sql = 
+            "update m_pivot " +
+            "set dataset_id=@dataset_id, " +
+            "    setting_json=@setting_json, " +
+            "    upd_time=CURRENT_TIMESTAMP " +
+            "where " +
+            "    pivot_id = @pivot_id"
+
+        let cmd = new NpgsqlCommand(sql, ctx.ConnDbSys)
+        cmd.Parameters.AddWithValue("dataset_id", datasetId) |> ignore
+        cmd.Parameters.AddWithValue("setting_json", sSettingJson) |> ignore
+        cmd.Parameters.AddWithValue("pivot_id", pivotId) |> ignore
+        let iResult = cmd.ExecuteNonQuery()
+        iResult

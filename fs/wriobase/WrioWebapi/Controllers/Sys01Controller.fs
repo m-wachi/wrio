@@ -78,26 +78,13 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
         ctx.LogInformation("PutPivot01 start.")
         sprintf "pivotId=%d, pvt.DatasetId=%d" pivotId pvt.DatasetId |> WrioCommon.logInformation ctx |> ignore
 
-        (*
-        let optPvt1 = BsLogic01.getPivotLogic 1 myCfg 
-        
-        match optPvt1 with
-            | Some pvt1 -> 
-                let pvtData =  BsLogic01.getPivotDataLogic pvt1 myCfg
-                Some pvtData
-            | None -> None
-        *)
-
-        //let dtSet = 
-        //let optDtSet = BsLogic01.getDtSetLogic pvt.DatasetId myCfg
         let optDtSet = BsLogic01.getDtSetLogic ctx pvt.DatasetId
         match optDtSet with
             | Some dtSet -> 
                 pvt.DataSet <- dtSet
                 //Some (BsLogic01.getPivotDataLogic pvt myCfg)
-                Some (BsLogic01.getPivotDataLogic ctx pvt)
+                BsLogic01.getPivotDataLogic ctx pvt
             | None -> None
-
 
     [<HttpGet("pvtdt1")>]
     member this.GetPivotData01(): PivotData option =
@@ -115,9 +102,7 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
         
         match optPvt1 with
             | Some pvt1 -> 
-                //let pvtData =  BsLogic01.getPivotDataLogic pvt1 myCfg
-                let pvtData =  BsLogic01.getPivotDataLogic ctx pvt1
-                Some pvtData
+                BsLogic01.getPivotDataLogic ctx pvt1
             | None -> None
 
 

@@ -128,11 +128,11 @@ module DbUserPg =
             let rows2 = getRows rdr
 
             let rows = Array.append [|rowVals1|] rows2
-            PivotData(colNames, rows)
+            Some (PivotData(colNames, rows))
         else
             printfn "rdr.Read() = false"
-            PivotData()
-
+            //PivotData()
+            None
 
 
 

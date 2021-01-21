@@ -109,79 +109,17 @@ let main argv =
 
     let ctxTest = WrioContext(cfgTest)
 
-
-(*
-    let dsJoin21: DbSysDsJoin = {
-        DsTableId = 1; SeqNo = 1; DatasetId = 1;
-        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1";
-        JoinDiv = 1
-    }
-
-    let dsJoin22 = {
-        DsTableId = 1
-        SeqNo = 2
-        DatasetId = 1
-        JoinSrcCol = "col1"
-        DstAbbrev = "b"
-        JoinDstCol = "col1_1"
-        JoinDiv = 1
-    }
-
-    let dsJoin23 = {
-        DsTableId = 2
-        SeqNo = 1
-        DatasetId = 1
-        JoinSrcCol = "col1"
-        DstAbbrev = "b"
-        JoinDstCol = "col1_1"
-        JoinDiv = 1
-    }
-
-    let lstDsJoin2 = [dsJoin21; dsJoin22; dsJoin23]
-*)
-    (*
-    let dsJoin21: DsJoin = {
-        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"
-    }
-    *)
     let dsJoin21 = DsJoin("col1", "b", "col1_1")
-    (*
-    let dsJoin22 = {
-        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"
-    }
-    *)
     let dsJoin22 = DsJoin("col1", "b", "col1_1")
-    (*
-    let dsJoin23 = {
-        JoinSrcCol = "col1"; DstAbbrev = "b"; JoinDstCol = "col1_1"
-    }
-    *)
     let dsJoin23 = DsJoin("col1", "b", "col1_1")
 
     let lstTupleDsJoin2 = [(1, 1, dsJoin21); (1, 2, dsJoin22); (2, 1, dsJoin23)]
 
-    (*
-    let dsTable21 = {
-        DsTableId = 1; TableAbbrev = "a"; TableName = "t_tbl01"; TableType = 2; JoinDiv = 1
-    }
-
-    let dsTable22 = {
-        DsTableId = 2; TableAbbrev = "b"; TableName = "t_tbl02"; TableType = 2; JoinDiv = 1
-    }
-    let lstDsTable2 = [dsTable21; dsTable22]
-    *)
     let dsTable21 = DsTable(1, "tbl01", "a", 1, 0, [||], [||])
     let dsTable22 = DsTable(2, "tbl02", "b", 2, 1, [||], [||])
 
     let lstDsTable2 = [dsTable21; dsTable22]
 
-    (*
-    let dsJoin3 = {
-        JoinSrcCol = "col1"
-        DstAbbrev = "b"
-        JoinDstCol = "col1_1"
-    }
-    *)
     let dsJoin3 = DsJoin("col1", "b", "col1_1")
 
     let sOpt = JsonSerializerOptions()
@@ -230,6 +168,9 @@ let main argv =
     
     let lstDsTbl = DbSystem.getDsTable ctx 2
     printfn "lstDsTbl=%A" lstDsTbl
+
+    let iResult1 = DbSystem.updatePivot 3 (3, settingJsonStr1) ctx
+    printfn "updatePivot iResult1=%A" iResult1
 
     DbSystem.closeDbSys ctx |> ignore
 
@@ -374,10 +315,7 @@ let main argv =
 
     printfn "pvt2=%A" sPvt2
 
-    let pvtData3 = BsLogic01.getPivotDataLogic ctx pvt2
-    printfn "pvtData3=%A" pvtData3
-
-    let aryColName1 = BsLogic01.getColumnsLogic ctx 1
-    printfn "aryColName1=%A" aryColName1
+    //let pvtData3 = BsLogic01.getPivotDataLogic ctx pvt2
+    //printfn "pvtData3=%A" pvtData3
 
     0 // return an integer exit code

@@ -144,9 +144,6 @@ module DbUserPgTest =
 
     [<Test>]
     let UserPgGetPivotDataTest01 () =
-        // let dbUsrConn = getTestDbUsrConn()
-        // dbUsrConn.Open()
-
         let ctx = getWrioContext()
         DbUserPg.connectDbUsr ctx |> DbUserPg.openDbUsr |> ignore        
 
@@ -155,13 +152,13 @@ module DbUserPgTest =
 
         let pvt1 = getTestPivot02()
 
-        //let pvtData = DbUserPg.getPivotData dbUsrConn pvt1
-        let pvtData = DbUserPg.getPivotData ctx pvt1
+        let optPvtData = DbUserPg.getPivotData ctx pvt1
 
-        //dbUsrConn.Close()
+        let pvtData = match optPvtData with
+                        | Some pvtData -> pvtData
+                        | None -> PivotData()
+
         DbUserPg.closeDbUsr ctx |> ignore
-
-        //printfn "pvtData=%A" pvtData
 
         Assert.AreEqual(3, pvtData.ColNames.Length)
         Assert.AreEqual("sales_date", pvtData.ColNames.[0])

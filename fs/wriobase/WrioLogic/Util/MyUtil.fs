@@ -1,5 +1,7 @@
 namespace Wrio.Util
 
+open System.Text.Json
+
 module MyUtil =
     let rec span (predicate : 'T -> bool) (lst : 'T list) = 
         if lst.IsEmpty then 
@@ -18,3 +20,14 @@ module MyUtil =
          where
          (ys, zs) = span p xs'
     *)
+
+    let toJson<'T> (jsonObj : 'T) : string =
+        let sOpt = JsonSerializerOptions()
+        sOpt.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
+        JsonSerializer.Serialize<'T>(jsonObj, sOpt)
+
+    let fromJson<'T> (sJson: string) : 'T =
+        let sOpt = JsonSerializerOptions()
+        sOpt.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
+        JsonSerializer.Deserialize<'T>(sJson, sOpt)
+

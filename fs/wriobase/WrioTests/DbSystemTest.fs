@@ -140,5 +140,25 @@ module DbSystemTest =
         Assert.AreEqual(3, datasetId)
         Assert.AreEqual(settingJsonExp, settingJsonAct)
 
+    [<Test>]
+    let UpdatePivotTest01 () =
+
+        let ctx = getWrioContext()
+        DbSystem.connectDbSys ctx |> DbSystem.openDbSys |> ignore        
+
+        prepMPivot01 (ctx.ConnDbSys)
+
+        let settingJsonExp = "setting json value"
+
+        let iResult = DbSystem.updatePivot 4 (2, settingJsonExp) ctx 
+
+        Assert.AreEqual(1, iResult)
+
+        let datasetIdAct, settingJsonAct = DbSystem.getPivotBase ctx 4
+
+        DbSystem.closeDbSys ctx |> ignore
+
+        Assert.AreEqual(2, datasetIdAct)
+        Assert.AreEqual(settingJsonExp, settingJsonAct)
 
 

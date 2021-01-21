@@ -12,6 +12,19 @@ module BsLogic01 =
     let hello name =
         sprintf "Hello %s" name
 
+
+    let runLogic (ctx: WrioContext) funcLogic =
+        try
+            DbSystem.connectDbSys ctx |> DbSystem.openDbSys |> ignore
+            DbUserPg.connectDbUsr ctx |> DbUserPg.openDbUsr |> ignore
+
+            let retVal = funcLogic ctx
+            retVal
+        finally
+            DbUserPg.closeDbUsr ctx |> ignore
+            DbSystem.closeDbSys ctx |> ignore
+
+
     let spanByDsTableId dsTableId (lstTupleDtJoin: (int * int * DsJoin) list) =
         let pred (x : (int * int * DsJoin)) = 
             let (dsTableIdTuple, seqNo, dsJoin) = x
@@ -36,7 +49,6 @@ module BsLogic01 =
         let (dsTbl, lstDsJoin) = pairDsTblJoin
         //Dimension(dsTbl.TableName, dsTbl.TableAbbrev, "", "", "", 0)
 *)
-
 
     let getDtSetBase (ctx: WrioContext) (datasetId: int) : DtSet option  =
         ctx.LogInformation("BsLogic01.getDtSetBase start")
@@ -101,27 +113,9 @@ module BsLogic01 =
 
         let pvtSetting : PivotSetting = JsonSerializer.Deserialize<PivotSetting>(sSettingJson, sOpt)
 
-        (*
-        let pvt : Pivot = {
-            PivotId = pivotId
-            DatasetId = datasetId
-            Setting = pvtSetting
-            DtSet = dtSet
-        }
-        pvt
-        *)
-
         let optPvt = 
             match optDtset with
                 | Some dtSet -> 
-(*
-                    let pvt : Pivot = {
-                        PivotId = pivotId
-                        DatasetId = datasetId
-                        Setting = pvtSetting
-                        DtSet = dtSet
-                    }
-*)
                     let pvt = Pivot(pivotId, datasetId, pvtSetting, dtSet)
                     Some pvt
                 | None -> None
@@ -131,16 +125,36 @@ module BsLogic01 =
 
         optPvt
 
+    let savePivot (pvt: Pivot) (ctx: WrioContext) =
+        let sSettingJson = MyUtil.toJson<PivotSetting> pvt.Setting
+        let iUpdResult = DbSystem.updatePivot pvt.PivotId (pvt.DatasetId, sSettingJson) ctx
 
-    let getPivotDataLogic (ctx: WrioContext) (pvt: Pivot)  : PivotData =
+        if 0 = iUpdResult then
+            0   //TODO do insert pivot
+        else 
+            iUpdResult
+
+
+    let putPivotLogic (pvt: Pivot) (ctx: WrioContext)  : PivotData option =
+        savePivot pvt ctx |> ignore
+
+        let optDtSet = getDtSetBase ctx pvt.DatasetId
+        match optDtSet with
+            | Some dtSet ->  
+                pvt.DataSet <- dtSet
+                DbUserPg.getPivotData ctx pvt 
+
+            | None -> None
+
+    let getPivotDataLogic (ctx: WrioContext) (pvt: Pivot)  : PivotData option =
 
         DbUserPg.connectDbUsr ctx |> DbUserPg.openDbUsr |> ignore
 
-        let pvtData = DbUserPg.getPivotData ctx pvt 
+        let optPvtData = DbUserPg.getPivotData ctx pvt 
 
         DbUserPg.closeDbUsr ctx |> ignore
 
-        pvtData
+        optPvtData
     (*
     let getColumnsLogic (ctx: WrioContext) (datasetId: int) =
 
