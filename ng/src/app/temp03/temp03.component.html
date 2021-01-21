@@ -11,21 +11,39 @@
       </tr>
     </table>
   </div>
-  <div>pivot.setting.colHdr:<span *ngFor="let colHdr of pivot.setting.colHdr">{{colHdr}}, </span></div>
-  <div>pivot.setting.rowHdr:<span *ngFor="let rowHdr of pivot.setting.rowHdr">{{rowHdr}}, </span></div>
+  <div (dragover)="hdr_Dragover($event)" (drop)="colHdr_Drop($event)">
+    pivot.setting.colHdr:
+    <span *ngFor="let colHdr of pivot.setting.colHdr; index as idx">
+      {{colHdr}} <span (click)="colHdrRemove_Click(idx)"> [X]</span>, 
+    </span>
+  </div>
+  <div (dragover)="hdr_Dragover($event)" (drop)="rowHdr_Drop($event)">
+    pivot.setting.rowHdr:
+    <span *ngFor="let rowHdr of pivot.setting.rowHdr; index as idx">
+      {{rowHdr}}, <span (click)="rowHdrRemove_Click(idx)"> [X]</span>
+    </span>
+  </div>
   fact column
-  <table border="1">
-    <tr><th>{{pivot.dataSet.fact.table}}</th></tr>
+  <table id="tbl_{{dataSet.fact.table}}" border="1">
+    <thead>
+    <tr><th><span (click)="tblHdr_Click(pivot.dataSet.fact.table)">{{pivot.dataSet.fact.table}}</span></th></tr>
+  </thead>
+  <tbody>
     <tr *ngFor="let col of pivot.dataSet.fact.columns">
-      <td><span id="{{col.colName}}" draggable="true" (dragstart)="f_dragstart($event)">{{col.colName}}</span></td>
+      <td><span id="{{col.colName}}" draggable="true" (dragstart)="column_Dragstart($event)">{{col.colName}}</span></td>
     </tr>
+  </tbody>
   </table>
-  <table border="1">
-    <tr><th>{{pivot.dataSet.dimensions[0].table}}</th></tr>
+  <table id="tbl_{{dataSet.dimensions[0].table}}" border="1">
+    <thead>
+      <tr><th><span (click)="tblHdr_Click(pivot.dataSet.dimensions[0].table)">{{pivot.dataSet.dimensions[0].table}}</span></th></tr>
+    </thead>
+    <tbody>
     <tr *ngFor="let col of pivot.dataSet.dimensions[0].columns">
       <td id="{{col.colName}}" draggable="true">{{col.colName}}</td>
     </tr>
-  </table>
+  </tbody>
+</table>
 
   <div>pivot.dataSet.fact.columns.length= {{pivot.dataSet.fact.columns.length}} </div>
   <div>pivot.dataSet.fact.columns[1].colName= {{pivot.dataSet.fact.columns[1].colName}} </div>
