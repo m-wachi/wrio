@@ -4,10 +4,12 @@ import { Pivot, DtSet, DsColumn } from '../model';
 import { PivotService } from '../pivot.service';
 import { MessageService } from '../message.service';
 
+//  styleUrls: ['./temp03.component.css']
+
+
 @Component({
   selector: 'app-temp03',
-  templateUrl: './temp03.component.html',
-  styleUrls: ['./temp03.component.css']
+  templateUrl: './temp03.component.html'
 })
 export class Temp03Component implements OnInit {
 
