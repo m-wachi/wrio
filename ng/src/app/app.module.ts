@@ -9,6 +9,7 @@ import { MessagesComponent } from './messages/messages.component';
 import { Temp01Component } from './temp01/temp01.component';
 import { Temp02Component } from './temp02/temp02.component';
 import { Temp03Component } from './temp03/temp03.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { Temp03Component } from './temp03/temp03.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
