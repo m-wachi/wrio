@@ -21,6 +21,7 @@ export class Temp03Component implements OnInit {
   factColumns: Array<DsColumn> = [];
   aryColumn: Array<DsColumn> = [];
 
+  removable = true;
 
   constructor(private pivotSvc: PivotService, 
               private messageSvc: MessageService) { }
@@ -183,5 +184,8 @@ export class Temp03Component implements OnInit {
     }
   }
 
+  chipRemove(col) : void {
+    console.log("chipremove");
+  }
 
 }

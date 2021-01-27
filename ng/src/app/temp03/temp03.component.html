@@ -30,14 +30,19 @@
     <mat-chip color="accent" selected>Accent fish</mat-chip>
   </mat-chip-list>
   fact columns
-  <mat-chip-list aria-label="fact columns" class="mat-chip-list-stacked" >
-    <mat-chip 
-        *ngFor="let col of pivot.dataSet.fact.columns"
-        id="{{col.colName}}" draggable="true" (dragstart)="column_Dragstart($event)">
-        {{col.colName}}
-    </mat-chip>
-  </mat-chip-list>
-
+  <div  style="width: 500px;">
+    <mat-form-field>
+      <mat-chip-list aria-label="fact columns" class="mat-chip-list-stacked">
+        <mat-chip 
+            *ngFor="let col of pivot.dataSet.fact.columns"
+            id="{{col.colName}}" draggable="true" (dragstart)="column_Dragstart($event)"
+            [removable]="removable" (removed)="chipRemove(col)">
+            {{col.colName}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+      </mat-chip-list>
+    </mat-form-field>
+  </div>
   fact column
   <table id="tbl_{{dataSet.fact.table}}" border="1">
     <thead>
