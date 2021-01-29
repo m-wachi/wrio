@@ -139,12 +139,13 @@ export class Temp03Component implements OnInit {
     console.log("drop element id=" + elmId);
     //get element from id
     var elmDrag =document.getElementById(elmId);
-    let sColumn = elmDrag.textContent;
+    console.log("drop id=[" + elmDrag.id + "]");
+    //let sColumn = elmDrag.textContent;
 
     if (colrow === 1) {
-      this.pivot.setting.colHdr.push(sColumn);
+      this.pivot.setting.colHdr.push(elmId);
     } else if (colrow === 2) {
-      this.pivot.setting.rowHdr.push(sColumn);
+      this.pivot.setting.rowHdr.push(elmId);
     }
 
   }
@@ -161,6 +162,15 @@ export class Temp03Component implements OnInit {
     }
     
   }
+
+  tblHdr_Click2(chip_list_name : string) {
+    console.log("tblHdr_Click2: " + chip_list_name);
+    let chipListElm = document.getElementById(chip_list_name);
+    chipListElm.hidden = !chipListElm.hidden;
+
+  }
+
+
 
   //remove header columns
   colHdrRemove_Click(colIndex: number) {
