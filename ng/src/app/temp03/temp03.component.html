@@ -35,22 +35,25 @@
       <mat-chip-list aria-label="fact columns" class="mat-chip-list-stacked">
         <mat-chip 
             *ngFor="let col of pivot.dataSet.fact.columns"
-            id="{{col.colName}}" draggable="true" (dragstart)="column_Dragstart($event)">
-            {{col.colName}}
+            id="{{pivot.dataSet.fact.abbrev}}.{{col.colName}}" draggable="true" (dragstart)="column_Dragstart($event)">
+            {{pivot.dataSet.fact.abbrev}}.{{col.colName}}
         </mat-chip>
       </mat-chip-list>
     </div>
   </div>
-  <table id="tbl_{{dataSet.dimensions[0].table}}" border="1">
-    <thead>
-      <tr><th><span (click)="tblHdr_Click(pivot.dataSet.dimensions[0].table)">{{pivot.dataSet.dimensions[0].table}}</span></th></tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let col of pivot.dataSet.dimensions[0].columns">
-      <td id="{{col.colName}}" draggable="true">{{col.colName}}</td>
-    </tr>
-  </tbody>
-</table>
+  <br>
+  <div style="width: 300px;">
+    <mat-label (click)="tblHdr_Click2('tbl_' + pivot.dataSet.dimensions[0].table)">{{pivot.dataSet.dimensions[0].table}}</mat-label>
+    <div id="tbl_{{dataSet.dimensions[0].table}}">
+      <mat-chip-list aria-label="dimension columns" class="mat-chip-list-stacked">
+        <mat-chip 
+            *ngFor="let col of pivot.dataSet.dimensions[0].columns"
+            id="{{pivot.dataSet.dimensions[0].abbrev}}.{{col.colName}}" draggable="true" (dragstart)="column_Dragstart($event)">
+            {{pivot.dataSet.dimensions[0].abbrev}}.{{col.colName}}
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
 
   <div>pivot.dataSet.fact.columns.length= {{pivot.dataSet.fact.columns.length}} </div>
   <div>pivot.dataSet.fact.columns[1].colName= {{pivot.dataSet.fact.columns[1].colName}} </div>

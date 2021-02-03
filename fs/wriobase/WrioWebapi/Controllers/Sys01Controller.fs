@@ -60,6 +60,14 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
     [<HttpPut("pvt/{pivotId}")>]
     member this.PutPivot01(pivotId: int, pvt: Pivot): PivotData option =
 
+        let ctx = WebapiCommon.setupContext<Sys01Controller> config logger
+
+        BsLogic01.runLogic ctx (BsLogic01.putPivotLogic pvt)
+
+
+    //Old PutPIvot01
+    member this.PutPivot01Old(pivotId: int, pvt: Pivot): PivotData option =
+
         let myCfg = MyConfig()
 
         let a = config.GetSection("AppConfiguration")

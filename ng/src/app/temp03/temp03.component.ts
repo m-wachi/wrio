@@ -42,6 +42,7 @@ export class Temp03Component implements OnInit {
     this.getPivot(2);
   }
 
+  // put button
   button1_Click(): void {
     //this.sPivot = sessionStorage.getItem("pivot");
     //this.pivot = JSON.parse(this.sPivot);
@@ -169,7 +170,6 @@ export class Temp03Component implements OnInit {
     chipListElm.hidden = !chipListElm.hidden;
 
   }
-
 
 
   //remove header columns
