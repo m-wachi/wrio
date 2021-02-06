@@ -3,6 +3,18 @@ import { PivotData, OptPivotData } from '../pivotdata';
 import { Pivot } from '../model';
 import { PivotService } from '../pivot.service';
 
+
+class PivotTable {
+  constructor(aryDctPivotData) { }
+
+  tableData = [];
+
+}
+
+
+
+
+
 @Component({
   selector: 'app-temp02',
   templateUrl: './temp02.component.html',
@@ -13,7 +25,7 @@ export class Temp02Component implements OnInit {
   optPivotData: OptPivotData = null;
   pivotData: PivotData = null;
   pivot: Pivot = null;
-  dicPivotData: any = null;
+  aryDctPivotData: any = null;
   sPivot: string = "";
   sDicPivotData: string = "";
   
@@ -57,15 +69,20 @@ export class Temp02Component implements OnInit {
             this.optPivotData = optPvtDt;
             this.pivotData = optPvtDt.value;
             let pvtDt = this.pivotData;
-            pvtDt.rows.forEach((row) => {
-              var dctRec = {};
-              for(var i=0; i<pvtDt.colNames.length; i++) {
-                dctRec[pvtDt.colNames[i]] = pvtDt.rows[0][i];
+
+            let aryDctRec = [];
+            //pvtDt.rows.forEach((row) => {
+            for (let i=0; i<pvtDt.rows.length; i++) {
+              let dctRec = {};
+              for(let j=0; j<pvtDt.colNames.length; j++) {
+                dctRec[pvtDt.colNames[j]] = pvtDt.rows[i][j];
               }
               console.log("dctRec=" + JSON.stringify(dctRec));
               this.sDicPivotData = JSON.stringify(dctRec);
-  
-            });
+              aryDctRec.push(dctRec);
+            //});
+            }
+            this.aryDctPivotData = aryDctRec;
             //dctRec[pvtDt.colNames[0]] = pvtDt.rows[0][0];
             //dctRec[pvtDt.colNames[1]] = pvtDt.rows[0][1];
 	        });
