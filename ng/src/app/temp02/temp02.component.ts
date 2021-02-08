@@ -28,7 +28,8 @@ export class Temp02Component implements OnInit {
   aryDctPivotData: any = null;
   sPivot: string = "";
   sDicPivotData: string = "";
-  
+  lstColHdrVal = null;
+  lstRowHdrVal = null;
   constructor(private pivotSvc: PivotService) { }
 
   colnames = ["col1", "col2", "col3"];
@@ -60,6 +61,8 @@ export class Temp02Component implements OnInit {
       optPvt => {
         this.pivot = optPvt.value;
         let colHdr = this.pivot.setting.colHdr;
+        console.log("colHdr[0]=" + colHdr[0]);
+        let rowHdr = this.pivot.setting.rowHdr;
         let sPivot = JSON.stringify(this.pivot);
         this.sPivot = sPivot;
         sessionStorage.setItem("pivot", sPivot);
@@ -69,7 +72,8 @@ export class Temp02Component implements OnInit {
             this.optPivotData = optPvtDt;
             this.pivotData = optPvtDt.value;
             let pvtDt = this.pivotData;
-
+            let colHdrSet = new Set();
+            let rowHdrSet = new Set();   
             let aryDctRec = [];
             //pvtDt.rows.forEach((row) => {
             for (let i=0; i<pvtDt.rows.length; i++) {
@@ -79,10 +83,15 @@ export class Temp02Component implements OnInit {
               }
               console.log("dctRec=" + JSON.stringify(dctRec));
               this.sDicPivotData = JSON.stringify(dctRec);
+              colHdrSet.add(dctRec[colHdr[0]]);
+              rowHdrSet.add(dctRec[rowHdr[0]]);
               aryDctRec.push(dctRec);
             //});
             }
             this.aryDctPivotData = aryDctRec;
+            this.lstColHdrVal = Array.from(colHdrSet);
+            console.log("colHdrSet[0])=" + colHdrSet[0]);
+            this.lstRowHdrVal = Array.from(rowHdrSet);
             //dctRec[pvtDt.colNames[0]] = pvtDt.rows[0][0];
             //dctRec[pvtDt.colNames[1]] = pvtDt.rows[0][1];
 	        });

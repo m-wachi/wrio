@@ -64,8 +64,8 @@ type Sys01Controller (logger : ILogger<Sys01Controller>, config : IConfiguration
 
         BsLogic01.runLogic ctx (BsLogic01.putPivotLogic pvt)
 
-
-    //Old PutPIvot01
+    // 
+    // 
     member this.PutPivot01Old(pivotId: int, pvt: Pivot): PivotData option =
 
         let myCfg = MyConfig()
