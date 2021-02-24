@@ -1,7 +1,7 @@
 import moment, {isMoment} from 'moment';
 
 
-export type WrioValue = string | number | null | IWrioBase; // | moment.Moment;
+export type WrioValue = string | number | null | WrioDate | IWrioBase; // | moment.Moment;
 
 
 export interface IWrioBase {
