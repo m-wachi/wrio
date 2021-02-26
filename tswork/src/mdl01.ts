@@ -67,7 +67,7 @@ export class WrioDate implements IWrioBase {
     return false;
   }
 
-  toString(): string {
+  public toString(): string {
     return this.momentValue.toString();
   }
 
@@ -134,6 +134,36 @@ export class WrioRecord implements IWrioBase {
       lstKv.push(String(k) + ": " + String(v));
     });
     return ("WrioRecord {" + lstKv.join(", ") + "}");
+  }
+
+}
+
+export class WrioRecordPair implements IWrioBase {
+  private static TYPENAME = "WrioRecordPair"; // do not change
+  constructor(public rowHdr : WrioRecord, public colHdr: WrioRecord) {}
+
+  public getTypeName() : string {
+    return WrioRecordPair.TYPENAME;
+  }
+
+  public equals(wrp: any) : boolean {
+    if (!(wrp instanceof WrioRecordPair)) {
+      return false;
+    }
+
+    const wrp2 = wrp as WrioRecordPair;
+
+    if (!wrp2.rowHdr.equals(this.rowHdr)) {
+      return false;
+    } else if (!wrp2.colHdr.equals(this.colHdr)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  public toString() : string {
+    return "WrioRecordPair { rowHdr: " + this.rowHdr.toString() + ", colHdr: " + this.colHdr.toString() + "}";
   }
 
 }
@@ -208,7 +238,13 @@ export class WrioMap {
   }
 
   public toString(): string {
-    return String(this.map_);
+    //return String(this.map_);
+    let lstKv : string[] = [];
+    this.map_.forEach((v, k, mp) => {
+      lstKv.push(String(k) + ": " + String(v));
+    });
+    return ("WrioRecord {" + lstKv.join(", ") + "}");
+
   }
 
 }
