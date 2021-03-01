@@ -243,7 +243,60 @@ export class WrioMap {
     this.map_.forEach((v, k, mp) => {
       lstKv.push(String(k) + ": " + String(v));
     });
-    return ("WrioRecord {" + lstKv.join(", ") + "}");
+    return ("WrioMap {" + lstKv.join(", ") + "}");
+
+  }
+
+}
+
+export class WrioSet {
+  private set_ : Set<WrioValue>;
+  constructor() {
+    this.set_ = new Set<WrioValue>();
+  }
+
+
+  public set(v: WrioValue) : void {
+    //this.set_.entries();
+
+    //this.set_.
+    const sTypeOf = typeof v;
+    if("string" === sTypeOf || "number" === sTypeOf) {
+      this.set_.add(v);
+      return;
+    }
+
+    // use "equals()" if theKey is not string or number;
+    const v2 = v as IWrioBase
+    const ite = this.set_.values();
+    let iteResult = ite.next();
+    while(!iteResult.done) {
+      const v3 = iteResult.value
+      //console.log("k=%s", String(k));
+      if (v2.equals(v3)) {
+        return;
+      }
+      iteResult = ite.next();
+    } 
+    this.set_.add(v2);
+
+  }
+
+  public values() {
+    return this.set_.values();
+  }
+
+  public toString(): string {
+    //return String(this.map_);
+    let lstV : string[] = [];
+    this.set_.forEach((v) => {
+      if (null === v) {
+        lstV.push("(null)");
+      } else {
+        lstV.push(v.toString());
+      }
+    });
+    return ("WrioSet [" + lstV.join(", ") + "]");
 
   }
 
