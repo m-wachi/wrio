@@ -256,7 +256,7 @@ export class WrioSet {
   }
 
 
-  public set(v: WrioValue) : void {
+  public add(v: WrioValue) : void {
     //this.set_.entries();
 
     //this.set_.
