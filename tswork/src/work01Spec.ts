@@ -1,4 +1,4 @@
-import {WrioDate, WrioMap, WrioValue, WrioRecord} from './mdl01';
+import {WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair} from './mdl01';
 
 //
 // memo npm install --save-dev @types/jasmine
@@ -56,5 +56,33 @@ describe("A suite", function() {
     expect(wrRec1.equals(wrRec3)).toBe(true);
 
   });
+
+  it("WrioRecordPair.equals() test 01", function() {
+    let wrRec1 = new WrioRecord();
+    wrRec1.set("k1", 5);
+    wrRec1.set("k2", "strValue1");
+    let wrRec2 = new WrioRecord();
+    wrRec2.set("k1", 5);
+    wrRec2.set("k2", "strValue2");
+    let wrRec3 = new WrioRecord();
+    wrRec3.set("k1", 5);
+    wrRec3.set("k2", "strValue1");
+    let wrRec4 = new WrioRecord();
+    wrRec4.set("k1", 5);
+    wrRec4.set("k2", "strValue2");
+
+    let wrp1 = new WrioRecordPair(wrRec1, wrRec2);
+    let wrp2 = new WrioRecordPair(wrRec3, wrRec4);
+    let wrp3 = new WrioRecordPair(wrRec1, wrRec3);
+    let wrp4 = new WrioRecordPair(wrRec3, wrRec3);
+
+    expect(wrp1.equals(wrp2)).toBeTrue();
+    expect(wrp1.equals(wrp3)).toBeFalse();
+    expect(wrp1.equals(wrp4)).toBeFalse();
+
+  });
+
+
+
 
 });

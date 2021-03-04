@@ -1,5 +1,6 @@
 import moment, { isMoment } from 'moment';
-import {WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair, WrioSet} from './mdl01';
+import {equals, WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair, WrioSet} from './mdl01';
+import {getNameIndexPairs, vals2Rec} from './lib01';
 
 const colnames = ["sales_date", "item_cd", "nof_sales"];
 
@@ -12,20 +13,44 @@ const recs : WrioValue[][] = [
   [new WrioDate("2019-07-02T00:00:00"), "A0002", 12]
 ];
 
+/*
+const getNameIndexPairs = (aryName: string[], aryColumnName: string[]) : [string, number][]=> {
+  return aryName.map((nm) => [nm, aryColumnName.indexOf(nm)])
+};
+
+const vals2Rec = (nmIdxPairs: [string, number][], rec: WrioValue[]) => {
+  let hdr = new WrioRecord();
+  nmIdxPairs.forEach(([nm, nmIdx]) => {
+    hdr.set(nm as string, rec[nmIdx as number]);
+  });
+  return hdr;
+} 
+*/
+
 const rowHdrNames = ["sales_date"];
 const rowHdrNmIdxs = rowHdrNames.map((v) => colnames.indexOf(v));
 console.log("rowHdrNmIdxs=" + rowHdrNmIdxs.toString());
+
+//const rowHdrNmIdxPairs : [string, number][] = rowHdrNames.map((nm) => [nm, colnames.indexOf(nm)]);
+const rowHdrNmIdxPairs : [string, number][] = getNameIndexPairs(rowHdrNames, colnames);
+console.log("rowHdrNmIdxPairs=" + rowHdrNmIdxPairs.toString());
 
 const colHdrNames = ["item_cd"];
 //const colHdrNmIdxs = [1];
 const colHdrNmIdxs = colHdrNames.map((v) => colnames.indexOf(v));
 console.log("colHdrNmIdxs=" + colHdrNmIdxs.toString());
 
+const colHdrNmIdxPairs = getNameIndexPairs(colHdrNames, colnames);
+console.log("colHdrNmIdxPairs=" + colHdrNmIdxPairs.toString());
+
 
 const valNames = ["nof_sales"];
 //const valNmIdxs = [2];
 const valNmIdxs = valNames.map((v) => colnames.indexOf(v));
 console.log("valNmIdxs=" + valNmIdxs.toString());
+
+const valNmIdxPairs = getNameIndexPairs(valNames, colnames);
+
 
 
 let pivotdata1 = new WrioMap();
@@ -36,20 +61,33 @@ for(let i=0; i<recs.length; i++) {
   for(let j=0; j<colnames.length; j++) {
     
   }
+  /*
   let rowHdr = new WrioRecord();
-  for(let k=0; k<rowHdrNmIdxs.length; k++) {
-    rowHdr.set(rowHdrNames[k], recs[i][rowHdrNmIdxs[k]]);
-  }
+  rowHdrNmIdxPairs.forEach(([nm, nmIdx]) => {
+    rowHdr.set(nm as string, recs[i][nmIdx as number]);
+  });
+  */
+  let rowHdr = vals2Rec(rowHdrNmIdxPairs, recs[i]);
+
+  console.log("rowHdr=" + rowHdr.toString());
   rowHdrSet.add(rowHdr);
+  /*
   let colHdr = new WrioRecord();
   for(let k=0; k<rowHdrNmIdxs.length; k++) {
     colHdr.set(colHdrNames[k], recs[i][colHdrNmIdxs[k]]);
-  }
+  } 
+  */
+  let colHdr = vals2Rec(colHdrNmIdxPairs, recs[i]);
   colHdrSet.add(colHdr);
+  
+  /*
   let values = new WrioRecord();
   for(let k=0; k<rowHdrNmIdxs.length; k++) {
     values.set(valNames[k], recs[i][valNmIdxs[k]]);
   }
+  */
+  let values = vals2Rec(valNmIdxPairs, recs[i]);
+
   let wrp = new WrioRecordPair(rowHdr, colHdr);
   pivotdata1.set(wrp, values);
 

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jasmine",
+    "build": "tsc",
     "dev": "ts-node src/index.ts",
     "dev2": "ts-node src/index2.ts"
   },
