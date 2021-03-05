@@ -286,6 +286,17 @@ export class WrioSet {
     return this.set_.values();
   }
 
+  public toArray() : WrioValue[] {
+    const ite = this.values();
+    let iteResult = ite.next();
+    let aryRet : WrioValue[] = [];
+    while(!iteResult.done) {
+      aryRet.push(iteResult.value);
+      iteResult = ite.next();
+    }
+    return aryRet;
+  }
+
   public toString(): string {
     //return String(this.map_);
     let lstV : string[] = [];

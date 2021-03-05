@@ -101,3 +101,39 @@ console.log("-- rowHdrSet --");
 console.log(rowHdrSet.toString());
 console.log("-- colHdrSet --");
 console.log(colHdrSet.toString());
+
+
+const aryRowHdr = rowHdrSet.toArray();
+const aryColHdr = colHdrSet.toArray();
+
+
+console.log(" === pivot data table === ");
+
+let sLine = "____";
+
+for(let colHdr of aryColHdr) {
+  const colHdr2 = colHdr as WrioRecord;
+  for(const colHdrName of colHdrNames) {
+    sLine += ", " + colHdr2.get(colHdrName);
+  }
+}
+console.log(sLine);
+sLine = "";
+
+for(const rowHdr of aryRowHdr) {
+  const rowHdr2 = rowHdr as WrioRecord;
+  for(const rowHdrName of rowHdrNames) {
+    sLine += ", " + rowHdr2.get(rowHdrName);
+  }
+  for(let colHdr of aryColHdr) {
+
+    let vals = pivotdata1.get(new WrioRecordPair(rowHdr as WrioRecord, colHdr as WrioRecord));
+    let vals2 = vals as WrioRecord;
+    for(const valName of valNames) {
+      sLine += ", " + vals2.get(valName);
+    }
+
+  }
+  console.log(sLine);
+  sLine = "";
+}
