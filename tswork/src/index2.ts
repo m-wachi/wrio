@@ -1,6 +1,7 @@
 import moment, { isMoment } from 'moment';
 import {equals, WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair, WrioSet} from './mdl01';
-import {getNameIndexPairs, vals2Rec} from './lib01';
+import {getNameIndexPairs, vals2Rec, conv2DArray, conv2Map} from './lib01';
+import { groupCollapsed } from 'console';
 
 const colnames = ["sales_date", "item_cd", "nof_sales"];
 
@@ -53,55 +54,64 @@ const valNmIdxPairs = getNameIndexPairs(valNames, colnames);
 
 
 
-let pivotdata1 = new WrioMap();
-let colHdrSet = new WrioSet();
-let rowHdrSet = new WrioSet();
+// let pivotdata1 = new WrioMap();
+// let colHdrSet = new WrioSet();
+// let rowHdrSet = new WrioSet();
 
-for(let i=0; i<recs.length; i++) {
-  for(let j=0; j<colnames.length; j++) {
+// for(let i=0; i<recs.length; i++) {
+//   for(let j=0; j<colnames.length; j++) {
     
-  }
-  /*
-  let rowHdr = new WrioRecord();
-  rowHdrNmIdxPairs.forEach(([nm, nmIdx]) => {
-    rowHdr.set(nm as string, recs[i][nmIdx as number]);
-  });
-  */
-  let rowHdr = vals2Rec(rowHdrNmIdxPairs, recs[i]);
+//   }
+//   /*
+//   let rowHdr = new WrioRecord();
+//   rowHdrNmIdxPairs.forEach(([nm, nmIdx]) => {
+//     rowHdr.set(nm as string, recs[i][nmIdx as number]);
+//   });
+//   */
+//   let rowHdr = vals2Rec(rowHdrNmIdxPairs, recs[i]);
 
-  console.log("rowHdr=" + rowHdr.toString());
-  rowHdrSet.add(rowHdr);
-  /*
-  let colHdr = new WrioRecord();
-  for(let k=0; k<rowHdrNmIdxs.length; k++) {
-    colHdr.set(colHdrNames[k], recs[i][colHdrNmIdxs[k]]);
-  } 
-  */
-  let colHdr = vals2Rec(colHdrNmIdxPairs, recs[i]);
-  colHdrSet.add(colHdr);
+//   console.log("rowHdr=" + rowHdr.toString());
+//   rowHdrSet.add(rowHdr);
+//   /*
+//   let colHdr = new WrioRecord();
+//   for(let k=0; k<rowHdrNmIdxs.length; k++) {
+//     colHdr.set(colHdrNames[k], recs[i][colHdrNmIdxs[k]]);
+//   } 
+//   */
+//   let colHdr = vals2Rec(colHdrNmIdxPairs, recs[i]);
+//   colHdrSet.add(colHdr);
   
-  /*
-  let values = new WrioRecord();
-  for(let k=0; k<rowHdrNmIdxs.length; k++) {
-    values.set(valNames[k], recs[i][valNmIdxs[k]]);
-  }
-  */
-  let values = vals2Rec(valNmIdxPairs, recs[i]);
+//   /*
+//   let values = new WrioRecord();
+//   for(let k=0; k<rowHdrNmIdxs.length; k++) {
+//     values.set(valNames[k], recs[i][valNmIdxs[k]]);
+//   }
+//   */
+//   let values = vals2Rec(valNmIdxPairs, recs[i]);
 
-  let wrp = new WrioRecordPair(rowHdr, colHdr);
-  pivotdata1.set(wrp, values);
+//   let wrp = new WrioRecordPair(rowHdr, colHdr);
+//   pivotdata1.set(wrp, values);
 
-  console.log(wrp.toString());
-  console.log(values.toString());
+//   console.log(wrp.toString());
+//   console.log(values.toString());
 
-}
+// }
+/*
+let aryRowHdr: ;
+let aryColHdr;
+let pivotdata1;
+*/
+let [rowHdrSet, colHdrSet, pivotdata1] = conv2Map(recs, rowHdrNmIdxPairs, colHdrNmIdxPairs, valNmIdxPairs);
+
+console.log(" === pivotdata1 === ");
 console.log(pivotdata1.toString());
 
+/*
 console.log("-- rowHdrSet --");
 console.log(rowHdrSet.toString());
 console.log("-- colHdrSet --");
 console.log(colHdrSet.toString());
-
+*/
 
 const aryRowHdr = rowHdrSet.toArray();
 const aryColHdr = colHdrSet.toArray();
@@ -110,20 +120,28 @@ const aryColHdr = colHdrSet.toArray();
 console.log(" === pivot data table === ");
 
 let sLine = "____";
+let cells : WrioValue[][] = [];
+cells.push(["_____"]);
+let cellsRowIdx = 0;
 
+/*
 for(let colHdr of aryColHdr) {
   const colHdr2 = colHdr as WrioRecord;
   for(const colHdrName of colHdrNames) {
     sLine += ", " + colHdr2.get(colHdrName);
+    cells[cellsRowIdx].push(colHdr2.get(colHdrName) as WrioValue);
   }
 }
 console.log(sLine);
 sLine = "";
 
 for(const rowHdr of aryRowHdr) {
+  cells.push([]);
+  cellsRowIdx += 1;
   const rowHdr2 = rowHdr as WrioRecord;
   for(const rowHdrName of rowHdrNames) {
     sLine += ", " + rowHdr2.get(rowHdrName);
+    cells[cellsRowIdx].push(rowHdr2.get(rowHdrName) as WrioValue);
   }
   for(let colHdr of aryColHdr) {
 
@@ -131,9 +149,17 @@ for(const rowHdr of aryRowHdr) {
     let vals2 = vals as WrioRecord;
     for(const valName of valNames) {
       sLine += ", " + vals2.get(valName);
+      cells[cellsRowIdx].push(vals2.get(valName) as WrioValue);
     }
 
   }
   console.log(sLine);
   sLine = "";
 }
+*/
+
+cells = conv2DArray(aryRowHdr, aryColHdr, rowHdrNames, colHdrNames, valNames, pivotdata1);
+
+console.log(" === pivot data table(cells) === ");
+
+console.log(cells);
