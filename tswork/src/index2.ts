@@ -1,6 +1,6 @@
 import moment, { isMoment } from 'moment';
 import {equals, WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair, WrioSet} from './mdl01';
-import {getNameIndexPairs, vals2Rec, conv2DArray, conv2Map} from './lib01';
+import {getNameIndexPairs, vals2Rec, conv2Array2D, conv2Map} from './lib01';
 import { groupCollapsed } from 'console';
 
 const colnames = ["sales_date", "item_cd", "nof_sales"];
@@ -158,7 +158,7 @@ for(const rowHdr of aryRowHdr) {
 }
 */
 
-cells = conv2DArray(aryRowHdr, aryColHdr, rowHdrNames, colHdrNames, valNames, pivotdata1);
+cells = conv2Array2D(aryRowHdr, aryColHdr, rowHdrNames, colHdrNames, valNames, pivotdata1);
 
 console.log(" === pivot data table(cells) === ");
 

@@ -12,7 +12,6 @@ export const vals2Rec = (nmIdxPairs: [string, number][], rec: WrioValue[]) => {
   return hdr;
 } 
 
-// write test code!
 export function conv2Map(
       recs: WrioValue[][], 
       rowHdrNmIdxPairs: [string, number][], colHdrNmIdxPairs: [string, number][], 
@@ -38,7 +37,7 @@ export function conv2Map(
 }
 
 // write test code!
-export function conv2DArray(
+export function conv2Array2D(
       aryRowHdr: WrioValue[], aryColHdr: WrioValue[], 
       rowHdrNames: string[], colHdrNames: string[], valNames: string[],
       dicPivotData: WrioMap) : WrioValue[][] {
