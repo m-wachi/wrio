@@ -91,38 +91,41 @@ describe("A suite", function() {
     rowHdr2.set(rowHdrNames[0], new WrioDate("2019-07-02T00:00:00"));
     let aryRowHdr = [rowHdr1, rowHdr2];
 
-    let aryColHdr = ["A0001", "A0002"];
+    let colHdr1 = new WrioRecord();
+    colHdr1.set(colHdrNames[0], "A0001");
+    let colHdr2 = new WrioRecord();
+    colHdr2.set(colHdrNames[0], "A0002");
+    let aryColHdr = [colHdr1, colHdr2];
+
     let valNames = ["nof_sales"];
     let dicPivotData = new WrioMap();
-    let rowHdr = new WrioRecord();
-    rowHdr.set("sales_date", aryRowHdr[0]);
-    let colHdr = new WrioRecord();
-    colHdr.set("item_cd", aryColHdr[0]);
-    dicPivotData.set(new WrioRecordPair(rowHdr, colHdr), 10);
+
+    const setPivotData = (idxRow: number, idxCol: number, v: number) :void=> {
+      let vals = new WrioRecord();
+      vals.set(valNames[0], v);
+      dicPivotData.set(new WrioRecordPair(aryRowHdr[idxRow], aryColHdr[idxCol]), vals);
+    }
+
+    setPivotData(0, 0, 10);
+    setPivotData(0, 1, 12);
+    setPivotData(1, 0, 13);
+    setPivotData(1, 1, 14);
+
+    //console.log("=== dicPivotData start ===");
+    //console.log(dicPivotData.toString());
+    //console.log("=== dicPivotData end ===");
 
     let ret: WrioValue[][] = conv2Array2D(aryRowHdr, aryColHdr, rowHdrNames, colHdrNames, valNames, dicPivotData);
 
     expect(ret[0][1]).toBe("A0001");
-    expect(equals(ret[1][0], aryRowHdr[0])).toBeTrue();
+    expect(ret[0][2]).toBe("A0002");
+    expect(equals(ret[1][0], aryRowHdr[0].get("sales_date"))).toBeTrue();
     expect(ret[1][1]).toBe(10);
+    expect(ret[1][2]).toBe(12);
+    expect(equals(ret[2][0], aryRowHdr[1].get("sales_date"))).toBeTrue();
+    expect(ret[2][1]).toBe(13);
+    expect(ret[2][2]).toBe(14);
 
   });
 
-  /*
-  it("WrioRecord.equals() test 01", function() {
-    let wrRec1 = new WrioRecord();
-    wrRec1.set("k1", 5);
-    wrRec1.set("k2", "strValue1");
-    let wrRec2 = new WrioRecord();
-    wrRec2.set("k1", 5);
-    wrRec2.set("k2", "strValue2");
-    let wrRec3 = new WrioRecord();
-    wrRec3.set("k1", 5);
-    wrRec3.set("k2", "strValue1");
-
-    expect(wrRec1.equals(wrRec2)).toBe(false);
-    expect(wrRec1.equals(wrRec3)).toBe(true);
-
-  });
-  */
 });
