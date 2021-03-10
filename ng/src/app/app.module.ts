@@ -12,6 +12,7 @@ import { MessagesComponent } from './messages/messages.component';
 import { Temp01Component } from './temp01/temp01.component';
 import { Temp02Component } from './temp02/temp02.component';
 import { Temp03Component } from './temp03/temp03.component';
+import { Temp04Component } from './temp04/temp04.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -21,7 +22,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MessagesComponent,
     Temp01Component,
     Temp02Component,
-    Temp03Component
+    Temp03Component,
+    Temp04Component
   ],
   imports: [
     CommonModule,

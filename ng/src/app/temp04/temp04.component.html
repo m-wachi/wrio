@@ -1,0 +1,83 @@
+<h2>temp04 component</h2>
+日本語を表示してみる。あいうえお <br/>
+<button id="button3" (click)="button3_Click()">get pivot</button><br/>
+<div *ngIf="pivot">
+  <div (dragover)="hdr_Dragover($event)" (drop)="colHdr_Drop($event)">
+    <mat-form-field>
+      <mat-label>pivot.setting.colHdr</mat-label>
+      <mat-chip-list aria-label="pivot.setting.colHdr">
+        <mat-chip 
+            *ngFor="let colHdr of pivot.setting.colHdr; index as idx"
+            [removable]="removable" (removed)="colHdrRemove_Click(idx)">
+            {{colHdr}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+      </mat-chip-list>
+    </mat-form-field>
+  </div>
+  <div (dragover)="hdr_Dragover($event)" (drop)="rowHdr_Drop($event)">
+    <mat-form-field>
+      <mat-label>pivot.setting.rowHdr</mat-label>
+      <mat-chip-list aria-label="pivot.setting.colHdr">
+        <mat-chip 
+            *ngFor="let rowHdr of pivot.setting.rowHdr; index as idx"
+            [removable]="removable" (removed)="rowHdrRemove_Click(idx)">
+            {{rowHdr}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+      </mat-chip-list>
+    </mat-form-field>
+  </div>
+  fact columns
+  <div style="width: 300px;">
+    <mat-label (click)="tblHdr_Click2('fact-chip-columns')">{{pivot.dataSet.fact.table}}</mat-label>
+    <div  id="fact-chip-columns">
+      <mat-chip-list aria-label="fact columns" class="mat-chip-list-stacked">
+        <mat-chip 
+            *ngFor="let col of pivot.dataSet.fact.columns"
+            id="{{pivot.dataSet.fact.abbrev}}.{{col.colName}}" draggable="true" (dragstart)="column_Dragstart($event)">
+            {{pivot.dataSet.fact.abbrev}}.{{col.colName}}
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+  <br>
+  <div style="width: 300px;">
+    <mat-label (click)="tblHdr_Click2('tbl_' + pivot.dataSet.dimensions[0].table)">{{pivot.dataSet.dimensions[0].table}}</mat-label>
+    <div id="tbl_{{dataSet.dimensions[0].table}}">
+      <mat-chip-list aria-label="dimension columns" class="mat-chip-list-stacked">
+        <mat-chip 
+            *ngFor="let col of pivot.dataSet.dimensions[0].columns"
+            id="{{pivot.dataSet.dimensions[0].abbrev}}.{{col.colName}}" draggable="true" (dragstart)="column_Dragstart($event)">
+            {{pivot.dataSet.dimensions[0].abbrev}}.{{col.colName}}
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+
+  <div>pivot.dataSet.fact.columns.length= {{pivot.dataSet.fact.columns.length}} </div>
+  <div>pivot.dataSet.fact.columns[1].colName= {{pivot.dataSet.fact.columns[1].colName}} </div>
+</div>
+
+<div>sPivot: {{sPivot}}</div>
+
+<button id="button2" (click)="button2_Click()">get columns</button><br/>
+<div>aryColumn: {{aryColumn}}</div>
+
+<button id="button1" (click)="button1_Click()">put</button>
+<div>sPivot: {{sPivot}}</div>
+<hr/>
+
+<table border="1" *ngIf="pivotData">
+  <tr>
+    <th *ngFor="let col of pivotData.colNames">
+      {{col}}
+    </th>
+  </tr>
+  <tr *ngFor="let dataRow of pivotData.rows">
+    <td *ngFor="let cellValue of dataRow">
+      {{cellValue}}
+    </td>
+  </tr>
+</table>
+  
