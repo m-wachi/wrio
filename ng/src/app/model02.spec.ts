@@ -6,7 +6,7 @@ import {getNameIndexPairs, vals2Rec, conv2Map, conv2Array2D} from './wriolib01';
 //
 
 
-describe("A suite", function() {
+describe("model02", function() {
   //
   // getNameIndexPairs Test
   //

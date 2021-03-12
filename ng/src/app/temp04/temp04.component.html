@@ -59,14 +59,28 @@
   <div>pivot.dataSet.fact.columns[1].colName= {{pivot.dataSet.fact.columns[1].colName}} </div>
 </div>
 
-<div>sPivot: {{sPivot}}</div>
 
-<button id="button2" (click)="button2_Click()">get columns</button><br/>
+<button id="button2" (click)="button2_Click()">button2</button><br/>
 <div>aryColumn: {{aryColumn}}</div>
 
 <button id="button1" (click)="button1_Click()">put</button>
 <div>sPivot: {{sPivot}}</div>
+
 <hr/>
+<div>sRowHdrSet : {{sRowHdrSet}}</div>
+
+<hr/>
+
+<table border="1" *ngIf="cells">
+  <tr *ngFor="let row of cells">
+    <td *ngFor="let cellValue of row">
+      {{cellValue}}
+    </td>
+  </tr>
+</table>
+  
+<hr/>
+
 
 <table border="1" *ngIf="pivotData">
   <tr>

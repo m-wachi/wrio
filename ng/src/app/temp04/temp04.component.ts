@@ -3,7 +3,8 @@ import { PivotData, OptPivotData } from '../pivotdata';
 import { Pivot, DtSet, DsColumn } from '../model';
 import { PivotService } from '../pivot.service';
 import { MessageService } from '../message.service';
-import { IWrioBase } from '../model02';
+import { WrioValue } from '../model02';
+import * as wlib01 from '../wriolib01';
 
 @Component({
   selector: 'app-temp04',
@@ -18,6 +19,8 @@ export class Temp04Component implements OnInit {
   pivotData: PivotData = null;
   factColumns: Array<DsColumn> = [];
   aryColumn: Array<DsColumn> = [];
+  sRowHdrSet: string = "";
+  cells: WrioValue[][] = [];
 
   removable = true;
 
@@ -37,7 +40,7 @@ export class Temp04Component implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getPivot(2);
+    this.getPivot(1);
   }
 
   // put button
@@ -48,6 +51,35 @@ export class Temp04Component implements OnInit {
       optPvtDt => {
         this.optPivotData = optPvtDt;
         this.pivotData = optPvtDt.value;
+
+
+        let recs = this.pivotData.rows;
+        let colnames = this.pivotData.colNames;
+
+        const rowHdrNames = this.pivot.setting.rowHdr;
+        const rowHdrNmIdxPairs : [string, number][] = wlib01.getNameIndexPairs(rowHdrNames, colnames);
+        console.log("rowHdrNmIdxPairs=" + rowHdrNmIdxPairs.toString());
+
+        //const colHdrNames = ["item_cd"];
+        const colHdrNames = this.pivot.setting.colHdr;
+        const colHdrNmIdxPairs = wlib01.getNameIndexPairs(colHdrNames, colnames);
+        console.log("colHdrNmIdxPairs=" + colHdrNmIdxPairs.toString());
+        
+        //const valNames = ["nof_sales"];
+        const valNames = [this.pivot.setting.cellVal[0].colName];
+        const valNmIdxPairs = wlib01.getNameIndexPairs(valNames, colnames);
+        
+
+        let [rowHdrSet, colHdrSet, pivotdata1] = wlib01.conv2Map(recs, rowHdrNmIdxPairs, colHdrNmIdxPairs, valNmIdxPairs);
+        console.log("pivotdata1=" + pivotdata1.toString());
+
+        this.sRowHdrSet = rowHdrSet.toString();
+
+        const aryRowHdr = rowHdrSet.toArray();
+        const aryColHdr = colHdrSet.toArray();
+
+        this.cells = wlib01.conv2Array2D(aryRowHdr, aryColHdr, rowHdrNames, colHdrNames, valNames, pivotdata1);
+        //this.cells = [["cell11", "cell12"], ["cell21", "cell22"]];
       }
     );
   }

@@ -11,7 +11,7 @@ const routes: Routes = [
   { path: 'temp01', component: Temp01Component },
   { path: 'temp02', component: Temp02Component },
   { path: 'temp03', component: Temp03Component },
-  { path: 'temp03', component: Temp03Component }
+  { path: 'temp04', component: Temp04Component }
 ];
 
 @NgModule({
