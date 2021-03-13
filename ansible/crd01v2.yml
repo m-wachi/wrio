@@ -48,12 +48,33 @@
         - xscreensaver
         - task-xfce-desktop
         - vnc4server
+        - uim
+        - uim-anthy
+        - git
 
   - name: disable lightdm
     systemd:
       name: lightdm
       enabled: no
       
+  - name: localectl set-keymap
+    command: localectl set-keymap jp106
+
+  - name: install font(1)
+    file: path=/tmp/font state=directory
+
+  - name: install font(2)
+    git:
+      repo: https://github.com/edihbrandon/RictyDiminished
+      dest: /tmp/font
+      update: no
+
+  - name: install font(3)
+    file: path=/usr/share/fonts/RictyDiminished state=directory
+
+  - name: install font(4)
+    shell: cp -p /tmp/font/*.ttf /usr/share/fonts/RictyDiminished/ 
+
   - name: Download Chrome Browser
     get_url:
       url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
