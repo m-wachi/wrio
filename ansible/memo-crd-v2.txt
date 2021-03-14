@@ -7,4 +7,8 @@
 
 3) paste command on target-host shell input, then enter-key
 
+4) アプリケーションメニューからの設定＞キーボードの
+   レイアウトタブで「システムデフォルトを使用する」をOFFにし、
+   キーボードレイアウトのレイアウトを
+   「日本語　日本語OADG 109A」を設定。英語は削除する
 
