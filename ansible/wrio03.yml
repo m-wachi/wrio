@@ -1,4 +1,4 @@
-- hosts: svr5
+- hosts: svrs
   remote_user: dev01
   vars:
     v_home_dir: /home/dev01

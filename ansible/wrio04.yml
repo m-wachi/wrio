@@ -1,9 +1,10 @@
-- hosts: svr5
+- hosts: svrs
   remote_user: dev01
   become: yes
   vars:
-    v_home_dir: /home/dev01/
+    v_home_dir: /home/dev01
     v_base_dir: "{{v_home_dir}}/nvm-work"
+    v_src_dir: "{{v_home_dir}}/src/wrio"
 
   tasks:
   - name: Download microsoft package signature key
@@ -12,7 +13,7 @@
       dest: /tmp/packages-microsoft-prod.deb
 
   - name: install microsoft package signature key
-    script: "{{v_home_dir}}/dpkg-install-mskey.sh"
+    script: "{{v_src_dir}}/ansible/dpkg-install-mskey.sh"
     args:
       creates: /tmp/mskeyinst.txt
 
