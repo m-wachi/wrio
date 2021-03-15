@@ -77,6 +77,14 @@ module DbUserPg =
 
         sql2
 
+    let getPivotColumns (pvtSetting: PivotSetting) =
+        let pvtCols1: string array = Array.append pvtSetting.RowHdr pvtSetting.ColHdr
+        let pvtCols2: string array = 
+            Array.append pvtCols1 
+                         (Array.map (fun (x: CellVal) -> x.Abbrev + "." + x.ColName) 
+                                    pvtSetting.CellVal)
+        pvtCols2
+
     let getColumns (ctx: WrioContext) (sTable: string) : DsColumn array =
 
         let sql1 = "SELECT column_name, data_type " + "\n" +
@@ -121,7 +129,8 @@ module DbUserPg =
         let rdr = cmd.ExecuteReader() 
 
         if rdr.Read() then
-            let colNames = Array.map (fun i -> rdr.GetName(i)) [|0 .. rdr.FieldCount - 1|]
+            //let colNames = Array.map (fun i -> rdr.GetName(i)) [|0 .. rdr.FieldCount - 1|]
+            let colNames = getPivotColumns pvt.Setting
             //1st row values
             let rowVals1 = getRowVals rdr
             //2nd row and following rows

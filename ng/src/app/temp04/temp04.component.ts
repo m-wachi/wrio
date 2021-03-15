@@ -55,6 +55,7 @@ export class Temp04Component implements OnInit {
 
         let recs = this.pivotData.rows;
         let colnames = this.pivotData.colNames;
+        console.log("colnames=" + colnames.toString());
 
         const rowHdrNames = this.pivot.setting.rowHdr;
         const rowHdrNmIdxPairs : [string, number][] = wlib01.getNameIndexPairs(rowHdrNames, colnames);
@@ -69,8 +70,8 @@ export class Temp04Component implements OnInit {
         const valNames = [this.pivot.setting.cellVal[0].colName];
         const valNmIdxPairs = wlib01.getNameIndexPairs(valNames, colnames);
         
-
         let [rowHdrSet, colHdrSet, pivotdata1] = wlib01.conv2Map(recs, rowHdrNmIdxPairs, colHdrNmIdxPairs, valNmIdxPairs);
+        console.log("rowHdrSet=" + rowHdrSet.toString());
         console.log("pivotdata1=" + pivotdata1.toString());
 
         this.sRowHdrSet = rowHdrSet.toString();
