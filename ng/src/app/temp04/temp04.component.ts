@@ -67,8 +67,11 @@ export class Temp04Component implements OnInit {
         console.log("colHdrNmIdxPairs=" + colHdrNmIdxPairs.toString());
         
         //const valNames = ["nof_sales"];
-        const valNames = [this.pivot.setting.cellVal[0].colName];
+        const cv1 = this.pivot.setting.cellVal[0];
+        //const valNames = [this.pivot.setting.cellVal[0].colName];
+        const valNames = [cv1.abbrev + "." + cv1.colName];
         const valNmIdxPairs = wlib01.getNameIndexPairs(valNames, colnames);
+        console.log("valNmIdxPairs=" + valNmIdxPairs.toString());
         
         let [rowHdrSet, colHdrSet, pivotdata1] = wlib01.conv2Map(recs, rowHdrNmIdxPairs, colHdrNmIdxPairs, valNmIdxPairs);
         console.log("rowHdrSet=" + rowHdrSet.toString());
