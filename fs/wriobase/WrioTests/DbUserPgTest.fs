@@ -161,9 +161,9 @@ module DbUserPgTest =
         DbUserPg.closeDbUsr ctx |> ignore
 
         Assert.AreEqual(3, pvtData.ColNames.Length)
-        Assert.AreEqual("sales_date", pvtData.ColNames.[0])
-        Assert.AreEqual("item_name", pvtData.ColNames.[1])
-        Assert.AreEqual("nof_sales", pvtData.ColNames.[2])
+        Assert.AreEqual("f.sales_date", pvtData.ColNames.[0])
+        Assert.AreEqual("d1.item_name", pvtData.ColNames.[1])
+        Assert.AreEqual("f.nof_sales", pvtData.ColNames.[2])
         
         let mutable i = 0
         Assert.AreEqual(4, pvtData.Rows.Length)
