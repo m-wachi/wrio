@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PivotData, OptPivotData } from '../pivotdata';
-import { Pivot, DtSet, DsColumn } from '../model';
+import { Pivot, DtSet, DsColumn, CellVal } from '../model';
 import { PivotService } from '../pivot.service';
 import { MessageService } from '../message.service';
 import { WrioValue } from '../model02';
@@ -158,15 +158,21 @@ export class Temp04Component implements OnInit {
 
   // column header drop event
   colHdr_Drop(event) {
-    this.hdrDrop(event, 1);
+    this.hdrValDrop(event, 1);
   }
   // row header drop event
   rowHdr_Drop(event) {
-    this.hdrDrop(event, 2);
+    this.hdrValDrop(event, 2);
   }
 
+  // cell value drop event
+  cellVal_Drop(event) {
+    this.hdrValDrop(event, 3);
+  }
+
+
   // column and row header drop event common routine.
-  hdrDrop(event, colrow: number) {
+  hdrValDrop(event, colrow: number) {
     //event.preventDefault(); DO NOT preventDefault(). component not redrawing. 
     event.dataTransfer.dropEffect = "copy";
     //get id attribute from "DataTransfer" object.
@@ -181,6 +187,10 @@ export class Temp04Component implements OnInit {
       this.pivot.setting.colHdr.push(elmId);
     } else if (colrow === 2) {
       this.pivot.setting.rowHdr.push(elmId);
+    } else if (colrow === 3) {
+      let aryElmId = (elmId as string).split('.');
+      let cellVal0: CellVal = {colName: aryElmId[1], abbrev: aryElmId[0], aggFuncDiv: 0};
+      this.pivot.setting.cellVal.push(cellVal0);
     }
 
   }
@@ -218,6 +228,12 @@ export class Temp04Component implements OnInit {
     this.removeColumn(colIndex, 2);
   }
 
+  //remove cell value columns
+  cellValRemove_Click(colIndex: number) {
+    console.log("call cellValRemove_Click(" + colIndex.toString() + ")");
+    this.removeColumn(colIndex, 3);
+  }
+
   removeColumn(colIndex: number, colrow: number) {
 
     if (colrow === 1) {
@@ -225,6 +241,9 @@ export class Temp04Component implements OnInit {
     } 
     else if (colrow === 2) {
       this.pivot.setting.rowHdr.splice(colIndex, 1);
+    }
+    else if (colrow === 3) {
+      this.pivot.setting.cellVal.splice(colIndex, 1);
     }
   }
 

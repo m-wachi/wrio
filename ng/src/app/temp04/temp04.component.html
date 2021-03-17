@@ -28,6 +28,19 @@
       </mat-chip-list>
     </mat-form-field>
   </div>
+  <div (dragover)="hdr_Dragover($event)" (drop)="cellVal_Drop($event)">
+    <mat-form-field>
+      <mat-label>pivot.setting.cellVal</mat-label>
+      <mat-chip-list aria-label="pivot.setting.cellVal">
+        <mat-chip 
+            *ngFor="let cellVal of pivot.setting.cellVal; index as idx"
+            [removable]="removable" (removed)="cellValRemove_Click(idx)">
+            {{cellVal.abbrev}}.{{cellVal.colName}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+      </mat-chip-list>
+    </mat-form-field>
+  </div>
   fact columns
   <div style="width: 300px;">
     <mat-label (click)="tblHdr_Click2('fact-chip-columns')">{{pivot.dataSet.fact.table}}</mat-label>
