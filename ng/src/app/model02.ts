@@ -4,6 +4,11 @@ import * as moment from 'moment';
 
 export type WrioValue = string | number | null | WrioDate | IWrioBase; // | moment.Moment;
 
+export enum WrioValueType {
+  STRING, NUMBER, DATE, WRIOBASE
+}
+
+
 
 export interface IWrioBase {
   getTypeName() : string;
@@ -40,6 +45,15 @@ export function equals(v1: WrioValue | undefined, v2: WrioValue | undefined) : b
   
 }
 
+export function getTypeName(v: WrioValue) {
+  if (v === null) return null;
+
+  if (("string" === typeof v) || ("number" === typeof v)) return typeof v;
+
+  return v.getTypeName();
+
+}
+
 
 export class WrioDate implements IWrioBase {
   private static TYPENAME = "WrioDate"; // do not change
@@ -70,6 +84,10 @@ export class WrioDate implements IWrioBase {
 
   public toString(): string {
     return this.momentValue.toString();
+  }
+
+  public format(formatString: string): string {
+    return this.momentValue.format(formatString);
   }
 
 }
