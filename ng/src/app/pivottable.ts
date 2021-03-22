@@ -1,12 +1,16 @@
 import { type } from 'os';
-import { WrioValueType, WrioValue, WrioDate } from './model02';
+import { WrioValueType, WrioValue, WrioDate, getWrioValueType } from './model02';
 
 
-export interface PivotTableFieldDef {
+export interface IPivotTableFieldDef {
     format(v: WrioValue): string;
 }
 
-export function getPivotTableFieldDef(typeEnum: WrioValueType): PivotTableFieldDef {
+
+//
+// PivotTableFieldDef factory function
+//
+export function getPivotTableFieldDef(typeEnum: WrioValueType): IPivotTableFieldDef {
     switch (typeEnum) {
         case WrioValueType.STRING:
             return new PivotTableStringFieldDef();
@@ -18,13 +22,13 @@ export function getPivotTableFieldDef(typeEnum: WrioValueType): PivotTableFieldD
 }
 
 
-export class PivotTableStringFieldDef implements PivotTableFieldDef {
+export class PivotTableStringFieldDef implements IPivotTableFieldDef {
     format(v: string): string {
         return v;
     }
 }
 
-export class PivotTableNumberFieldDef implements PivotTableFieldDef {
+export class PivotTableNumberFieldDef implements IPivotTableFieldDef {
 
     private numfmt: Intl.NumberFormat = null;
     private fractMin: number = 0;
@@ -59,7 +63,7 @@ export class PivotTableNumberFieldDef implements PivotTableFieldDef {
 
 }
 
-export class PivotTableDateFieldDef implements PivotTableFieldDef {
+export class PivotTableDateFieldDef implements IPivotTableFieldDef {
 
     private fmtStr: string = "";
 
@@ -74,6 +78,44 @@ export class PivotTableDateFieldDef implements PivotTableFieldDef {
     }
 
 }
+
+/* これはいらない
+export function getPivotTableCell(v: WrioValue) {
+    const nWVType = getWrioValueType(v);
+    const fieldDef = getPivotTableFieldDef(nWVType);
+    return new PivotTableCell(v, fieldDef);
+}
+*/
+
+export class PivotTableCell {
+    constructor(protected v: WrioValue, protected fieldDef: IPivotTableFieldDef) {}
+    toString() {
+        return this.fieldDef.format(this.v);
+    }
+}
+
+/*
+export interface PivotTableCell {
+
+}
+
+export class PivotTableStringCell {
+    constructor(protected v: string, protected fieldDef: PivotTableStringFieldDef) { }
+
+    toString(): string{
+        return this.fieldDef.format(this.v)
+    }
+}
+
+export class PivotTableNumberCell {
+    constructor(protected v: number, protected fieldDef: PivotTableNumberFieldDef) { }
+
+    toString(): string{
+        return this.fieldDef.format(this.v)
+    }
+}
+*/
+
 
 /*
 export class PivotTableFieldDef {

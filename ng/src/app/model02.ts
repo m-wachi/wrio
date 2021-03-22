@@ -4,10 +4,10 @@ import * as moment from 'moment';
 
 export type WrioValue = string | number | null | WrioDate | IWrioBase; // | moment.Moment;
 
+//set same value defined by FSharp
 export enum WrioValueType {
-  STRING, NUMBER, DATE, WRIOBASE
+  NULL = 0, STRING = 1, NUMBER = 2, DATE = 3, OTHER = 4
 }
-
 
 
 export interface IWrioBase {
@@ -51,6 +51,17 @@ export function getTypeName(v: WrioValue) {
   if (("string" === typeof v) || ("number" === typeof v)) return typeof v;
 
   return v.getTypeName();
+
+}
+
+export function getWrioValueType(v: WrioValue): WrioValueType {
+  if (v === null) return WrioValueType.NULL;
+
+  if ("string" === typeof v) return WrioValueType.STRING;
+  if ("number" === typeof v) return WrioValueType.NUMBER;
+  if ("WrioDate" === v.getTypeName()) return WrioValueType.DATE;
+  
+  return WrioValueType.OTHER;
 
 }
 

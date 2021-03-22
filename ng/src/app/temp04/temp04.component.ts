@@ -57,6 +57,11 @@ export class Temp04Component implements OnInit {
         let colnames = this.pivotData.colNames;
         console.log("colnames=" + colnames.toString());
 
+        //
+        // このあたりにthis.pivotData.rowsをPivotTableCellに変換するコードを入れる
+        // WrioValue[][] -> PivotTableCell[][]
+        //
+
         const rowHdrNames = this.pivot.setting.rowHdr;
         const rowHdrNmIdxPairs : [string, number][] = wlib01.getNameIndexPairs(rowHdrNames, colnames);
         console.log("rowHdrNmIdxPairs=" + rowHdrNmIdxPairs.toString());
