@@ -2,17 +2,20 @@ namespace Wrio.Models
 
 open System
 
+type WrioValueType = 
+    | NULL = 0 | STRING = 1 | NUMBER = 2 | DATE = 3 | OTHER = 4
+
 // Dataset Column 
-type DsColumn(pColName: string, pColType: string) =
+type DsColumn(pColName: string, pColType: WrioValueType) =
     let mutable colName: string = pColName
-    let mutable colType: string = pColType
-    new() = DsColumn("", "")
+    let mutable colType: WrioValueType = pColType
+    new() = DsColumn("", WrioValueType.STRING)
     member this.ColName
         with get(): string = colName
         and set(v: string) = colName <- v
-    member this.coltype
-        with get(): string = colType
-        and set(v: string) = colType <- v
+    member this.ColType
+        with get(): WrioValueType = colType
+        and set(v: WrioValueType) = colType <- v
 
 type DsJoin(pJoinSrcCol: string, pDstAbbrev: string, pJoinDstCol: string) = 
     let mutable joinSrcCol: string = pJoinSrcCol
