@@ -88,7 +88,7 @@ module DbUserPg =
     let getWrioValueType (dataType: string) : WrioValueType =
         match dataType with
             | "numeric" -> WrioValueType.NUMBER
-            | "string" -> WrioValueType.STRING
+            | "character varying" -> WrioValueType.STRING
             | "date" -> WrioValueType.DATE
             | _ -> WrioValueType.OTHER
 

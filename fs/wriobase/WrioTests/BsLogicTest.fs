@@ -150,10 +150,13 @@ module BsLogicTest =
 
                 Assert.AreEqual(5, fact.Columns.Length)
                 Assert.AreEqual("item_cd", fact.Columns.[0].ColName)
+                Assert.AreEqual(WrioValueType.STRING, fact.Columns.[0].ColType)
                 Assert.AreEqual("item_grp_cd", fact.Columns.[1].ColName)
                 Assert.AreEqual("nof_sales", fact.Columns.[2].ColName)
+                Assert.AreEqual(WrioValueType.NUMBER, fact.Columns.[2].ColType)
                 Assert.AreEqual("sales_amount", fact.Columns.[3].ColName)
                 Assert.AreEqual("sales_date", fact.Columns.[4].ColName)
+                Assert.AreEqual(WrioValueType.DATE, fact.Columns.[4].ColType)
 
                 let dimension = dtSet1.Dimensions.[0]
                 Assert.AreEqual(2, dimension.DsTableId)
