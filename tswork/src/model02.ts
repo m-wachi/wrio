@@ -1,8 +1,7 @@
 //import moment, {isMoment} from 'moment';
 //import {isMoment} from 'moment';
-//import * as mmt from 'moment';
+//import moement from 'moment';
 import moment from 'moment';
-//import {moment} from 'moment';
 
 export type WrioValue = string | number | null | WrioDate | IWrioBase; // | moment.Moment;
 
