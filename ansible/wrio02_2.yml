@@ -1,0 +1,13 @@
+- hosts: svrs
+  remote_user: dev01
+  vars:
+    v_home_dir: /home/dev01
+    v_base_dir: "{{v_home_dir}}/nvm-work"
+    v_src_dir: "{{v_home_dir}}/src/wrio"
+
+  tasks:
+    - name: create postgresql user
+      script: "{{v_src_dir}}/ansible/wrio_pg02.sh"
+      args:
+        creates: /tmp/wrio_pg02.log
+
