@@ -82,7 +82,7 @@ export class WrioDate implements IWrioBase {
 
     } else {
       //this.momentValue = moment(sDateExp);
-      this.dayjsValue = dayjs();
+      this.dayjsValue = dayjs(sDateExp);
     }
   }
 
