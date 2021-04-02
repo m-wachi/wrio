@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "jasmine",
     "build": "tsc",
@@ -19,6 +20,6 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "moment": "^2.27.0"
+    "dayjs": "^1.10.4"
   }
 }

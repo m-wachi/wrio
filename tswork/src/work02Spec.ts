@@ -1,5 +1,5 @@
-import {equals, WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair} from './mdl01';
-import {getNameIndexPairs, vals2Rec, conv2Map, conv2Array2D} from './lib01';
+import {equals, WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair} from './model02';
+import {getNameIndexPairs, vals2Rec, conv2Map, conv2Array2D} from './wriolib01';
 
 //
 // memo npm install --save-dev @types/jasmine

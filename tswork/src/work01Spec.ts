@@ -1,4 +1,4 @@
-import {WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair} from './mdl01';
+import {WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair} from './model02';
 
 //
 // memo npm install --save-dev @types/jasmine
