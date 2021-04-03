@@ -2,6 +2,8 @@
 //import * as mmt from 'moment';
 import { WrioDate, WrioMap, WrioValue, WrioRecord, WrioValueType } from './model02';
 import * as wl from './wriolib01';
+import {getPivotTableFieldDef, PivotTableCell, PivotTableCells} from './pivottable';
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 console.log("Hello index.ts");
 
@@ -21,7 +23,7 @@ console.log("v1=" + nf1.format(v1));
 console.log("v2=" + nf1.format(v2));
 
 
-//const fieldNames = ["sales_date", "item_cd", "nof_sales"];
+const fieldNames = ["sales_date", "item_cd", "nof_sales"];
 const dsColumns : DsColumn[] = [
   {colName: "sales_date", colType: WrioValueType.DATE},
   {colName: "item_cd", colType: WrioValueType.STRING},
@@ -39,9 +41,42 @@ const recs : WrioValue[][] = [
   [new WrioDate("2019-07-02"), "A0002", 12]
 ];
 
-const rowNmIdxPairs = wl.getNameIndexPairs(["sales_date"], fieldNames2);
-const colNmIdxPairs = wl.getNameIndexPairs(["item_cd"], fieldNames2);
-const valNmIdxPairs = wl.getNameIndexPairs(["nof_sales"], fieldNames2);
+let fd1 = getPivotTableFieldDef(dsColumns[0].colType);
+let ptc1 = new PivotTableCell(recs[0][0], fd1);
+
+let myZip = <T1, T2>(ary1: T1[], ary2: T2[]): [T1, T2][] => {
+  let aryRet:[T1, T2][] = [];
+  for(let i=0; i<ary1.length; i++) {
+    aryRet.push([ary1[i], ary2[i]]);
+  }
+  return aryRet;
+}
+
+let fun1 = (pair: [DsColumn, WrioValue]) => {
+  const [dsColumn, wv] = pair;
+  let fd = getPivotTableFieldDef(dsColumn.colType);
+  return new PivotTableCell(wv, fd);
+}
+
+let a = myZip(dsColumns, recs[0]);
+
+let b = a.map(fun1);
+let c = b.map((x) => {return x.text();});
+console.log(c);
+
+let fun2 = (dsColumns1: DsColumn[], recs1: WrioValue[][]) => {
+  return recs1.map((x) => {
+    let c = myZip(dsColumns1, x);
+    return c.map(fun1);
+  });
+}
+
+let d = fun2(dsColumns, recs);
+console.log(d.map((x) => {return x.map((y) => {return y.text();})}));
+
+const rowNmIdxPairs = wl.getNameIndexPairs(["sales_date"], fieldNames);
+const colNmIdxPairs = wl.getNameIndexPairs(["item_cd"], fieldNames);
+const valNmIdxPairs = wl.getNameIndexPairs(["nof_sales"], fieldNames);
 
 console.log("rowNmIdxPairs: " + rowNmIdxPairs.toString());
 

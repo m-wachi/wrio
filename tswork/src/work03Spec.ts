@@ -1,0 +1,119 @@
+import {WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair} from './model02';
+import {PivotTableCell, PivotTableCells, PivotTableDateFieldDef } from './pivottable';
+
+//
+// memo npm install --save-dev @types/jasmine
+//
+
+
+describe("pivottable test suite", function() {
+  //
+  // WrioDate Test
+  //
+  it("PivotTableCells.valEquals Test 01", function() {
+    let wd11 = new WrioDate("2019-07-01");
+    let wd12 = new WrioDate("2019-07-02");
+    let wd21 = new WrioDate("2019-07-01");
+    let wd22 = new WrioDate("2019-07-02");
+    let dtfd1 = new PivotTableDateFieldDef();
+    let dtfd2 = new PivotTableDateFieldDef();
+  
+    let ptc11 = new PivotTableCell(wd11, dtfd1);
+    let ptc12 = new PivotTableCell(wd12, dtfd2);
+    let ptc21 = new PivotTableCell(wd21, dtfd1);
+    let ptc22 = new PivotTableCell(wd22, dtfd2);
+ 
+    let ptcs1 = new PivotTableCells([ptc11, ptc12]);
+    let ptcs2 = new PivotTableCells([ptc21, ptc22]);
+
+    expect(ptcs1.valEquals(ptcs2)).toBe(true);
+  });
+  it("PivotTableCells.valEquals Test 02", function() {
+    let wd11 = new WrioDate("2019-07-01");
+    let wd12 = new WrioDate("2019-07-02");
+    let wd21 = new WrioDate("2019-07-01");
+    let wd22 = new WrioDate("2019-07-03");
+    let dtfd1 = new PivotTableDateFieldDef();
+    let dtfd2 = new PivotTableDateFieldDef();
+  
+    let ptc11 = new PivotTableCell(wd11, dtfd1);
+    let ptc12 = new PivotTableCell(wd12, dtfd2);
+    let ptc21 = new PivotTableCell(wd21, dtfd1);
+    let ptc22 = new PivotTableCell(wd22, dtfd2);
+ 
+    let ptcs1 = new PivotTableCells([ptc11, ptc12]);
+    let ptcs2 = new PivotTableCells([ptc21, ptc22]);
+
+    expect(ptcs1.valEquals(ptcs2)).toBeFalse();
+  });
+  it("WrioDate.equals Test 02", function() {
+    let wd1 = new WrioDate("2019-07-01T00:00:00");
+    let wd3 = new WrioDate("2019-07-02T00:00:00");
+
+    expect(wd1.equals(wd3)).toBe(false);
+  });
+
+  //
+  // WrioMap Test
+  //
+  it("WrioMap Test 01", function() {
+    let wd1 = new WrioDate("2019-07-01T00:00:00");
+    let wd2 = new WrioDate("2019-07-01T00:00:00");
+    let wd3 = new WrioDate("2019-07-02T00:00:00");
+
+    let wrMap = new WrioMap();
+    wrMap.set(wd1, "wd1");
+    wrMap.set(wd2, "wd2");  // overwrite wd1
+    wrMap.set(wd3, "wd3");
+
+    expect(wrMap.get(wd1)).toBe("wd2");
+    expect(wrMap.get(wd2)).toBe("wd2");
+    expect(wrMap.get(wd3)).toBe("wd3");
+
+  });
+
+  it("WrioRecord.equals() test 01", function() {
+    let wrRec1 = new WrioRecord();
+    wrRec1.set("k1", 5);
+    wrRec1.set("k2", "strValue1");
+    let wrRec2 = new WrioRecord();
+    wrRec2.set("k1", 5);
+    wrRec2.set("k2", "strValue2");
+    let wrRec3 = new WrioRecord();
+    wrRec3.set("k1", 5);
+    wrRec3.set("k2", "strValue1");
+
+    expect(wrRec1.equals(wrRec2)).toBe(false);
+    expect(wrRec1.equals(wrRec3)).toBe(true);
+
+  });
+
+  it("WrioRecordPair.equals() test 01", function() {
+    let wrRec1 = new WrioRecord();
+    wrRec1.set("k1", 5);
+    wrRec1.set("k2", "strValue1");
+    let wrRec2 = new WrioRecord();
+    wrRec2.set("k1", 5);
+    wrRec2.set("k2", "strValue2");
+    let wrRec3 = new WrioRecord();
+    wrRec3.set("k1", 5);
+    wrRec3.set("k2", "strValue1");
+    let wrRec4 = new WrioRecord();
+    wrRec4.set("k1", 5);
+    wrRec4.set("k2", "strValue2");
+
+    let wrp1 = new WrioRecordPair(wrRec1, wrRec2);
+    let wrp2 = new WrioRecordPair(wrRec3, wrRec4);
+    let wrp3 = new WrioRecordPair(wrRec1, wrRec3);
+    let wrp4 = new WrioRecordPair(wrRec3, wrRec3);
+
+    expect(wrp1.equals(wrp2)).toBeTrue();
+    expect(wrp1.equals(wrp3)).toBeFalse();
+    expect(wrp1.equals(wrp4)).toBeFalse();
+
+  });
+
+
+
+
+});

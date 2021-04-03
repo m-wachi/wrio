@@ -7,7 +7,8 @@
     "test": "jasmine",
     "build": "tsc",
     "dev": "ts-node src/index.ts",
-    "dev2": "ts-node src/index2.ts"
+    "dev2": "ts-node src/index2.ts",
+    "dev3": "ts-node src/index3.ts"
   },
   "author": "",
   "license": "ISC",
