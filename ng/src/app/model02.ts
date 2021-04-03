@@ -1,8 +1,9 @@
 //import moment, {isMoment} from 'moment';
 //import {isMoment} from 'moment';
-//import * as mmt from 'moment';
-import moment from 'moment';
-//import {moment} from 'moment';
+//import moment from 'moment';
+
+//import * as dayjs from 'dayjs';
+import * as dayjs from 'dayjs';
 
 export type WrioValue = string | number | null | WrioDate | IWrioBase; // | moment.Moment;
 
@@ -70,13 +71,17 @@ export function getWrioValueType(v: WrioValue): WrioValueType {
 
 export class WrioDate implements IWrioBase {
   private static TYPENAME = "WrioDate"; // do not change
-  public momentValue: moment.Moment;
-
+  //public momentValue: moment.Moment;
+  public dayjsValue: dayjs.Dayjs; 
+  
   constructor(sDateExp?: string) {
     if (undefined === sDateExp) {
-      this.momentValue = moment();
+      //this.momentValue = moment();
+      this.dayjsValue = dayjs();
+
     } else {
-      this.momentValue = moment(sDateExp);
+      //this.momentValue = moment(sDateExp);
+      this.dayjsValue = dayjs(sDateExp);
     }
   }
 
@@ -90,17 +95,20 @@ export class WrioDate implements IWrioBase {
     if (vTypeName === "WrioDate") {
     */
     if (v instanceof WrioDate) {
-        return this.momentValue.isSame(v.momentValue);
+        //return this.momentValue.isSame(v.momentValue);
+        return this.dayjsValue.isSame(v.dayjsValue);
     }
     return false;
   }
 
   public toString(): string {
-    return this.momentValue.toString();
+    //return this.momentValue.toString();
+    return this.dayjsValue.format("YYYY-MM-DD");
   }
 
   public format(formatString: string): string {
-    return this.momentValue.format(formatString);
+    //return this.momentValue.format(formatString);
+    return this.dayjsValue.format(formatString);
   }
 
 }
