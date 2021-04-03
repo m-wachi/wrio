@@ -27,10 +27,10 @@ const fieldNames = ["sales_date", "item_cd", "nof_sales"];
 //const colnmIdxs = [0, 1, 2];
 
 const recs : WrioValue[][] = [
-  [new WrioDate("2019-07-01T00:00:00"),	"A0001", 10],
-  [new WrioDate("2019-07-01T00:00:00"), "A0002", 15],
-  [new WrioDate("2019-07-02T00:00:00"), "A0001", 8],
-  [new WrioDate("2019-07-02T00:00:00"), "A0002", 12]
+  [new WrioDate("2019-07-01"),	"A0001", 10],
+  [new WrioDate("2019-07-01"), "A0002", 15],
+  [new WrioDate("2019-07-02"), "A0001", 8],
+  [new WrioDate("2019-07-02"), "A0002", 12]
 ];
 
 const rowNmIdxPairs = wl.getNameIndexPairs(["sales_date"], fieldNames);

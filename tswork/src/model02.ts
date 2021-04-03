@@ -104,7 +104,7 @@ export class WrioDate implements IWrioBase {
 
   public toString(): string {
     //return this.momentValue.toString();
-    return this.dayjsValue.toString();
+    return this.dayjsValue.format("YYYY-MM-DD");
   }
 
   public format(formatString: string): string {
