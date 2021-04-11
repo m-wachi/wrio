@@ -64,6 +64,10 @@ let b = a.map(fun1);
 let c = b.map((x) => {return x.text();});
 console.log(c);
 
+
+//
+// convert WrioValue[][] to PivotTableCell[][]
+//
 let fun2 = (dsColumns1: DsColumn[], recs1: WrioValue[][]) => {
   return recs1.map((x) => {
     let c = myZip(dsColumns1, x);
@@ -71,8 +75,8 @@ let fun2 = (dsColumns1: DsColumn[], recs1: WrioValue[][]) => {
   });
 }
 
-let d = fun2(dsColumns, recs);
-console.log(d.map((x) => {return x.map((y) => {return y.text();})}));
+let ary2dPtCell = fun2(dsColumns, recs);
+console.log(ary2dPtCell.map((x) => {return x.map((y) => {return y.text();})}));
 
 const rowNmIdxPairs = wl.getNameIndexPairs(["sales_date"], fieldNames);
 const colNmIdxPairs = wl.getNameIndexPairs(["item_cd"], fieldNames);
@@ -83,6 +87,9 @@ console.log("rowNmIdxPairs: " + rowNmIdxPairs.toString());
 
 const [rowHdrSet1, colHdrSet1, dicVal] = wl.conv2Map(recs, rowNmIdxPairs, colNmIdxPairs, valNmIdxPairs);
 console.log("rowHdrSet1: " + rowHdrSet1.toString());
+
+// next coding
+// const [rowHdrSet1, colHdrSet1, dicVal] = wl.conv2Map2(ary2dPtCell, rowNmIdxPairs, colNmIdxPairs, valNmIdxPairs);
 
 console.log("dicVal: " + dicVal.toString());
 
