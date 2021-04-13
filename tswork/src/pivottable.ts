@@ -1,34 +1,37 @@
 import { type } from 'os';
+import { Pivot } from './model';
 import { WrioValueType, WrioValue, WrioDate, getWrioValueType, equals } from './model02';
 
 export interface IPivotTableFieldDef {
   format(v: WrioValue): string;
   textAlign: string; //left, right, center
+  fieldName: string;
 }
 
 
 //
 // PivotTableFieldDef factory function
 //
-export function getPivotTableFieldDef(typeEnum: WrioValueType): IPivotTableFieldDef {
+export function getPivotTableFieldDef(fieldName: string, typeEnum: WrioValueType): IPivotTableFieldDef {
   switch (typeEnum) {
     case WrioValueType.STRING:
-      return new PivotTableStringFieldDef();
+      return new PivotTableStringFieldDef(fieldName);
     case WrioValueType.NUMBER:
-      return new PivotTableNumberFieldDef();
+      return new PivotTableNumberFieldDef(fieldName);
     case WrioValueType.DATE:
-      return new PivotTableDateFieldDef();
+      return new PivotTableDateFieldDef(fieldName);
     default:
-      return new PivotTableStringFieldDef();
+      return new PivotTableStringFieldDef(fieldName);
   }
 }
 
 
 export class PivotTableStringFieldDef implements IPivotTableFieldDef {
   public textAlign: string = "left";
+  constructor(public fieldName: string) {}
   format(v: string): string {
     return v;
-}
+  }
 }
 
 export class PivotTableNumberFieldDef implements IPivotTableFieldDef {
@@ -38,7 +41,7 @@ export class PivotTableNumberFieldDef implements IPivotTableFieldDef {
   private fractMax: number = 0;
   public textAlign: string = "right";
 
-  constructor() {
+  constructor(public fieldName: string) {
     this.setNumFmt();
   }
 
@@ -77,7 +80,7 @@ export class PivotTableDateFieldDef implements IPivotTableFieldDef {
   private fmtStr: string = "YYYY-MM-DD";
   public textAlign: string = "left";
 
-  constructor() {}
+  constructor(public fieldName: string) {}
 
   public setFormatString(formatString: string) {
     this.fmtStr = formatString;
@@ -109,6 +112,10 @@ export class PivotTableCell {
   textAlign() {
     return this.fieldDef.textAlign;
   }
+
+  fieldName() {
+    return this.fieldDef.fieldName;
+  }
 }
 
 export class PivotTableCells {
@@ -121,6 +128,47 @@ export class PivotTableCells {
         return false;
     }
     return true;
+  }
+
+
+  filterByFieldIndexes(aryFieldIndex: number[]): PivotTableCells {
+
+    /*
+    let aryPtc2: PivotTableCell[] = [];
+    for (let fieldIndex of aryFieldIndex) {
+      aryPtc2.push(this.aryPtc[fieldIndex]);
+    }
+    */
+    return new PivotTableCells(aryFieldIndex.map((x) => {return this.aryPtc[x];}));
+  }
+
+
+  /*
+  filterFieldNames(aryFieldName: string[]): PivotTableCells {
+
+    const f = (x: PivotTableCell) => {
+      for (const fieldName of aryFieldName) {
+        if (x.fieldName() === fieldName) return true;
+      }
+      return false;
+    }
+
+    return new PivotTableCells(this.aryPtc.filter(f));
+  }
+  */
+
+  getFieldNames(): string[] {
+    return this.aryPtc.map((x) => {return x.fieldName();});
+  }
+
+  getPtc(fieldName: string): PivotTableCell | undefined {
+    let aryPtc2 = this.aryPtc.filter((x) => {
+      return (x.fieldName() === fieldName);
+    });
+    if (aryPtc2.length === 0) {
+      return undefined;
+    }
+    return aryPtc2[0];
   }
 }
 export class PtcsPair {

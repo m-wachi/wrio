@@ -2,6 +2,7 @@
 //import * as mmt from 'moment';
 import { WrioDate, WrioMap, WrioValue, WrioRecord, WrioValueType } from './model02';
 import * as wl from './wriolib01';
+import * as wl2 from './wriolib02';
 import {getPivotTableFieldDef, PivotTableCell, PivotTableCells} from './pivottable';
 import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
@@ -41,7 +42,7 @@ const recs : WrioValue[][] = [
   [new WrioDate("2019-07-02"), "A0002", 12]
 ];
 
-let fd1 = getPivotTableFieldDef(dsColumns[0].colType);
+let fd1 = getPivotTableFieldDef(dsColumns[0].colName, dsColumns[0].colType);
 let ptc1 = new PivotTableCell(recs[0][0], fd1);
 
 let myZip = <T1, T2>(ary1: T1[], ary2: T2[]): [T1, T2][] => {
@@ -54,7 +55,7 @@ let myZip = <T1, T2>(ary1: T1[], ary2: T2[]): [T1, T2][] => {
 
 let fun1 = (pair: [DsColumn, WrioValue]) => {
   const [dsColumn, wv] = pair;
-  let fd = getPivotTableFieldDef(dsColumn.colType);
+  let fd = getPivotTableFieldDef(dsColumn.colName, dsColumn.colType);
   return new PivotTableCell(wv, fd);
 }
 
@@ -71,7 +72,7 @@ console.log(c);
 let fun2 = (dsColumns1: DsColumn[], recs1: WrioValue[][]) => {
   return recs1.map((x) => {
     let c = myZip(dsColumns1, x);
-    return c.map(fun1);
+    return new PivotTableCells(c.map(fun1));
   });
 }
 
@@ -89,7 +90,7 @@ const [rowHdrSet1, colHdrSet1, dicVal] = wl.conv2Map(recs, rowNmIdxPairs, colNmI
 console.log("rowHdrSet1: " + rowHdrSet1.toString());
 
 // next coding
-// const [rowHdrSet1, colHdrSet1, dicVal] = wl.conv2Map2(ary2dPtCell, rowNmIdxPairs, colNmIdxPairs, valNmIdxPairs);
+// const [rowHdrSet1_2, colHdrSet1_2, dicVal_2] = wl2.conv2Map2(ary2dPtCell, rowNmIdxPairs, colNmIdxPairs, valNmIdxPairs);
 
 console.log("dicVal: " + dicVal.toString());
 

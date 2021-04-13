@@ -1,5 +1,6 @@
 import {WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair, WrioSet} from './model02';
-import { PivotTableCell } from './pivottable';
+import { PivotTableCell, PivotTableCells } from './pivottable';
+import { PtcRecord } from './model03';
 
 export const getNameIndexPairs = (aryName: string[], aryColumnName: string[]) : [string, number][]=> {
   return aryName.map((nm) => [nm, aryColumnName.indexOf(nm)])
@@ -15,40 +16,19 @@ export const vals2Rec = (nmIdxPairs: [string, number][], rec: WrioValue[]) => {
 } 
 */
 
-class PtcRecord {
-  constructor(public nmIdxPairs: [string, number][], public aryPtc: PivotTableCell[]) {}
+/*
+export const filterPtcs = (nmIdxPairs: [string, number][], ptcs: PivotTableCells) => {
+  //let hdr = new WrioRecord();
+  const f;
 
-  get(fieldName: string) : PivotTableCell | undefined {
-    const f = (x: [string, number]) => {
-      if (x[0] === fieldName) return true;
-      else false;
-    }
-
-    let filtered = this.nmIdxPairs.filter(f)
-    if (0 === filtered.length) {
-      return undefined;
-    }
-    else {
-      const idx = filtered[0][1];
-      return this.aryPtc[idx];
-    }
-
-  }
-}
-
-
-export const vals2PtcRec = (nmIdxPairs: [string, number][], aryPtc: PivotTableCell[]) => {
-  /*
-  let hdr = new WrioRecord();
+  ptc
   nmIdxPairs.forEach(([nm, nmIdx]) => {
-    hdr.set(nm as string, aryPtc[nmIdx as number]);
+    hdr.set(nm as string, rec[nmIdx as number]);
   });
   return hdr;
-  */
- return new PtcRecord(nmIdxPairs, aryPtc);
 } 
-
-
+*/
+/*
 export function conv2Map(
       recs: WrioValue[][], 
       rowHdrNmIdxPairs: [string, number][], colHdrNmIdxPairs: [string, number][], 
@@ -71,6 +51,32 @@ export function conv2Map(
   
   }
   return [rowHdrSet, colHdrSet, dicPivotData];
+} */
+
+export function conv2Map2(
+  ary2dPtCell: PivotTableCells[], 
+  rowHdrNmIdxPairs: [string, number][], colHdrNmIdxPairs: [string, number][], 
+  valNmIdxPairs: [string, number][]) : [WrioSet, WrioSet, WrioMap] {
+  let dicPivotData = new WrioMap();
+  let colHdrSet = new WrioSet();
+  let rowHdrSet = new WrioSet();
+
+  for(const aryPtCell of ary2dPtCell) {
+    //let rowHdr = vals2Rec(rowHdrNmIdxPairs, rec);
+    //rowHdrSet.add(rowHdr);
+    let rowHdrIdxs = rowHdrNmIdxPairs.map((x)=>{return x[1];});
+    let rowHdr = aryPtCell.filterByFieldIndexes(rowHdrIdxs);
+
+let colHdr = vals2Rec(colHdrNmIdxPairs, rec);
+colHdrSet.add(colHdr);
+
+let values = vals2Rec(valNmIdxPairs, rec);
+
+let wrp = new WrioRecordPair(rowHdr, colHdr);
+dicPivotData.set(wrp, values);
+
+}
+return [rowHdrSet, colHdrSet, dicPivotData];
 }
 
 // write test code!
