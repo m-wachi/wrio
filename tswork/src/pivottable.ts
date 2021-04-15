@@ -184,70 +184,125 @@ export class PtcsPair {
       return true;
   }
 }
+
+
 export class PtcMap {
   private map_ : Map<PtcsPair, PivotTableCells>;
   constructor() {
     this.map_ = new Map();
   }
   
-  public get(ptcspKey: PtcsPair) : PivotTableCells | undefined {
+  get(ptcspKey: PtcsPair) : PivotTableCells | undefined {
 
     const ite = this.map_.entries();
     let iteResult = ite.next();
     while(!iteResult.done) {
       const kvPair = iteResult.value;
-        const k = kvPair[0];
-        const v = kvPair[1];
-        
-        if (ptcspKey.valEquals(k)) {
-          return v;
-        }
-        iteResult = ite.next();
+      const k = kvPair[0];
+      const v = kvPair[1];
+      
+      if (ptcspKey.valEquals(k)) {
+        return v;
       }
-      return undefined;      
+      iteResult = ite.next();
     }
-  
-    public set(ptcspKey: PtcsPair, ptcsValue: PivotTableCells) : void {
-    
-      const ite = this.map_.keys();
-      let iteResult = ite.next();
-      while(!iteResult.done) {
-        const k = iteResult.value
-        //console.log("k=%s", String(k));
-        if (ptcspKey.valEquals(k)) {
-          this.map_.set(k, ptcsValue);
-          return;
-        }
-        iteResult = ite.next();
-      }      
-      this.map_.set(ptcspKey, ptcsValue);
-    }
-  
-    public entries() {
-      return this.map_.entries();
-    }
-  
-    public keys() {
-      return this.map_.keys();
-    }
-  
-    public getSize() {
-      return this.map_.size;
-    }
-  
-    public toString(): string {
-
-      let lstKv : string[] = [];
-      this.map_.forEach((v, k, mp) => {
-        lstKv.push(String(k) + ": " + String(v));
-      });
-      return ("PtcMap {" + lstKv.join(", ") + "}");
-  
-    }
-  
+    return undefined;      
   }
   
+  set(ptcspKey: PtcsPair, ptcsValue: PivotTableCells) : void {
+    
+    const ite = this.map_.keys();
+    let iteResult = ite.next();
+    while(!iteResult.done) {
+      const k = iteResult.value
+      //console.log("k=%s", String(k));
+      if (ptcspKey.valEquals(k)) {
+        this.map_.set(k, ptcsValue);
+        return;
+      }
+      iteResult = ite.next();
+    }      
+    this.map_.set(ptcspKey, ptcsValue);
+  }
   
+  public entries() {
+    return this.map_.entries();
+  }
+  
+  public keys() {
+    return this.map_.keys();
+  }
+
+  public getSize() {
+    return this.map_.size;
+  }
+
+  public toString(): string {
+
+    let lstKv : string[] = [];
+    this.map_.forEach((v, k, mp) => {
+      lstKv.push(String(k) + ": " + String(v));
+    });
+    return ("PtcMap {" + lstKv.join(", ") + "}");
+
+  }
+
+}
+  
+
+export class PtcpSet {
+  private set_ : Set<PtcsPair>;
+  constructor() {
+    this.set_ = new Set<PtcsPair>();
+  }
+
+
+  public add(ptcp: PtcsPair) : void {
+
+    const ite = this.set_.values();
+    let iteResult = ite.next();
+    while(!iteResult.done) {
+      const ptcp2 = iteResult.value
+      //console.log("k=%s", String(k));
+      if (ptcp.valEquals(ptcp2)) {
+        return;
+      }
+      iteResult = ite.next();
+    } 
+    this.set_.add(ptcp);
+
+  }
+
+  public values() {
+    return this.set_.values();
+  }
+
+  public toArray() : PtcsPair[] {
+    const ite = this.values();
+    let iteResult = ite.next();
+    let aryRet : PtcsPair[] = [];
+    while(!iteResult.done) {
+      aryRet.push(iteResult.value);
+      iteResult = ite.next();
+    }
+    return aryRet;
+  }
+
+  public toString(): string {
+    //return String(this.map_);
+    let lstV : string[] = [];
+    this.set_.forEach((v) => {
+      if (null === v) {
+        lstV.push("(null)");
+      } else {
+        lstV.push(v.toString());
+      }
+    });
+    return ("WrioSet [" + lstV.join(", ") + "]");
+
+  }
+
+}
 /*
 export class PivotTableStringCell {
     constructor(protected v: string, protected fieldDef: PivotTableStringFieldDef) { }

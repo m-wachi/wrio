@@ -67,8 +67,8 @@ export function conv2Map2(
     let rowHdrIdxs = rowHdrNmIdxPairs.map((x)=>{return x[1];});
     let rowHdr = aryPtCell.filterByFieldIndexes(rowHdrIdxs);
 
-let colHdr = vals2Rec(colHdrNmIdxPairs, rec);
-colHdrSet.add(colHdr);
+    let colHdr = vals2Rec(colHdrNmIdxPairs, rec);
+    colHdrSet.add(colHdr);
 
 let values = vals2Rec(valNmIdxPairs, rec);
 
