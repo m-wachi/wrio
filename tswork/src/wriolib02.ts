@@ -1,5 +1,5 @@
 import {WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair, WrioSet} from './model02';
-import { PivotTableCell, PivotTableCells } from './pivottable';
+import { PivotTableCell, PivotTableCells, PtcsSet, PtcsPair, PtcMap } from './pivottable';
 import { PtcRecord } from './model03';
 
 export const getNameIndexPairs = (aryName: string[], aryColumnName: string[]) : [string, number][]=> {
@@ -56,27 +56,37 @@ export function conv2Map(
 export function conv2Map2(
   ary2dPtCell: PivotTableCells[], 
   rowHdrNmIdxPairs: [string, number][], colHdrNmIdxPairs: [string, number][], 
-  valNmIdxPairs: [string, number][]) : [WrioSet, WrioSet, WrioMap] {
-  let dicPivotData = new WrioMap();
-  let colHdrSet = new WrioSet();
-  let rowHdrSet = new WrioSet();
+  valNmIdxPairs: [string, number][]) : [PtcsSet, PtcsSet, PtcMap] {
+  //let dicPivotData = new WrioMap();
+  let dicPivotData = new PtcMap();
+  //let colHdrSet = new WrioSet();
+  //let rowHdrSet = new WrioSet();
+  let colHdrSet = new PtcsSet();
+  let rowHdrSet = new PtcsSet();
 
   for(const aryPtCell of ary2dPtCell) {
     //let rowHdr = vals2Rec(rowHdrNmIdxPairs, rec);
     //rowHdrSet.add(rowHdr);
     let rowHdrIdxs = rowHdrNmIdxPairs.map((x)=>{return x[1];});
     let rowHdr = aryPtCell.filterByFieldIndexes(rowHdrIdxs);
+    rowHdrSet.add(rowHdr);
 
-    let colHdr = vals2Rec(colHdrNmIdxPairs, rec);
-    colHdrSet.add(colHdr);
+    //let colHdr = vals2Rec(colHdrNmIdxPairs, rec);
+    //colHdrSet.add(colHdr);
+    let colHdrIdxs = colHdrNmIdxPairs.map((x)=>{return x[1];});
+    let colHdr = aryPtCell.filterByFieldIndexes(colHdrIdxs);
+    colHdrSet.add(rowHdr);
 
-let values = vals2Rec(valNmIdxPairs, rec);
+    //let values = vals2Rec(valNmIdxPairs, rec);
+    let valIdxs = valNmIdxPairs.map((x)=>{return x[1];});
+    let values = aryPtCell.filterByFieldIndexes(valIdxs);
 
-let wrp = new WrioRecordPair(rowHdr, colHdr);
-dicPivotData.set(wrp, values);
-
-}
-return [rowHdrSet, colHdrSet, dicPivotData];
+    //let wrp = new WrioRecordPair(rowHdr, colHdr);
+    //dicPivotData.set(wrp, values);
+    let pp = new PtcsPair(rowHdr, colHdr);
+    dicPivotData.set(pp, values);
+  }
+  return [rowHdrSet, colHdrSet, dicPivotData];
 }
 
 // write test code!

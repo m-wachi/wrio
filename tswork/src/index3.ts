@@ -86,13 +86,11 @@ const valNmIdxPairs = wl.getNameIndexPairs(["nof_sales"], fieldNames);
 console.log("rowNmIdxPairs: " + rowNmIdxPairs.toString());
 
 
-const [rowHdrSet1, colHdrSet1, dicVal] = wl.conv2Map(recs, rowNmIdxPairs, colNmIdxPairs, valNmIdxPairs);
-console.log("rowHdrSet1: " + rowHdrSet1.toString());
-
-// next coding
-// const [rowHdrSet1_2, colHdrSet1_2, dicVal_2] = wl2.conv2Map2(ary2dPtCell, rowNmIdxPairs, colNmIdxPairs, valNmIdxPairs);
-
-console.log("dicVal: " + dicVal.toString());
+//const [rowHdrSet1, colHdrSet1, dicVal] = wl.conv2Map(recs, rowNmIdxPairs, colNmIdxPairs, valNmIdxPairs);
+//console.log("rowHdrSet1: " + rowHdrSet1.toString());
+const [rowHdrSet1_2, colHdrSet1_2, dicVal_2] = wl2.conv2Map2(ary2dPtCell, rowNmIdxPairs, colNmIdxPairs, valNmIdxPairs);
+console.log("rowHdrSet1_2: " + rowHdrSet1_2.toString());
+console.log("dicVal: " + dicVal_2.toString());
 
 const tbl = wl.conv2Array2D(rowHdrSet1.toArray(), colHdrSet1.toArray(), 
                           ["sales_date"], ["item_cd"], ["nof_sales"], dicVal);

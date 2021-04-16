@@ -250,26 +250,26 @@ export class PtcMap {
 }
   
 
-export class PtcpSet {
-  private set_ : Set<PtcsPair>;
+export class PtcsSet {
+  private set_ : Set<PivotTableCells>;
   constructor() {
-    this.set_ = new Set<PtcsPair>();
+    this.set_ = new Set<PivotTableCells>();
   }
 
 
-  public add(ptcp: PtcsPair) : void {
+  public add(ptcs: PivotTableCells) : void {
 
     const ite = this.set_.values();
     let iteResult = ite.next();
     while(!iteResult.done) {
       const ptcp2 = iteResult.value
       //console.log("k=%s", String(k));
-      if (ptcp.valEquals(ptcp2)) {
+      if (ptcs.valEquals(ptcp2)) {
         return;
       }
       iteResult = ite.next();
     } 
-    this.set_.add(ptcp);
+    this.set_.add(ptcs);
 
   }
 
@@ -277,10 +277,10 @@ export class PtcpSet {
     return this.set_.values();
   }
 
-  public toArray() : PtcsPair[] {
+  public toArray() : PivotTableCells[] {
     const ite = this.values();
     let iteResult = ite.next();
-    let aryRet : PtcsPair[] = [];
+    let aryRet : PivotTableCells[] = [];
     while(!iteResult.done) {
       aryRet.push(iteResult.value);
       iteResult = ite.next();
@@ -298,7 +298,7 @@ export class PtcpSet {
         lstV.push(v.toString());
       }
     });
-    return ("WrioSet [" + lstV.join(", ") + "]");
+    return ("PtcsSet [" + lstV.join(", ") + "]");
 
   }
 
