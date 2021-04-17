@@ -77,7 +77,7 @@ let fun2 = (dsColumns1: DsColumn[], recs1: WrioValue[][]) => {
 }
 
 let ary2dPtCell = fun2(dsColumns, recs);
-console.log(ary2dPtCell.map((x) => {return x.map((y) => {return y.text();})}));
+console.log(ary2dPtCell.map((x) => {return x.getPtcArray().map((y) => {return y.text();})}));
 
 const rowNmIdxPairs = wl.getNameIndexPairs(["sales_date"], fieldNames);
 const colNmIdxPairs = wl.getNameIndexPairs(["item_cd"], fieldNames);
@@ -90,11 +90,16 @@ console.log("rowNmIdxPairs: " + rowNmIdxPairs.toString());
 //console.log("rowHdrSet1: " + rowHdrSet1.toString());
 const [rowHdrSet1_2, colHdrSet1_2, dicVal_2] = wl2.conv2Map2(ary2dPtCell, rowNmIdxPairs, colNmIdxPairs, valNmIdxPairs);
 console.log("rowHdrSet1_2: " + rowHdrSet1_2.toString());
+console.log("colHdrSet1_2: " + colHdrSet1_2.toString());
 console.log("dicVal: " + dicVal_2.toString());
 
-const tbl = wl.conv2Array2D(rowHdrSet1.toArray(), colHdrSet1.toArray(), 
-                          ["sales_date"], ["item_cd"], ["nof_sales"], dicVal);
+//const tbl = wl.conv2Array2D(rowHdrSet1.toArray(), colHdrSet1.toArray(), 
+//                          ["sales_date"], ["item_cd"], ["nof_sales"], dicVal);
+
+const tbl = wl2.conv2Array2D2(rowHdrSet1_2.toArray(), colHdrSet1_2.toArray(), 
+                          ["sales_date"], ["item_cd"], ["nof_sales"], dicVal_2);
+
 for(const r of tbl) {
-  let ary = r.map((x)=>{return x?.toString();});
+  let ary = r.map((x)=>{return x?.text();});
   console.log(ary);
 }

@@ -116,6 +116,10 @@ export class PivotTableCell {
   fieldName() {
     return this.fieldDef.fieldName;
   }
+
+  toString(): string {
+    return "PivitTableCell { fieldName: " + this.fieldName() + ", wrioValue: " + this.wrioValue?.toString() + "}";
+  }
 }
 
 export class PivotTableCells {
@@ -130,6 +134,9 @@ export class PivotTableCells {
     return true;
   }
 
+  getPtcArray(): PivotTableCell[] {
+    return this.aryPtc;
+  }
 
   filterByFieldIndexes(aryFieldIndex: number[]): PivotTableCells {
 
@@ -170,6 +177,11 @@ export class PivotTableCells {
     }
     return aryPtc2[0];
   }
+
+  toString(): string {
+    return "PivotTableCells [" + this.aryPtc.map((x) => {return x.toString()}).join(",") + "]";
+  }
+
 }
 export class PtcsPair {
   
@@ -183,6 +195,10 @@ export class PtcsPair {
       if (!this.colPtcs.valEquals(ptcp.colPtcs)) return false;
       return true;
   }
+  toString(): string {
+    return "PtcPair {rowPtcs: " + this.rowPtcs.toString() + ", colPtcs: " + this.colPtcs.toString() + "}";
+  }
+
 }
 
 

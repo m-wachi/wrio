@@ -1,5 +1,5 @@
 import {WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair, WrioSet} from './model02';
-import { PivotTableCell, PivotTableCells, PtcsSet, PtcsPair, PtcMap } from './pivottable';
+import { PivotTableCell, PivotTableCells, PtcsSet, PtcsPair, PtcMap, PivotTableStringFieldDef } from './pivottable';
 import { PtcRecord } from './model03';
 
 export const getNameIndexPairs = (aryName: string[], aryColumnName: string[]) : [string, number][]=> {
@@ -75,7 +75,7 @@ export function conv2Map2(
     //colHdrSet.add(colHdr);
     let colHdrIdxs = colHdrNmIdxPairs.map((x)=>{return x[1];});
     let colHdr = aryPtCell.filterByFieldIndexes(colHdrIdxs);
-    colHdrSet.add(rowHdr);
+    colHdrSet.add(colHdr);
 
     //let values = vals2Rec(valNmIdxPairs, rec);
     let valIdxs = valNmIdxPairs.map((x)=>{return x[1];});
@@ -90,6 +90,7 @@ export function conv2Map2(
 }
 
 // write test code!
+/*
 export function conv2Array2D(
       aryRowHdr: WrioValue[], aryColHdr: WrioValue[], 
       rowHdrNames: string[], colHdrNames: string[], valNames: string[],
@@ -124,5 +125,61 @@ export function conv2Array2D(
     }
   }
   
+  return retAry2d;
+}
+*/
+
+export function conv2Array2D2(
+  aryRowHdr: PivotTableCells[], aryColHdr: PivotTableCells[], 
+  rowHdrNames: string[], colHdrNames: string[], valNames: string[],
+  dicPivotData: PtcMap) : PivotTableCell[][] {
+
+  //let retAry2d : WrioValue[][] = [];
+  let retAry2d : PivotTableCell[][] = [];
+  //retAry2d.push(["_____"]);
+  let dummyPtc = new PivotTableCell("_____", new PivotTableStringFieldDef("dummy"));
+  retAry2d.push([dummyPtc]);
+  let idxRow = 0;
+
+  for(let colHdr of aryColHdr) {
+    //const colHdr2 = colHdr as PivotTableCells;
+    console.log("colHdr: " + colHdr.toString());
+    for(const colHdrName of colHdrNames) {
+      //retAry2d[idxRow].push(colHdr2.get(colHdrName) as WrioValue);
+      let ptc1 = colHdr.getPtc(colHdrName);
+      console.log("colHdrName=" + colHdrName + ", colHdr ptc1: " + ptc1?.toString());
+      if (undefined !== ptc1) {
+        retAry2d[idxRow].push(ptc1);
+      }
+    }
+  }
+
+  for(const rowHdr of aryRowHdr) {
+    retAry2d.push([]);
+    idxRow += 1;
+    //const rowHdr2 = rowHdr as WrioRecord;
+    for(const rowHdrName of rowHdrNames) {
+      //retAry2d[idxRow].push(rowHdr2.get(rowHdrName) as WrioValue);
+      let ptc1 = rowHdr.getPtc(rowHdrName);
+      if (undefined !== ptc1) {
+        retAry2d[idxRow].push(ptc1);
+      }
+    }
+    for(let colHdr of aryColHdr) {
+      //let vals = dicPivotData.get(new WrioRecordPair(rowHdr as WrioRecord, colHdr as WrioRecord));
+      let vals = dicPivotData.get(new PtcsPair(rowHdr, colHdr));
+      console.log("vals:" + vals?.toString());
+      //let vals2 = vals as WrioRecord;
+      if (vals === undefined) continue;
+      for(const valName of valNames) {
+        console.log("valName=" + valName);
+        let ptc1 = vals.getPtc(valName);
+        if (undefined !== ptc1) {
+          retAry2d[idxRow].push(ptc1);
+        }
+      }
+    }
+  }
+
   return retAry2d;
 }
