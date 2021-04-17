@@ -4,6 +4,7 @@
 
 //import * as dayjs from 'dayjs';
 import * as dayjs from 'dayjs';
+import { formats } from 'dayjs/locale/*';
 
 export type WrioValue = string | number | null | WrioDate | IWrioBase; // | moment.Moment;
 

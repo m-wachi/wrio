@@ -1,4 +1,5 @@
-﻿import { DsColumn } from './model';
+﻿import * as utl1 from './util01';
+import { DsColumn } from './model';
 //import * as mmt from 'moment';
 import { WrioDate, WrioMap, WrioValue, WrioRecord, WrioValueType } from './model02';
 import * as wl from './wriolib01';
@@ -45,38 +46,30 @@ const recs : WrioValue[][] = [
 let fd1 = getPivotTableFieldDef(dsColumns[0].colName, dsColumns[0].colType);
 let ptc1 = new PivotTableCell(recs[0][0], fd1);
 
-let myZip = <T1, T2>(ary1: T1[], ary2: T2[]): [T1, T2][] => {
-  let aryRet:[T1, T2][] = [];
-  for(let i=0; i<ary1.length; i++) {
-    aryRet.push([ary1[i], ary2[i]]);
-  }
-  return aryRet;
-}
-
-let fun1 = (pair: [DsColumn, WrioValue]) => {
+let getPtcFromPair = (pair: [DsColumn, WrioValue]) => {
   const [dsColumn, wv] = pair;
   let fd = getPivotTableFieldDef(dsColumn.colName, dsColumn.colType);
   return new PivotTableCell(wv, fd);
 }
 
-let a = myZip(dsColumns, recs[0]);
+let a = utl1.myZip(dsColumns, recs[0]);
 
-let b = a.map(fun1);
+let b = a.map(getPtcFromPair);
 let c = b.map((x) => {return x.text();});
 console.log(c);
 
 
 //
-// convert WrioValue[][] to PivotTableCell[][]
+// convert WrioValue[][] to PivotTableCells[]
 //
-let fun2 = (dsColumns1: DsColumn[], recs1: WrioValue[][]) => {
+let convAry2dWv2AryPtcs = (dsColumns1: DsColumn[], recs1: WrioValue[][]) => {
   return recs1.map((x) => {
-    let c = myZip(dsColumns1, x);
-    return new PivotTableCells(c.map(fun1));
+    let c = utl1.myZip(dsColumns1, x);
+    return new PivotTableCells(c.map(getPtcFromPair));
   });
 }
 
-let ary2dPtCell = fun2(dsColumns, recs);
+let ary2dPtCell = convAry2dWv2AryPtcs(dsColumns, recs);
 console.log(ary2dPtCell.map((x) => {return x.getPtcArray().map((y) => {return y.text();})}));
 
 const rowNmIdxPairs = wl.getNameIndexPairs(["sales_date"], fieldNames);

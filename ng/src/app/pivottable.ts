@@ -1,82 +1,94 @@
 import { type } from 'os';
-import { WrioValueType, WrioValue, WrioDate, getWrioValueType } from './model02';
-
+import { Pivot } from './model';
+import { WrioValueType, WrioValue, WrioDate, getWrioValueType, equals } from './model02';
 
 export interface IPivotTableFieldDef {
-    format(v: WrioValue): string;
+  format(v: WrioValue): string;
+  textAlign: string; //left, right, center
+  fieldName: string;
 }
 
 
 //
 // PivotTableFieldDef factory function
 //
-export function getPivotTableFieldDef(typeEnum: WrioValueType): IPivotTableFieldDef {
-    switch (typeEnum) {
-        case WrioValueType.STRING:
-            return new PivotTableStringFieldDef();
-        case WrioValueType.NUMBER:
-            return new PivotTableNumberFieldDef();
-        case WrioValueType.DATE:
-            return new PivotTableDateFieldDef();
-    }
+export function getPivotTableFieldDef(fieldName: string, typeEnum: WrioValueType): IPivotTableFieldDef {
+  switch (typeEnum) {
+    case WrioValueType.STRING:
+      return new PivotTableStringFieldDef(fieldName);
+    case WrioValueType.NUMBER:
+      return new PivotTableNumberFieldDef(fieldName);
+    case WrioValueType.DATE:
+      return new PivotTableDateFieldDef(fieldName);
+    default:
+      return new PivotTableStringFieldDef(fieldName);
+  }
 }
 
 
 export class PivotTableStringFieldDef implements IPivotTableFieldDef {
-    format(v: string): string {
-        return v;
-    }
+  public textAlign: string = "left";
+  constructor(public fieldName: string) {}
+  format(v: string): string {
+    return v;
+  }
 }
 
 export class PivotTableNumberFieldDef implements IPivotTableFieldDef {
 
-    private numfmt: Intl.NumberFormat = null;
-    private fractMin: number = 0;
-    private fractMax: number = 0;
+  private numfmt?: Intl.NumberFormat = undefined;
+  private fractMin: number = 0;
+  private fractMax: number = 0;
+  public textAlign: string = "right";
 
-    constructor() {}
+  constructor(public fieldName: string) {
+    this.setNumFmt();
+  }
 
-    private setNumFmt() {
-        this.numfmt = new Intl.NumberFormat('ja', 
-            {style: 'decimal', minimumFractionDigits: this.fractMin, maximumFractionDigits: this.fractMax});
-    }
+  private setNumFmt() {
+    this.numfmt = new Intl.NumberFormat('ja', 
+        {style: 'decimal', minimumFractionDigits: this.fractMin, maximumFractionDigits: this.fractMax});
+  }
 
-    public setFractMin(pFractMin: number) {
-        this.fractMin = pFractMin;
-        this.setNumFmt();
-    }
+  public setFractMin(pFractMin: number) {
+    this.fractMin = pFractMin;
+    this.setNumFmt();
+  }
 
-    public setFractMax(pFractMax: number) {
-        this.fractMax = pFractMax;
-        this.setNumFmt();
-    }
+  public setFractMax(pFractMax: number) {
+    this.fractMax = pFractMax;
+    this.setNumFmt();
+  }
 
-    public setFract(pFractMin: number, pFractMax: number) {
-        this.fractMin = pFractMin;
-        this.fractMax = pFractMax;
-        this.setNumFmt();
-    }
+  public setFract(pFractMin: number, pFractMax: number) {
+    this.fractMin = pFractMin;
+    this.fractMax = pFractMax;
+    this.setNumFmt();
+  }
 
-    public format(v: number): string {
-        return this.numfmt.format(v);
-    }
+  public format(v: number): string {
+    if(null == this.numfmt)
+      return "";
+    else
+      return this.numfmt.format(v);
+  }
 
 }
 
 export class PivotTableDateFieldDef implements IPivotTableFieldDef {
 
-    private fmtStr: string = "";
+  private fmtStr: string = "YYYY-MM-DD";
+  public textAlign: string = "left";
 
-    constructor() {}
+  constructor(public fieldName: string) {}
 
-    public setFormatString(formatString: string) {
-        this.fmtStr = formatString;
-    }
-    
-    public format(v: WrioDate): string {
-        return v.format(this.fmtStr);
-    }
-
+  public setFormatString(formatString: string) {
+    this.fmtStr = formatString;
+  }
+   
+  public format(v: WrioDate): string {
+    return v.format(this.fmtStr);
+  }
 }
 
 /* これはいらない
@@ -88,17 +100,226 @@ export function getPivotTableCell(v: WrioValue) {
 */
 
 export class PivotTableCell {
-    constructor(protected v: WrioValue, protected fieldDef: IPivotTableFieldDef) {}
-    toString() {
-        return this.fieldDef.format(this.v);
+  constructor(protected wrioValue: WrioValue, protected fieldDef: IPivotTableFieldDef) {}
+  text(): string {
+    return this.fieldDef.format(this.wrioValue);
+  }
+
+  valEquals(ptc: PivotTableCell): boolean {
+    return equals(this.wrioValue, ptc.wrioValue);
+  }
+
+  textAlign() {
+    return this.fieldDef.textAlign;
+  }
+
+  fieldName() {
+    return this.fieldDef.fieldName;
+  }
+
+  toString(): string {
+    return "PivitTableCell { fieldName: " + this.fieldName() + ", wrioValue: " + this.wrioValue?.toString() + "}";
+  }
+}
+
+export class PivotTableCells {
+  constructor(protected aryPtc: PivotTableCell[]) {}
+  valEquals(ptcs: PivotTableCells): boolean {
+    let len = this.aryPtc.length;
+    if(len !== ptcs.aryPtc.length) return false;
+    for (let i = 0; i<len; i++) {
+      if (!this.aryPtc[i].valEquals(ptcs.aryPtc[i]))
+        return false;
     }
+    return true;
+  }
+
+  getPtcArray(): PivotTableCell[] {
+    return this.aryPtc;
+  }
+
+  filterByFieldIndexes(aryFieldIndex: number[]): PivotTableCells {
+
+    /*
+    let aryPtc2: PivotTableCell[] = [];
+    for (let fieldIndex of aryFieldIndex) {
+      aryPtc2.push(this.aryPtc[fieldIndex]);
+    }
+    */
+    return new PivotTableCells(aryFieldIndex.map((x) => {return this.aryPtc[x];}));
+  }
+
+
+  /*
+  filterFieldNames(aryFieldName: string[]): PivotTableCells {
+
+    const f = (x: PivotTableCell) => {
+      for (const fieldName of aryFieldName) {
+        if (x.fieldName() === fieldName) return true;
+      }
+      return false;
+    }
+
+    return new PivotTableCells(this.aryPtc.filter(f));
+  }
+  */
+
+  getFieldNames(): string[] {
+    return this.aryPtc.map((x) => {return x.fieldName();});
+  }
+
+  getPtc(fieldName: string): PivotTableCell | undefined {
+    let aryPtc2 = this.aryPtc.filter((x) => {
+      return (x.fieldName() === fieldName);
+    });
+    if (aryPtc2.length === 0) {
+      return undefined;
+    }
+    return aryPtc2[0];
+  }
+
+  toString(): string {
+    return "PivotTableCells [" + this.aryPtc.map((x) => {return x.toString()}).join(",") + "]";
+  }
+
+}
+export class PtcsPair {
+  
+  constructor(public rowPtcs: PivotTableCells, public colPtcs: PivotTableCells) {}
+
+  toArray(): PivotTableCells[] {
+    return [this.rowPtcs, this.colPtcs];
+  }
+  valEquals(ptcp: PtcsPair): boolean {
+      if (!this.rowPtcs.valEquals(ptcp.rowPtcs)) return false;
+      if (!this.colPtcs.valEquals(ptcp.colPtcs)) return false;
+      return true;
+  }
+  toString(): string {
+    return "PtcPair {rowPtcs: " + this.rowPtcs.toString() + ", colPtcs: " + this.colPtcs.toString() + "}";
+  }
+
 }
 
+
+export class PtcMap {
+  private map_ : Map<PtcsPair, PivotTableCells>;
+  constructor() {
+    this.map_ = new Map();
+  }
+  
+  get(ptcspKey: PtcsPair) : PivotTableCells | undefined {
+
+    const ite = this.map_.entries();
+    let iteResult = ite.next();
+    while(!iteResult.done) {
+      const kvPair = iteResult.value;
+      const k = kvPair[0];
+      const v = kvPair[1];
+      
+      if (ptcspKey.valEquals(k)) {
+        return v;
+      }
+      iteResult = ite.next();
+    }
+    return undefined;      
+  }
+  
+  set(ptcspKey: PtcsPair, ptcsValue: PivotTableCells) : void {
+    
+    const ite = this.map_.keys();
+    let iteResult = ite.next();
+    while(!iteResult.done) {
+      const k = iteResult.value
+      //console.log("k=%s", String(k));
+      if (ptcspKey.valEquals(k)) {
+        this.map_.set(k, ptcsValue);
+        return;
+      }
+      iteResult = ite.next();
+    }      
+    this.map_.set(ptcspKey, ptcsValue);
+  }
+  
+  public entries() {
+    return this.map_.entries();
+  }
+  
+  public keys() {
+    return this.map_.keys();
+  }
+
+  public getSize() {
+    return this.map_.size;
+  }
+
+  public toString(): string {
+
+    let lstKv : string[] = [];
+    this.map_.forEach((v, k, mp) => {
+      lstKv.push(String(k) + ": " + String(v));
+    });
+    return ("PtcMap {" + lstKv.join(", ") + "}");
+
+  }
+
+}
+  
+
+export class PtcsSet {
+  private set_ : Set<PivotTableCells>;
+  constructor() {
+    this.set_ = new Set<PivotTableCells>();
+  }
+
+
+  public add(ptcs: PivotTableCells) : void {
+
+    const ite = this.set_.values();
+    let iteResult = ite.next();
+    while(!iteResult.done) {
+      const ptcp2 = iteResult.value
+      //console.log("k=%s", String(k));
+      if (ptcs.valEquals(ptcp2)) {
+        return;
+      }
+      iteResult = ite.next();
+    } 
+    this.set_.add(ptcs);
+
+  }
+
+  public values() {
+    return this.set_.values();
+  }
+
+  public toArray() : PivotTableCells[] {
+    const ite = this.values();
+    let iteResult = ite.next();
+    let aryRet : PivotTableCells[] = [];
+    while(!iteResult.done) {
+      aryRet.push(iteResult.value);
+      iteResult = ite.next();
+    }
+    return aryRet;
+  }
+
+  public toString(): string {
+    //return String(this.map_);
+    let lstV : string[] = [];
+    this.set_.forEach((v) => {
+      if (null === v) {
+        lstV.push("(null)");
+      } else {
+        lstV.push(v.toString());
+      }
+    });
+    return ("PtcsSet [" + lstV.join(", ") + "]");
+
+  }
+
+}
 /*
-export interface PivotTableCell {
-
-}
-
 export class PivotTableStringCell {
     constructor(protected v: string, protected fieldDef: PivotTableStringFieldDef) { }
 

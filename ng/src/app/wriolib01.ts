@@ -1,5 +1,4 @@
 import {WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair, WrioSet} from './model02';
-
 export const getNameIndexPairs = (aryName: string[], aryColumnName: string[]) : [string, number][]=> {
   return aryName.map((nm) => [nm, aryColumnName.indexOf(nm)])
 };
