@@ -1,10 +1,29 @@
+import * as utl1 from './util01';
+import { DsColumn } from './model';
 import {WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair, WrioSet} from './model02';
-import { PivotTableCell, PivotTableCells, PtcsSet, PtcsPair, PtcMap, PivotTableStringFieldDef } from './pivottable';
+import { PivotTableCell, PivotTableCells, PtcsSet, PtcsPair, PtcMap, PivotTableStringFieldDef, getPivotTableFieldDef } from './pivottable';
 import { PtcRecord } from './model03';
 
 export const getNameIndexPairs = (aryName: string[], aryColumnName: string[]) : [string, number][]=> {
   return aryName.map((nm) => [nm, aryColumnName.indexOf(nm)])
 };
+
+export const getPtcFromPair = (pair: [DsColumn, WrioValue]) => {
+  const [dsColumn, wv] = pair;
+  let fd = getPivotTableFieldDef(dsColumn.colName, dsColumn.colType);
+  return new PivotTableCell(wv, fd);
+}
+
+//
+// convert WrioValue[][] to PivotTableCells[]
+//
+export const convAry2dWv2AryPtcs = (dsColumns1: DsColumn[], recs1: WrioValue[][]) => {
+  return recs1.map((x) => {
+    let c = utl1.myZip(dsColumns1, x);
+    return new PivotTableCells(c.map(getPtcFromPair));
+  });
+}
+
 
 /*
 export const vals2Rec = (nmIdxPairs: [string, number][], rec: WrioValue[]) => {
