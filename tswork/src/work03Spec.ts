@@ -10,42 +10,6 @@ describe("pivottable test suite", function() {
   //
   // WrioDate Test
   //
-  it("PivotTableCells.valEquals Test 01", function() {
-    let wd11 = new WrioDate("2019-07-01");
-    let wd12 = new WrioDate("2019-07-02");
-    let wd21 = new WrioDate("2019-07-01");
-    let wd22 = new WrioDate("2019-07-02");
-    let dtfd1 = new PivotTableDateFieldDef();
-    let dtfd2 = new PivotTableDateFieldDef();
-  
-    let ptc11 = new PivotTableCell(wd11, dtfd1);
-    let ptc12 = new PivotTableCell(wd12, dtfd2);
-    let ptc21 = new PivotTableCell(wd21, dtfd1);
-    let ptc22 = new PivotTableCell(wd22, dtfd2);
- 
-    let ptcs1 = new PivotTableCells([ptc11, ptc12]);
-    let ptcs2 = new PivotTableCells([ptc21, ptc22]);
-
-    expect(ptcs1.valEquals(ptcs2)).toBe(true);
-  });
-  it("PivotTableCells.valEquals Test 02", function() {
-    let wd11 = new WrioDate("2019-07-01");
-    let wd12 = new WrioDate("2019-07-02");
-    let wd21 = new WrioDate("2019-07-01");
-    let wd22 = new WrioDate("2019-07-03");
-    let dtfd1 = new PivotTableDateFieldDef();
-    let dtfd2 = new PivotTableDateFieldDef();
-  
-    let ptc11 = new PivotTableCell(wd11, dtfd1);
-    let ptc12 = new PivotTableCell(wd12, dtfd2);
-    let ptc21 = new PivotTableCell(wd21, dtfd1);
-    let ptc22 = new PivotTableCell(wd22, dtfd2);
- 
-    let ptcs1 = new PivotTableCells([ptc11, ptc12]);
-    let ptcs2 = new PivotTableCells([ptc21, ptc22]);
-
-    expect(ptcs1.valEquals(ptcs2)).toBeFalse();
-  });
   it("WrioDate.equals Test 02", function() {
     let wd1 = new WrioDate("2019-07-01T00:00:00");
     let wd3 = new WrioDate("2019-07-02T00:00:00");

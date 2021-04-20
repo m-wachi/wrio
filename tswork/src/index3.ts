@@ -5,7 +5,6 @@ import { WrioDate, WrioMap, WrioValue, WrioRecord, WrioValueType } from './model
 import * as wl from './wriolib01';
 import * as wl2 from './wriolib02';
 import {getPivotTableFieldDef, PivotTableCell, PivotTableCells} from './pivottable';
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 console.log("Hello index.ts");
 

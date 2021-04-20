@@ -139,13 +139,6 @@ export class PivotTableCells {
   }
 
   filterByFieldIndexes(aryFieldIndex: number[]): PivotTableCells {
-
-    /*
-    let aryPtc2: PivotTableCell[] = [];
-    for (let fieldIndex of aryFieldIndex) {
-      aryPtc2.push(this.aryPtc[fieldIndex]);
-    }
-    */
     return new PivotTableCells(aryFieldIndex.map((x) => {return this.aryPtc[x];}));
   }
 
