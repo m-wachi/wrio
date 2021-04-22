@@ -120,6 +120,9 @@ export class PivotTableCell {
   toString(): string {
     return "PivitTableCell { fieldName: " + this.fieldName() + ", wrioValue: " + this.wrioValue?.toString() + "}";
   }
+  value(): WrioValue {
+    return this.wrioValue;
+  }
 }
 
 export class PivotTableCells {
