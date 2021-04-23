@@ -116,6 +116,20 @@ export class Temp04Component implements OnInit {
     );
   }
 
+  btnPut2_Click(): void {
+    this.pivotSvc.putPivotData01(this.pivot).subscribe(
+      optPvtDt => {
+        this.optPivotData = optPvtDt;
+        this.pivotData = optPvtDt.value;
+
+        let recs = this.pivotData.rows;
+        let colnames = this.pivotData.colNames;
+        //this.pivotData.colNames
+
+        let ary2dPtCell = wl2.convAry2dWv2AryPtcs(dsColumns, recs);
+      }
+  }
+
 
   /***** ドラッグ開始時の処理 *****/
   column_Dragstart(event){
