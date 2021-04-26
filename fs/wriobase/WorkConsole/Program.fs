@@ -71,6 +71,7 @@ let getDsColumn(dtSet: DtSet) (colName1: string) : DsColumn option =
                 then fun1 b.[0]
                 else None
 
+//TODO use getDsColumn
 let getPivotColumns2 (pvtSetting: PivotSetting) (dtSet: DtSet) =
     let pvtCols1: string array = Array.append pvtSetting.RowHdr pvtSetting.ColHdr
 
@@ -340,6 +341,9 @@ let main argv =
 
     printfn "pvt2=%A" sPvt2
 
+    let dsCol1 = getDsColumn pvt2.DataSet "d02.merc_name"
+
+    printfn "dsCol1=%A" dsCol1
 
     let dsColumns2 = getPivotColumns2 pvt2.Setting pvt2.DataSet
 

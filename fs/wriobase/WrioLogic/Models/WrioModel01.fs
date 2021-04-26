@@ -16,6 +16,8 @@ type DsColumn(pColName: string, pColType: WrioValueType) =
     member this.ColType
         with get(): WrioValueType = colType
         and set(v: WrioValueType) = colType <- v
+    override this.ToString(): string =
+        sprintf "DsColumn {colName: %s, colType=%A}" colName colType
 
 type DsJoin(pJoinSrcCol: string, pDstAbbrev: string, pJoinDstCol: string) = 
     let mutable joinSrcCol: string = pJoinSrcCol
