@@ -71,8 +71,9 @@ let getDsColumn(dtSet: DtSet) (colName1: string) : DsColumn option =
                 then fun1 b.[0]
                 else None
 
-//TODO use getDsColumn
-let getPivotColumns2 (pvtSetting: PivotSetting) (dtSet: DtSet) =
+//TODO 
+// move to correct .fs, write test
+let getPivotColumns2 (pvtSetting: PivotSetting) (dtSet: DtSet) : DsColumn array =
     let pvtCols1: string array = Array.append pvtSetting.RowHdr pvtSetting.ColHdr
 
     let colName1: string = pvtCols1.[0]
@@ -81,11 +82,19 @@ let getPivotColumns2 (pvtSetting: PivotSetting) (dtSet: DtSet) =
         Array.append pvtCols1 
                      (Array.map (fun (x: CellVal) -> x.Abbrev + "." + x.ColName) 
                                 pvtSetting.CellVal)
-    pvtCols2
+   
+    let consOpt (ary: DsColumn list) (x: DsColumn option) =
+        match x with
+        | Some y -> y :: ary
+        | None -> ary
 
+    let lstOptDsColumn = List.map (getDsColumn dtSet) (Array.toList pvtCols2)
 
+    let lstDsColumnRev = List.fold consOpt [] lstOptDsColumn
+    
+    List.rev lstDsColumnRev |> List.toArray
 
-
+   
 type MyLogger(pDummy: string) =
     let mutable logger : ILog = LogManager.GetLogger(typeof<MyLogger>)
     //let mutable dataSet : DtSet = pDataSet
