@@ -21,6 +21,7 @@
     <Compile Include="DbSystemTest.fs" />
     <Compile Include="DbUserPgTest.fs" />
     <Compile Include="BsLogicTest.fs" />
+    <Compile Include="WrioModel01Test.fs" />
     <Compile Include="UnitTest1.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

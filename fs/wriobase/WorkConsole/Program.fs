@@ -48,52 +48,6 @@ let func01 acc (lstDsJoin1: DbSysDsJoin list) (lstDsJoin2 : DbSysDsJoin list) =
         (dsJoin1, lst1, lst2)
 *)
 
-let getDsColumn(dtSet: DtSet) (colName1: string) : DsColumn option =
-    let sepColName1 = colName1.Split(".")
-    let abbrev1 = sepColName1.[0]
-    let rawColName = sepColName1.[1]
-
-    let fun1 (dsTable1: DsTable): DsColumn option = 
-        let dsColumns1 = Array.filter (fun (x: DsColumn) -> x.ColName = rawColName)  dsTable1.Columns
-        if dsColumns1.Length > 0 
-            then Some dsColumns1.[0] 
-            else None
-
-    if dtSet.Fact.Abbrev = abbrev1 
-        then  
-            //let dsColumns1 = Array.filter (fun (x: DsColumn) -> x.ColName = rawColName)  dtSet.Fact.Columns
-            //if dsColumns1.Length > 0 then Some dsColumns1.[0] 
-            //                else None
-            fun1 dtSet.Fact
-        else
-            let b = Array.filter (fun (x: DsTable) -> x.Abbrev = abbrev1) dtSet.Dimensions
-            if b.Length > 0 
-                then fun1 b.[0]
-                else None
-
-//TODO 
-// move to correct .fs, write test
-let getPivotColumns2 (pvtSetting: PivotSetting) (dtSet: DtSet) : DsColumn array =
-    let pvtCols1: string array = Array.append pvtSetting.RowHdr pvtSetting.ColHdr
-
-    let colName1: string = pvtCols1.[0]
-    
-    let pvtCols2: string array = 
-        Array.append pvtCols1 
-                     (Array.map (fun (x: CellVal) -> x.Abbrev + "." + x.ColName) 
-                                pvtSetting.CellVal)
-   
-    let consOpt (ary: DsColumn list) (x: DsColumn option) =
-        match x with
-        | Some y -> y :: ary
-        | None -> ary
-
-    let lstOptDsColumn = List.map (getDsColumn dtSet) (Array.toList pvtCols2)
-
-    let lstDsColumnRev = List.fold consOpt [] lstOptDsColumn
-    
-    List.rev lstDsColumnRev |> List.toArray
-
    
 type MyLogger(pDummy: string) =
     let mutable logger : ILog = LogManager.GetLogger(typeof<MyLogger>)
@@ -350,11 +304,11 @@ let main argv =
 
     printfn "pvt2=%A" sPvt2
 
-    let dsCol1 = getDsColumn pvt2.DataSet "d02.merc_name"
+    let dsCol1 = MdlFunc.getDsColumn pvt2.DataSet "d02.merc_name"
 
     printfn "dsCol1=%A" dsCol1
 
-    let dsColumns2 = getPivotColumns2 pvt2.Setting pvt2.DataSet
+    let dsColumns2 = MdlFunc.getPivotColumns2 pvt2.Setting pvt2.DataSet
 
     printfn "dsColumns2=%A" dsColumns2
 

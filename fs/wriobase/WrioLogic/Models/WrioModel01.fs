@@ -155,8 +155,51 @@ type PivotData(pColNames: string array, pRows: (obj array) array) =
     override this.ToString(): string =
         sprintf "PivotData { ColNames=%A, Rows=%A }" colNames rows
 
+module MdlFunc =
+    let getDsColumn(dtSet: DtSet) (colName1: string) : DsColumn option =
+        let sepColName1 = colName1.Split(".")
+        let abbrev1 = sepColName1.[0]
+        let rawColName = sepColName1.[1]
+
+        let lookupDsc (dsTable1: DsTable): DsColumn option = 
+            let dsColumns1 = Array.filter (fun (x: DsColumn) -> x.ColName = rawColName)  dsTable1.Columns
+            if dsColumns1.Length > 0 
+                then Some dsColumns1.[0] 
+                else None
+
+        if dtSet.Fact.Abbrev = abbrev1 
+            then  
+                lookupDsc dtSet.Fact
+            else
+                let b = Array.filter (fun (x: DsTable) -> x.Abbrev = abbrev1) dtSet.Dimensions
+                if b.Length > 0 
+                    then lookupDsc b.[0]
+                    else None
+
+    //TODO 
+    // write test
+    let getPivotColumns2 (pvtSetting: PivotSetting) (dtSet: DtSet) : DsColumn array =
+        let pvtCols1: string array = Array.append pvtSetting.RowHdr pvtSetting.ColHdr
+
+        let colName1: string = pvtCols1.[0]
+        
+        let pvtCols2: string array = 
+            Array.append pvtCols1 
+                         (Array.map (fun (x: CellVal) -> x.Abbrev + "." + x.ColName) 
+                                    pvtSetting.CellVal)
+       
+        let consOpt (ary: DsColumn list) (x: DsColumn option) =
+            match x with
+            | Some y -> y :: ary
+            | None -> ary
+
+        let lstOptDsColumn = List.map (getDsColumn dtSet) (Array.toList pvtCols2)
+
+        let lstDsColumnRev = List.fold consOpt [] lstOptDsColumn
+        
+        List.rev lstDsColumnRev |> List.toArray
+
 (*
-module ModelFunc =
     let joinCondSql (srcAbbrev: string) (dsJoin: DsJoin) : string =
         //sprintf "%s.%s=%s.%s" dsJoin.DstAbbrev dsJoin.JoinDstCol srcAbbrev dsJoin.JoinSrcCol
         String.Format("{0}.{1}={2}.{3}", dsJoin.DstAbbrev, dsJoin.JoinDstCol, srcAbbrev, dsJoin.JoinSrcCol)
