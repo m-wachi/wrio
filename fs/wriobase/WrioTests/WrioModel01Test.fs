@@ -58,10 +58,22 @@ module WrioModel01Test =
         
         [(1, 1, dsJoin21); (1, 2, dsJoin22); (2, 1, dsJoin23)]
 
-    let prepMPivot01 (dbSysConn : NpgsqlConnection) =
-        let sql1 = """insert into m_pivot values(4, 'usr1', 3, '{"datasetId":3,"colHdr":["d01.item_name"],"rowHdr":["f01.sales_date"],"cellVal":[{"colName":"nof_sales","abbrev":"f01","aggFuncDiv":1}],"rowOdr":["f01.sales_date"],"colOdr":[]}', CURRENT_TIMESTAMP)"""
+    let prepDtSet01 =
 
-        execSql dbSysConn sql1 |> ignore
+        let colfct1 = DsColumn("item_grp_cd", WrioValueType.STRING)
+        let colfct2 = DsColumn("item_cd", WrioValueType.STRING)
+        let colfct3 = DsColumn("nof_sales", WrioValueType.NUMBER)
+        let colfct4 = DsColumn("sales_date", WrioValueType.DATE)
+        let dstblFact = DsTable(1, "t_table01", "f01", 1, -1, [||], [|colfct1; colfct2; colfct3; colfct4|])
+
+        let coldim1 = DsColumn("item_grp_cd", WrioValueType.STRING)
+        let coldim2 = DsColumn("item_cd", WrioValueType.STRING)
+        let coldim3 = DsColumn("item_name", WrioValueType.STRING)
+
+        let dstblDim1 = DsTable(2, "m_item", "d01", 2, -1, [||], [|coldim1; coldim2; coldim3|])
+        
+        DtSet(1, dstblFact, [|dstblDim1|] )
+
 
 (*
     [<SetUp>]
@@ -105,39 +117,53 @@ module WrioModel01Test =
     [<Test>]
     let getDsColumnTest01 () =
 
-        let colfct1 = DsColumn("item_grp_cd", WrioValueType.STRING)
-        let colfct2 = DsColumn("item_cd", WrioValueType.STRING)
-        let colfct3 = DsColumn("nof_sales", WrioValueType.NUMBER)
-        let dstblFact = DsTable(1, "t_table01", "f01", 1, -1, [||], [|colfct1; colfct2; colfct3|])
+        let dtSet = prepDtSet01
 
-        let coldim1 = DsColumn("item_grp_cd", WrioValueType.STRING)
-        let coldim2 = DsColumn("item_cd", WrioValueType.STRING)
-        let coldim3 = DsColumn("item_name", WrioValueType.STRING)
-
-        let dstblDim1 = DsTable(2, "m_item", "d01", 2, -1, [||], [|coldim1; coldim2; coldim3|])
-        
-        let dtSet = DtSet(1, dstblFact, [|dstblDim1|] )
         let optDsCol1 = MdlFunc.getDsColumn dtSet "d01.item_name"
 
         match optDsCol1 with
         | Some dsCol1 ->
-            Assert.AreEqual(dsCol1.ColName, "item_name")
-            Assert.AreEqual(dsCol1.ColType, WrioValueType.STRING)
+            Assert.AreEqual("item_name", dsCol1.ColName)
+            Assert.AreEqual(WrioValueType.STRING, dsCol1.ColType)
         | None -> Assert.Fail("must be Some xxx")
 
         let optDsCol2 = MdlFunc.getDsColumn dtSet "f01.item_cd"
 
         match optDsCol2 with
         | Some dsCol2 ->
-            Assert.AreEqual(dsCol2.ColName, "item_cd")
-            Assert.AreEqual(dsCol2.ColType, WrioValueType.STRING)
+            Assert.AreEqual("item_cd", dsCol2.ColName)
+            Assert.AreEqual(WrioValueType.STRING, dsCol2.ColType)
         | None -> Assert.Fail("must be Some yyy")
 
         let optDsCol3 = MdlFunc.getDsColumn dtSet "f02.item_cd"
         match optDsCol3 with
         | Some _ -> Assert.Fail("must be None")
-        | None -> Assert.Pass()
+        | None -> ()
+
+        let optDsCol4 = MdlFunc.getDsColumn dtSet "f01.item2_cd"
+        match optDsCol4 with
+        | Some _ -> Assert.Fail("must be None")
+        | None -> ()
 
 
+    [<Test>]
+    let getPivotColumns2Test01 () =
 
-        
+        let pvtSetting = PivotSetting()
+        pvtSetting.RowHdr <- [|"f01.sales_date"|]
+        pvtSetting.ColHdr <- [|"f01.item_cd"|]
+        pvtSetting.CellVal <- [|CellVal("nof_sales", "f01", 1)|]
+        let dtSet = prepDtSet01
+
+        let cols = MdlFunc.getPivotColumns2  pvtSetting dtSet
+
+        Assert.AreEqual(3, cols.Length)
+
+        Assert.AreEqual("f01.sales_date", cols.[0].ColName)
+        Assert.AreEqual(WrioValueType.STRING, cols.[0].ColType)
+
+        Assert.AreEqual("f01.item_cd", cols.[1].ColName)
+        Assert.AreEqual(WrioValueType.STRING, cols.[1].ColType)
+
+        Assert.AreEqual("f01.nof_sales", cols.[2].ColName)
+        Assert.AreEqual(WrioValueType.NUMBER, cols.[2].ColType)
