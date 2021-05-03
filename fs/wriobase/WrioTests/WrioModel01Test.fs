@@ -104,17 +104,39 @@ module WrioModel01Test =
 
     [<Test>]
     let getDsColumnTest01 () =
-        let dstblFact = DsTable(1, "t_table03", "f01", 1, -1, [||], [||])
-        let dstblDim1 = DsTable(2, "m_item", "d01", 2, -1, [||], [||])
+
+        let colfct1 = DsColumn("item_grp_cd", WrioValueType.STRING)
+        let colfct2 = DsColumn("item_cd", WrioValueType.STRING)
+        let colfct3 = DsColumn("nof_sales", WrioValueType.NUMBER)
+        let dstblFact = DsTable(1, "t_table01", "f01", 1, -1, [||], [|colfct1; colfct2; colfct3|])
+
+        let coldim1 = DsColumn("item_grp_cd", WrioValueType.STRING)
+        let coldim2 = DsColumn("item_cd", WrioValueType.STRING)
+        let coldim3 = DsColumn("item_name", WrioValueType.STRING)
+
+        let dstblDim1 = DsTable(2, "m_item", "d01", 2, -1, [||], [|coldim1; coldim2; coldim3|])
+        
         let dtSet = DtSet(1, dstblFact, [|dstblDim1|] )
-        let optDsCol1 = MdlFunc.getDsColumn dtSet "d02.merc_name"
+        let optDsCol1 = MdlFunc.getDsColumn dtSet "d01.item_name"
 
         match optDsCol1 with
         | Some dsCol1 ->
-            Assert.AreEqual(dsCol1.ColName, "merc_name")
+            Assert.AreEqual(dsCol1.ColName, "item_name")
+            Assert.AreEqual(dsCol1.ColType, WrioValueType.STRING)
         | None -> Assert.Fail("must be Some xxx")
 
+        let optDsCol2 = MdlFunc.getDsColumn dtSet "f01.item_cd"
 
+        match optDsCol2 with
+        | Some dsCol2 ->
+            Assert.AreEqual(dsCol2.ColName, "item_cd")
+            Assert.AreEqual(dsCol2.ColType, WrioValueType.STRING)
+        | None -> Assert.Fail("must be Some yyy")
+
+        let optDsCol3 = MdlFunc.getDsColumn dtSet "f02.item_cd"
+        match optDsCol3 with
+        | Some _ -> Assert.Fail("must be None")
+        | None -> Assert.Pass()
 
 
 
