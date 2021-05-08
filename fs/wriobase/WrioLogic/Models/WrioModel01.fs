@@ -146,8 +146,9 @@ type Pivot(pPivotId : int, pDatasetId : int, pSetting : PivotSetting, pDataSet :
         with get() : DtSet = dataSet
         and set(v : DtSet) = dataSet <- v
 
-type PivotData(pColNames: string array, pRows: (obj array) array) = 
-    let mutable colNames: string array = pColNames
+//type PivotData(pColNames: string array, pRows: (obj array) array) = 
+type PivotData(pDsColumns: DsColumn array, pRows: (obj array) array) = 
+    let mutable colNames: DsColumn array = pDsColumns
     let mutable rows: (obj array) array = pRows
     new() = PivotData([||], [||])
     member this.ColNames
