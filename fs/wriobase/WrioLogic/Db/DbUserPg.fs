@@ -105,10 +105,8 @@ module DbUserPg =
 
         let rdr = cmd.ExecuteReader() 
 
-        //let f2 s1 s2 = DsColumn(s1, getWrioValueType s2)
-
         let f (rdr2: NpgsqlDataReader) = 
-            DsColumn((rdr2.GetString(0)), getWrioValueType (rdr2.GetString(1)))
+            DsColumn((rdr2.GetString(0)), getWrioValueType (rdr2.GetString(1)), "")
 
         let ret = [| while rdr.Read() do yield (f rdr) |]
 
@@ -117,7 +115,6 @@ module DbUserPg =
         ret
 
 
-    //let getPivotData (conn : NpgsqlConnection) (pvt: Pivot) =
     let getPivotData (ctx : WrioContext) (pvt: Pivot) =
 
         let getRowVals (rdr: DbDataReader) = 

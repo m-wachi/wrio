@@ -6,18 +6,22 @@ type WrioValueType =
     | NULL = 0 | STRING = 1 | NUMBER = 2 | DATE = 3 | OTHER = 4
 
 // Dataset Column 
-type DsColumn(pColName: string, pColType: WrioValueType) =
+type DsColumn(pColName: string, pColType: WrioValueType, pAbbrev: string) =
     let mutable colName: string = pColName
     let mutable colType: WrioValueType = pColType
-    new() = DsColumn("", WrioValueType.STRING)
+    let mutable abbrev: string = pAbbrev
+    new() = DsColumn("", WrioValueType.STRING, "")
     member this.ColName
         with get(): string = colName
         and set(v: string) = colName <- v
     member this.ColType
         with get(): WrioValueType = colType
         and set(v: WrioValueType) = colType <- v
+    member this.Abbrev
+        with get(): string = abbrev
+        and set(v: string) = abbrev <- v
     override this.ToString(): string =
-        sprintf "DsColumn {colName: %s, colType=%A}" colName colType
+        sprintf "DsColumn {colName: %s, colType=%A, abbrev=%A}" colName colType abbrev
 
 type DsJoin(pJoinSrcCol: string, pDstAbbrev: string, pJoinDstCol: string) = 
     let mutable joinSrcCol: string = pJoinSrcCol
@@ -156,6 +160,8 @@ type PivotData(pColNames: string array, pRows: (obj array) array) =
         sprintf "PivotData { ColNames=%A, Rows=%A }" colNames rows
 
 module MdlFunc =
+
+    // colName1: ex) "f01.item_cd"
     let getDsColumn(dtSet: DtSet) (colName1: string) : DsColumn option =
         let sepColName1 = colName1.Split(".")
         let abbrev1 = sepColName1.[0]
@@ -164,7 +170,10 @@ module MdlFunc =
         let lookupDsc (dsTable1: DsTable): DsColumn option = 
             let dsColumns1 = Array.filter (fun (x: DsColumn) -> x.ColName = rawColName)  dsTable1.Columns
             if dsColumns1.Length > 0 
-                then Some dsColumns1.[0] 
+                then
+                    let dsColumn = dsColumns1.[0] 
+                    dsColumn.Abbrev <- dsTable1.Abbrev
+                    Some dsColumns1.[0] 
                 else None
 
         if dtSet.Fact.Abbrev = abbrev1 
@@ -176,8 +185,6 @@ module MdlFunc =
                     then lookupDsc b.[0]
                     else None
 
-    //TODO 
-    // write test
     let getPivotColumns2 (pvtSetting: PivotSetting) (dtSet: DtSet) : DsColumn array =
         let pvtCols1: string array = Array.append pvtSetting.RowHdr pvtSetting.ColHdr
 

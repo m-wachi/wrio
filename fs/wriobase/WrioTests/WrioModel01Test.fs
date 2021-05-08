@@ -60,15 +60,15 @@ module WrioModel01Test =
 
     let prepDtSet01 =
 
-        let colfct1 = DsColumn("item_grp_cd", WrioValueType.STRING)
-        let colfct2 = DsColumn("item_cd", WrioValueType.STRING)
-        let colfct3 = DsColumn("nof_sales", WrioValueType.NUMBER)
-        let colfct4 = DsColumn("sales_date", WrioValueType.DATE)
+        let colfct1 = DsColumn("item_grp_cd", WrioValueType.STRING, "")
+        let colfct2 = DsColumn("item_cd", WrioValueType.STRING, "")
+        let colfct3 = DsColumn("nof_sales", WrioValueType.NUMBER, "")
+        let colfct4 = DsColumn("sales_date", WrioValueType.DATE, "")
         let dstblFact = DsTable(1, "t_table01", "f01", 1, -1, [||], [|colfct1; colfct2; colfct3; colfct4|])
 
-        let coldim1 = DsColumn("item_grp_cd", WrioValueType.STRING)
-        let coldim2 = DsColumn("item_cd", WrioValueType.STRING)
-        let coldim3 = DsColumn("item_name", WrioValueType.STRING)
+        let coldim1 = DsColumn("item_grp_cd", WrioValueType.STRING, "")
+        let coldim2 = DsColumn("item_cd", WrioValueType.STRING, "")
+        let coldim3 = DsColumn("item_name", WrioValueType.STRING, "")
 
         let dstblDim1 = DsTable(2, "m_item", "d01", 2, -1, [||], [|coldim1; coldim2; coldim3|])
         
@@ -159,11 +159,14 @@ module WrioModel01Test =
 
         Assert.AreEqual(3, cols.Length)
 
-        Assert.AreEqual("f01.sales_date", cols.[0].ColName)
-        Assert.AreEqual(WrioValueType.STRING, cols.[0].ColType)
+        Assert.AreEqual("sales_date", cols.[0].ColName)
+        Assert.AreEqual(WrioValueType.DATE, cols.[0].ColType)
+        Assert.AreEqual("f01", cols.[0].Abbrev)
 
-        Assert.AreEqual("f01.item_cd", cols.[1].ColName)
+        Assert.AreEqual("item_cd", cols.[1].ColName)
         Assert.AreEqual(WrioValueType.STRING, cols.[1].ColType)
+        Assert.AreEqual("f01", cols.[1].Abbrev)
 
-        Assert.AreEqual("f01.nof_sales", cols.[2].ColName)
+        Assert.AreEqual("nof_sales", cols.[2].ColName)
         Assert.AreEqual(WrioValueType.NUMBER, cols.[2].ColType)
+        Assert.AreEqual("f01", cols.[2].Abbrev)
