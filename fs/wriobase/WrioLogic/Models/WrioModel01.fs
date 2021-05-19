@@ -189,13 +189,13 @@ module MdlFunc =
     let getPivotColumns2 (pvtSetting: PivotSetting) (dtSet: DtSet) : DsColumn array =
         let pvtCols1: string array = Array.append pvtSetting.RowHdr pvtSetting.ColHdr
 
-        let colName1: string = pvtCols1.[0]
-        
         let pvtCols2: string array = 
             Array.append pvtCols1 
                          (Array.map (fun (x: CellVal) -> x.Abbrev + "." + x.ColName) 
                                     pvtSetting.CellVal)
-       
+
+        printfn "MdlFunc.getPivotColumns2 pvtCols2=%A" pvtCols2
+
         let consOpt (ary: DsColumn list) (x: DsColumn option) =
             match x with
             | Some y -> y :: ary

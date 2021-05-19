@@ -42,9 +42,19 @@ module DbUserPgTest =
 
 
     let getTestPivot02() =
+
+
+        let colfct1 = DsColumn("item_grp_cd", WrioValueType.STRING, "")
+        let colfct2 = DsColumn("item_cd", WrioValueType.STRING, "")
+        let colfct3 = DsColumn("nof_sales", WrioValueType.NUMBER, "")
+        let colfct4 = DsColumn("sales_date", WrioValueType.DATE, "")
+        let fact: DsTable = DsTable(1, "t_table01", "f", 1, 1, [||], [|colfct1; colfct2; colfct3; colfct4|])
+
+        let coldim1 = DsColumn("item_grp_cd", WrioValueType.STRING, "")
+        let coldim2 = DsColumn("item_cd", WrioValueType.STRING, "")
+        let coldim3 = DsColumn("item_name", WrioValueType.STRING, "")
         let dtJoin1 = DsJoin("item_cd", "f", "item_cd")
-        let dim1: DsTable = DsTable(2, "m_item", "d1", 1, 1, [|dtJoin1|], [||])
-        let fact: DsTable = DsTable(1, "t_table01", "f", 1, 1, [||], [||])
+        let dim1: DsTable = DsTable(2, "m_item", "d1", 1, 1, [|dtJoin1|], [|coldim1; coldim2; coldim3|])
 
         let dtSet1 = DtSet(4, fact, [|dim1|])
 
@@ -161,9 +171,12 @@ module DbUserPgTest =
         DbUserPg.closeDbUsr ctx |> ignore
 
         Assert.AreEqual(3, pvtData.ColNames.Length)
-        Assert.AreEqual("f.sales_date", pvtData.ColNames.[0])
-        Assert.AreEqual("d1.item_name", pvtData.ColNames.[1])
-        Assert.AreEqual("f.nof_sales", pvtData.ColNames.[2])
+        Assert.AreEqual("sales_date", pvtData.ColNames.[0].ColName)
+        Assert.AreEqual("f", pvtData.ColNames.[0].Abbrev)
+        Assert.AreEqual("item_name", pvtData.ColNames.[1].ColName)
+        Assert.AreEqual("d1", pvtData.ColNames.[1].Abbrev)
+        Assert.AreEqual("nof_sales", pvtData.ColNames.[2].ColName)
+        Assert.AreEqual("f", pvtData.ColNames.[2].Abbrev)
         
         let mutable i = 0
         Assert.AreEqual(4, pvtData.Rows.Length)

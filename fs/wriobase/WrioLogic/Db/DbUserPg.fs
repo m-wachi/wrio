@@ -138,15 +138,15 @@ module DbUserPg =
         let rdr = cmd.ExecuteReader() 
 
         if rdr.Read() then
-            //let colNames = Array.map (fun i -> rdr.GetName(i)) [|0 .. rdr.FieldCount - 1|]
-            let colNames = getPivotColumns pvt.Setting
+            //let colNames = getPivotColumns pvt.Setting
+            let dsColNames = MdlFunc.getPivotColumns2 pvt.Setting pvt.DataSet
             //1st row values
             let rowVals1 = getRowVals rdr
             //2nd row and following rows
             let rows2 = getRows rdr
 
             let rows = Array.append [|rowVals1|] rows2
-            Some (PivotData(colNames, rows))
+            Some (PivotData(dsColNames, rows))
         else
             printfn "rdr.Read() = false"
             //PivotData()
