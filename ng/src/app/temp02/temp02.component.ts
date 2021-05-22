@@ -79,7 +79,7 @@ export class Temp02Component implements OnInit {
             for (let i=0; i<pvtDt.rows.length; i++) {
               let dctRec = {};
               for(let j=0; j<pvtDt.colNames.length; j++) {
-                dctRec[pvtDt.colNames[j]] = pvtDt.rows[i][j];
+                //dctRec[pvtDt.colNames[j]] = pvtDt.rows[i][j];
               }
               console.log("dctRec=" + JSON.stringify(dctRec));
               this.sDicPivotData = JSON.stringify(dctRec);

@@ -1,5 +1,8 @@
+import { DsColumn } from "./model";
+
 export interface PivotData {
-  colNames: string[];
+  //colNames: string[];
+  colNames: DsColumn[];
   rows: number[][];
 }
 

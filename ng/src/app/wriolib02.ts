@@ -2,7 +2,6 @@ import * as utl1 from './util01';
 import { DsColumn } from './model';
 import {WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair, WrioSet} from './model02';
 import { PivotTableCell, PivotTableCells, PtcsSet, PtcsPair, PtcMap, PivotTableStringFieldDef, getPivotTableFieldDef } from './pivottable';
-import { PtcRecord } from './model03';
 
 export const getNameIndexPairs = (aryName: string[], aryColumnName: string[]) : [string, number][]=> {
   return aryName.map((nm) => [nm, aryColumnName.indexOf(nm)])

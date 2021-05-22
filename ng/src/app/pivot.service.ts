@@ -46,7 +46,7 @@ export class PivotService {
   //getPivotData01(): Observable<PivotData> {
   getPivotData01(): Observable<any> {
     let pvtData: PivotData = {
-      colNames: ["col1", "col2"],
+      colNames: [{colName: "col1", colType: 2}, {colName: "col2", colType: 2}],
       rows: [[1, 2], [3, 4]]
     };
     

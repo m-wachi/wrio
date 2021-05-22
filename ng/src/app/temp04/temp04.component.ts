@@ -5,6 +5,7 @@ import { PivotService } from '../pivot.service';
 import { MessageService } from '../message.service';
 import { WrioValue } from '../model02';
 import * as wlib01 from '../wriolib01';
+import * as wlib02 from '../wriolib02';
 
 @Component({
   selector: 'app-temp04',
@@ -61,7 +62,7 @@ export class Temp04Component implements OnInit {
         // このあたりにthis.pivotData.rowsをPivotTableCellに変換するコードを入れる
         // WrioValue[][] -> PivotTableCell[][]
         //
-
+        /*
         const rowHdrNames = this.pivot.setting.rowHdr;
         const rowHdrNmIdxPairs : [string, number][] = wlib01.getNameIndexPairs(rowHdrNames, colnames);
         console.log("rowHdrNmIdxPairs=" + rowHdrNmIdxPairs.toString());
@@ -89,6 +90,7 @@ export class Temp04Component implements OnInit {
 
         this.cells = wlib01.conv2Array2D(aryRowHdr, aryColHdr, rowHdrNames, colHdrNames, valNames, pivotdata1);
         //this.cells = [["cell11", "cell12"], ["cell21", "cell22"]];
+        */
       }
     );
   }
@@ -126,8 +128,34 @@ export class Temp04Component implements OnInit {
         let colnames = this.pivotData.colNames;
         //this.pivotData.colNames
 
-        let ary2dPtCell = wl2.convAry2dWv2AryPtcs(dsColumns, recs);
-      }
+        let dsColumns = this.pivotData.colNames;
+
+        let ary2dPtCell = wlib02.convAry2dWv2AryPtcs(dsColumns, recs);
+
+        const fieldNames2 = dsColumns.map((x)=>{return x.colName;});
+        console.log("fieldNames2");
+        
+
+        const rowNmIdxPairs = wlib01.getNameIndexPairs(["sales_date"], fieldNames2);
+        const colNmIdxPairs = wlib01.getNameIndexPairs(["item_cd"], fieldNames2);
+        const valNmIdxPairs = wlib01.getNameIndexPairs(["nof_sales"], fieldNames2);
+        
+        console.log("rowNmIdxPairs: " + rowNmIdxPairs.toString());
+        
+        const [rowHdrSet1_2, colHdrSet1_2, dicVal_2] = wlib02.conv2Map2(ary2dPtCell, rowNmIdxPairs, colNmIdxPairs, valNmIdxPairs);
+        console.log("rowHdrSet1_2: " + rowHdrSet1_2.toString());
+        console.log("colHdrSet1_2: " + colHdrSet1_2.toString());
+        console.log("dicVal: " + dicVal_2.toString());
+
+        const tbl = wlib02.conv2Array2D2(rowHdrSet1_2.toArray(), colHdrSet1_2.toArray(), 
+        ["sales_date"], ["item_cd"], ["nof_sales"], dicVal_2);
+
+        for(const r of tbl) {
+          let ary = r.map((x)=>{return x?.text();});
+          console.log(ary);
+        }
+
+      });
   }
 
 

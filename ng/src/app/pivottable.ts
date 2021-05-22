@@ -1,4 +1,3 @@
-import { type } from 'os';
 import { Pivot } from './model';
 import { WrioValueType, WrioValue, WrioDate, getWrioValueType, equals } from './model02';
 
