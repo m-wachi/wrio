@@ -273,7 +273,7 @@ export class PtcsSet {
     const ite = this.set_.values();
     let iteResult = ite.next();
     while(!iteResult.done) {
-      const ptcp2 = iteResult.value
+      const ptcp2 = iteResult.value;
       //console.log("k=%s", String(k));
       if (ptcs.valEquals(ptcp2)) {
         return;

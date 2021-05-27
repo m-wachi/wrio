@@ -133,12 +133,12 @@ export class Temp04Component implements OnInit {
         let ary2dPtCell = wlib02.convAry2dWv2AryPtcs(dsColumns, recs);
 
         const fieldNames2 = dsColumns.map((x)=>{return x.colName;});
-        console.log("fieldNames2");
+        console.log("fieldNames2=" + fieldNames2.toString());
         
 
         const rowNmIdxPairs = wlib01.getNameIndexPairs(["sales_date"], fieldNames2);
-        const colNmIdxPairs = wlib01.getNameIndexPairs(["item_cd"], fieldNames2);
-        const valNmIdxPairs = wlib01.getNameIndexPairs(["nof_sales"], fieldNames2);
+        const colNmIdxPairs = wlib01.getNameIndexPairs(["item_name"], fieldNames2);
+        const valNmIdxPairs = wlib01.getNameIndexPairs(["sales_amount"], fieldNames2);
         
         console.log("rowNmIdxPairs: " + rowNmIdxPairs.toString());
         
@@ -148,11 +148,12 @@ export class Temp04Component implements OnInit {
         console.log("dicVal: " + dicVal_2.toString());
 
         const tbl = wlib02.conv2Array2D2(rowHdrSet1_2.toArray(), colHdrSet1_2.toArray(), 
-        ["sales_date"], ["item_cd"], ["nof_sales"], dicVal_2);
+        ["sales_date"], ["item_name"], ["sales_amount"], dicVal_2);
 
         for(const r of tbl) {
+          console.log("r[0]=" + r[0].toString());
           let ary = r.map((x)=>{return x?.text();});
-          console.log(ary);
+          console.log("ary=" + ary.toString());
         }
 
       });

@@ -1,15 +1,28 @@
 import * as utl1 from './util01';
 import { DsColumn } from './model';
-import {WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair, WrioSet} from './model02';
+import {WrioDate, WrioMap, WrioValue, WrioRecord, WrioRecordPair, WrioSet, WrioValueType, getWrioValueType} from './model02';
 import { PivotTableCell, PivotTableCells, PtcsSet, PtcsPair, PtcMap, PivotTableStringFieldDef, getPivotTableFieldDef } from './pivottable';
 
 export const getNameIndexPairs = (aryName: string[], aryColumnName: string[]) : [string, number][]=> {
   return aryName.map((nm) => [nm, aryColumnName.indexOf(nm)])
 };
 
+
+//
+// convert process 'string -> WrioDate' HERE!!!
+// should be refactor!?
+//
 export const getPtcFromPair = (pair: [DsColumn, WrioValue]) => {
-  const [dsColumn, wv] = pair;
+  let [dsColumn, wv] = pair;
   let fd = getPivotTableFieldDef(dsColumn.colName, dsColumn.colType);
+  if (dsColumn.colType === WrioValueType.DATE) {
+    const wvType = getWrioValueType(wv);
+    console.log("getPtcFromPair  wv=" + wv.toString() + ", type=" + wvType);
+    if (WrioValueType.STRING === wvType) {
+      const wvDate = new WrioDate(wv.toString());
+      wv = wvDate; 
+    }
+  }
   return new PivotTableCell(wv, fd);
 }
 
@@ -82,7 +95,13 @@ export function conv2Map2(
   let colHdrSet = new PtcsSet();
   let rowHdrSet = new PtcsSet();
 
+  console.log("ary2dPtCell=" + ary2dPtCell.toString());
+  console.log("rowHdrNmIdxPairs=" + rowHdrNmIdxPairs.toString());
+  console.log("colHdrNmIdxPairs=" + colHdrNmIdxPairs.toString());
+  
   for(const aryPtCell of ary2dPtCell) {
+    console.log("aryPtCell=" + aryPtCell.toString());
+
     //let rowHdr = vals2Rec(rowHdrNmIdxPairs, rec);
     //rowHdrSet.add(rowHdr);
     let rowHdrIdxs = rowHdrNmIdxPairs.map((x)=>{return x[1];});
