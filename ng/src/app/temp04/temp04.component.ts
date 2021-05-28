@@ -155,7 +155,7 @@ export class Temp04Component implements OnInit {
         console.log("dicVal: " + dicVal_2.toString());
 
         const tbl = wlib02.conv2Array2D2(rowHdrSet1_2.toArray(), colHdrSet1_2.toArray(), 
-        ["sales_date"], ["item_name"], ["sales_amount"], dicVal_2);
+        aryRowName, aryColName, aryValName, dicVal_2);
 
         for(const r of tbl) {
           console.log("r[0]=" + r[0].toString());
