@@ -77,8 +77,6 @@
 <div>aryColumn: {{aryColumn}}</div>
 
 <button id="button1" (click)="button1_Click()">put</button>
-<br>
-<button id="btnPut2" (click)="btnPut2_Click()">put2</button>
 <div>sPivot: {{sPivot}}</div>
 
 <hr/>
@@ -111,3 +109,10 @@
 </table>
   
 <button id="btnPut2" (click)="btnPut2_Click()">put2</button>
+<table border="1" *ngIf="pivotTable">
+  <tr *ngFor="let row of pivotTable">
+    <td *ngFor="let ptCell of row">
+      {{ptCell.text()}}
+    </td>
+  </tr>
+</table>

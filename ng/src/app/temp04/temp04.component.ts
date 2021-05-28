@@ -4,6 +4,7 @@ import { Pivot, DtSet, DsColumn, CellVal } from '../model';
 import { PivotService } from '../pivot.service';
 import { MessageService } from '../message.service';
 import { WrioValue } from '../model02';
+import { PivotTableCell } from '../pivottable';
 import * as wlib01 from '../wriolib01';
 import * as wlib02 from '../wriolib02';
 
@@ -18,6 +19,7 @@ export class Temp04Component implements OnInit {
   sPivot: string = "";
   optPivotData: OptPivotData = null;
   pivotData: PivotData = null;
+  pivotTable: PivotTableCell[][];
   factColumns: Array<DsColumn> = [];
   aryColumn: Array<DsColumn> = [];
   sRowHdrSet: string = "";
@@ -135,10 +137,15 @@ export class Temp04Component implements OnInit {
         const fieldNames2 = dsColumns.map((x)=>{return x.colName;});
         console.log("fieldNames2=" + fieldNames2.toString());
         
-
-        const rowNmIdxPairs = wlib01.getNameIndexPairs(["sales_date"], fieldNames2);
-        const colNmIdxPairs = wlib01.getNameIndexPairs(["item_name"], fieldNames2);
-        const valNmIdxPairs = wlib01.getNameIndexPairs(["sales_amount"], fieldNames2);
+        //const rowNmIdxPairs = wlib01.getNameIndexPairs(["sales_date"], fieldNames2);
+        const aryRowName = this.pivot.setting.rowHdr.map(x => { return x.split(".")[1]});
+        const rowNmIdxPairs = wlib01.getNameIndexPairs(aryRowName, fieldNames2);
+        //const colNmIdxPairs = wlib01.getNameIndexPairs(["item_name"], fieldNames2);
+        const aryColName = this.pivot.setting.colHdr.map(x => { return x.split(".")[1]});
+        const colNmIdxPairs = wlib01.getNameIndexPairs(aryColName, fieldNames2);
+        //const valNmIdxPairs = wlib01.getNameIndexPairs(["sales_amount"], fieldNames2);
+        const aryValName = this.pivot.setting.cellVal.map(x => {return x.colName});
+        const valNmIdxPairs = wlib01.getNameIndexPairs(aryValName, fieldNames2);
         
         console.log("rowNmIdxPairs: " + rowNmIdxPairs.toString());
         
@@ -155,7 +162,7 @@ export class Temp04Component implements OnInit {
           let ary = r.map((x)=>{return x?.text();});
           console.log("ary=" + ary.toString());
         }
-
+        this.pivotTable = tbl;
       });
   }
 
