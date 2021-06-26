@@ -4,6 +4,9 @@
 
 細かいTodo
 
+- 数値の右寄せ（プロパティバインディング？[xxxxx]=???）
+　https://blog.officekoma.co.jp/2019/08/classangular.html
+
 - DBUserPgのgetPivotColumnsのリターンを文字型配列からDsColumn配列に変更する (21.04.23)
   -> 現在WorkConsoleでコーディング中
 
