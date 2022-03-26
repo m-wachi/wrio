@@ -116,6 +116,10 @@ export class PivotTableCell {
     return this.fieldDef.fieldName;
   }
 
+  style() {
+    return "text-align: " + this.textAlign();
+  }
+
   toString(): string {
     return "PivitTableCell { fieldName: " + this.fieldName() + ", wrioValue: " + this.wrioValue?.toString() + "}";
   }
